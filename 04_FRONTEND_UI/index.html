@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGIR - BCRP | Sistema de Gestión de Incidentes Regulatorios</title>
-    <!-- Fuentes Google: Plus Jakarta Sans y JetBrains Mono -->
+    <title>SIGIR - BCRP | Consola NOC de Supervisión y Gestión de Incidentes Regulatorios</title>
+    <!-- Fuentes Google: Plus Jakarta Sans, Inter y JetBrains Mono (display=swap para cero FOUT) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -16,79 +16,312 @@
     <header class="app-header">
         <div class="header-left">
             <div class="brand-badge">
-                <span class="badge-icon">🏛️</span>
+                <span class="badge-icon">
+                    <svg class="icon-svg bcrp-emblem" width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
+                        <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
+                        <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
+                        <rect x="11" y="15" width="14" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="12" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="15.3" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="18.7" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="22" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="10.5" y="24.5" width="15" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
+                    </svg>
+                </span>
                 <span class="badge-text">BCRP REGULATORIO</span>
             </div>
             <div class="brand-title">
                 <h1>SIGIR - BCRP</h1>
-                <p>Sistema Integral de Gestión de Incidentes Regulatorios | Pagos Digitales</p>
+                <p>Sistema de Supervisión y Gestión de Incidentes Regulatorios | Switch Interbancario CCE</p>
             </div>
         </div>
 
+        <!-- Pestañas de navegación superiores limpias -->
+        <nav class="header-nav" aria-label="Navegación del Sistema">
+            <a href="index.html" class="nav-tab active">
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>📡 Consola NOC</span>
+            </a>
+            <a href="infraestructura.html" class="nav-tab">
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>🌐 Infraestructura</span>
+            </a>
+            <a href="auditoria.html" class="nav-tab">
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>🛡️ Bitácora Auditoría</span>
+            </a>
+            <a href="reportes.html" class="nav-tab">
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>📊 Reportes SFT</span>
+            </a>
+        </nav>
+
         <div class="header-right">
-            <div class="backend-status-pill offline" id="backendStatusPill" title="Estado de conexión con Spring Boot API (http://localhost:8080)">
-                <span class="status-dot" id="backendStatusDot" style="background: #F59E0B;"></span>
-                <span id="backendStatusText">MODO DEMO (Local Mock)</span>
+            <!-- Píldora Command Palette (Raycast / Linear style) -->
+            <button class="cmd-palette-pill" id="btnHeaderCommandPalette" title="Abrir Paleta de Comandos (Ctrl+K / ⌘K)">
+                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="cmd-pill-label">Buscar comando</span>
+                <kbd class="cmd-pill-kbd">⌘K</kbd>
+            </button>
+
+            <!-- Botón Toggle de Audio Háptico (Web Audio API - Emil Kowalski) -->
+            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API - Emil Kowalski)">
+                <svg class="icon-svg icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                <svg class="icon-svg icon-sound-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+                <span class="audio-label">AUDIO</span>
+            </button>
+
+            <!-- Reloj digital en tiempo real -->
+            <div class="header-clock-box" title="Hora Oficial de la República del Perú (UTC-5)">
+                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="relojUtc" class="header-clock">--:--:-- PET</span>
             </div>
+
+            <!-- Píldora de estado del sistema -->
+            <div class="backend-status-pill online" id="backendStatusPill" title="Estado de conexión con Spring Boot API (http://localhost:8080)">
+                <span class="status-dot online" id="backendStatusDot"></span>
+                <span id="backendStatusText">MOTOR DE TELEMETRÍA ACTIVO</span>
+            </div>
+
+            <!-- Tarjeta de sesión -->
             <div class="ad-session-card">
                 <div class="user-avatar">FV</div>
                 <div class="user-meta">
                     <span class="user-name">Frank Vargas Huamán</span>
                     <span class="user-ad-domain">
-                        <span class="status-dot online"></span> AD\frank.vargas@bcrp.local (Rol: NOC_LEAD)
+                        <span class="status-dot online"></span> Frank Vargas Huamán | NOC Lead
                     </span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Barra de Telemetría en Vivo (Semáforos NOC del Ecosistema) -->
-    <section class="telemetry-bar-container">
-        <div class="section-title-compact">
-            <h2>Telemetría de Salud en Vivo</h2>
-            <span class="telemetry-timer" id="timerSondeo">Sondeo: 30s</span>
-        </div>
-
-        <div class="telemetry-grid" id="telemetryGrid">
-            <!-- Renderizado dinámico vía JS -->
-        </div>
-    </section>
-
     <!-- Contenedor Principal de Gestión -->
     <main class="main-layout">
+
+        <!-- Banner Explicativo Intuitivo para Usuarios No Técnicos y Jurado -->
+        <div class="human-welcome-banner" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(226, 179, 87, 0.25); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <span style="font-size: 1.8rem;">🏛️</span>
+                <div>
+                    <div style="font-size: 0.95rem; font-weight: 700; color: #F8FAFC;">Centro de Control &amp; Supervisión de Pagos Interbancarios (SIGIR - BCRP)</div>
+                    <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 2px;">
+                        Supervisa en tiempo real las transferencias entre <strong>Yape, Plin y Cajas Municipales</strong>. Puedes simular fallas para evaluar la auto-recuperación o generar reportes oficiales con sello digital.
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button type="button" class="btn btn-secondary" onclick="AuthRBAC.abrirModalRoles()" style="font-size:0.75rem; white-space:nowrap;">
+                    👤 Cambiar Rol
+                </button>
+                <a href="login.html" class="btn btn-secondary" style="font-size:0.75rem; text-decoration:none; white-space:nowrap;">
+                    Portal Acceso &rarr;
+                </a>
+            </div>
+        </div>
         
-        <!-- Barra de Acciones y Métricas Resumen -->
-        <section class="action-metrics-row">
-            <div class="kpi-group">
-                <div class="kpi-mini-card">
-                    <span class="kpi-label">Total</span>
-                    <span class="kpi-value" id="kpiTotal">0</span>
+        <!-- Fila de KPIs Ejecutivos de Borde Nítido -->
+        <section class="executive-kpi-grid grid-5">
+            <div class="executive-kpi-card kpi-accent-cyan">
+                <div class="kpi-card-top">
+                    <span class="kpi-card-label">Disponibilidad del Sistema</span>
+                    <span class="kpi-card-icon">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
                 </div>
-                <div class="kpi-mini-card critical">
-                    <span class="kpi-label">Activos</span>
-                    <span class="kpi-value" id="kpiCriticos">0</span>
-                </div>
-                <div class="kpi-mini-card success">
-                    <span class="kpi-label">Resueltos</span>
-                    <span class="kpi-value" id="kpiResueltos">0</span>
-                </div>
-                <div class="kpi-mini-card">
-                    <span class="kpi-label">Disponibilidad</span>
-                    <span class="kpi-value" id="kpiUptime" style="color: #38BDF8;">99.82%</span>
+                <span class="kpi-card-value" id="kpiUptime" style="color: #38BDF8;">99.82%</span>
+                <div class="kpi-card-footer">
+                    <span class="kpi-tag">Salud de Red: Excelente</span>
                 </div>
             </div>
 
-            <div class="action-buttons-group">
+            <div class="executive-kpi-card kpi-accent-gold">
+                <div class="kpi-card-top">
+                    <span class="kpi-card-label">Tiempo de Detección (MTTD)</span>
+                    <span class="kpi-card-icon">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </span>
+                </div>
+                <span class="kpi-card-value" style="color: #E2B357;">&lt; 30s</span>
+                <div class="kpi-card-footer">
+                    <span class="kpi-tag">Detección Inmediata</span>
+                </div>
+            </div>
+
+            <div class="executive-kpi-card kpi-accent-danger">
+                <div class="kpi-card-top">
+                    <span class="kpi-card-label">Incidentes Activos</span>
+                    <span class="kpi-card-icon">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </span>
+                </div>
+                <span class="kpi-card-value" id="kpiCriticos" style="color: #EF4444;">0</span>
+                <div class="kpi-card-footer">
+                    <span class="kpi-tag">En Evaluación / Mitigación</span>
+                </div>
+            </div>
+
+            <div class="executive-kpi-card kpi-accent-success">
+                <div class="kpi-card-top">
+                    <span class="kpi-card-label">Incidentes Resueltos</span>
+                    <span class="kpi-card-icon">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </span>
+                </div>
+                <span class="kpi-card-value" id="kpiResueltos" style="color: #10B981;">0</span>
+                <div class="kpi-card-footer">
+                    <span class="kpi-tag">Mitigados &amp; Cerrados</span>
+                </div>
+            </div>
+
+            <div class="executive-kpi-card kpi-accent-blue">
+                <div class="kpi-card-top">
+                    <span class="kpi-card-label">Total en Bitácora</span>
+                    <span class="kpi-card-icon">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                </div>
+                <span class="kpi-card-value" id="kpiTotal">0</span>
+                <div class="kpi-card-footer">
+                    <span class="kpi-tag">Histórico Acumulado</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Barra de Telemetría en Vivo (Semáforos NOC de las 5 Entidades Conectadas) -->
+        <section class="telemetry-bar-container" style="padding:0; margin:0; max-width:100%;">
+            <div class="section-title-compact">
+                <h2>
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+                    Telemetría de Salud en Vivo &bull; Entidades Financieras Conectadas
+                </h2>
+                <span class="telemetry-timer" id="timerSondeo">Sondeo: 30s</span>
+            </div>
+
+            <div class="telemetry-grid" id="telemetryGrid">
+                <!-- Renderizado dinámico vía app.js -->
+            </div>
+        </section>
+
+        <!-- Tarjeta de Lujo: Topología de Conectividad Interbancaria CCE en Tiempo Real -->
+        <section class="panel-card topology-panel-section" id="seccionTopologiaCce">
+            <div class="panel-header topology-header">
+                <div class="panel-title-group">
+                    <div class="topology-title-badge-row">
+                        <h3>TOPOLOGÍA DE CONECTIVIDAD INTERBANCARIA CCE EN TIEMPO REAL</h3>
+                        <span class="topology-status-pill online" id="topologiaStatusPill">
+                            <span class="status-dot online" id="topologiaStatusDot"></span>
+                            <span id="topologiaStatusText">SWITCH CENTRAL ACTIVO</span>
+                        </span>
+                        <span class="topology-tps-pill" id="topologiaTpsPill">
+                            <span class="tps-label">RENDIMIENTO:</span>
+                            <span class="tps-value" id="topologiaTpsVal">1,480 TPS</span>
+                        </span>
+                    </div>
+                    <span class="panel-subtitle">Arquitectura Hub-and-Spoke de Compensación y Liquidación Inmediata ISO 20022 | Supervisión NOC BCRP</span>
+                </div>
+
+                <div class="topology-controls-toolbar">
+                    <div class="topology-legend-chips">
+                        <span class="legend-chip"><span class="chip-color chip-iso"></span>ISO 20022 pacs.008</span>
+                        <span class="legend-chip"><span class="chip-color chip-ack"></span>pacs.002 ACK</span>
+                        <span class="legend-chip"><span class="chip-color chip-clearing"></span>camt.053 Liquidación</span>
+                        <span class="legend-chip"><span class="chip-color chip-contingency"></span>Contingencia Sísmica</span>
+                    </div>
+                    <div class="topology-action-btns">
+                        <button type="button" class="btn btn-secondary btn-xs active" id="btnToggleParticles" title="Alternar visualización de partículas de tráfico">
+                            <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h3m12 0h3M12 3v3m0 12v3"/></svg>
+                            <span>Partículas ON</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-xs" id="btnResetTopology" title="Restablecer posición geométrica de los nodos">
+                            <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor del Canvas con Overlay HUD -->
+            <div class="topology-canvas-viewport" id="topologyCanvasViewport">
+                <canvas id="networkTopologyCanvas" class="network-topology-canvas"></canvas>
+                
+                <!-- HUD Overlay con Metadatos Operativos en las Esquinas (Cero Emojis) -->
+                <div class="canvas-hud-overlay top-left">
+                    <span class="hud-mono-tag">PROTOCOLOS: ISO 20022 · AS2 / TLS 1.3 · MQ SERIES</span>
+                    <span class="hud-mono-tag">ROUTER CENTRAL: BCRP-CCE-CORE-01 (LIMA PET)</span>
+                </div>
+                <div class="canvas-hud-overlay top-right">
+                    <span class="hud-mono-tag" id="hudEngineFps">RENDER: 60 FPS · DPR 2.0</span>
+                    <span class="hud-mono-tag" id="hudPacketCount">PAQUETES ACTIVOS: 28</span>
+                </div>
+                <div class="canvas-hud-overlay bottom-left">
+                    <span class="hud-mono-tag">SEGURIDAD: HSM Thales Luna PCIe · HMAC-SHA256</span>
+                </div>
+                <div class="canvas-hud-overlay bottom-right">
+                    <span class="hud-mono-tag" id="hudInteroperabilidad">INTEROPERABILIDAD: YAPE &harr; PLIN NOMINAL</span>
+                </div>
+
+                <!-- Tooltip interactivo al posar el mouse sobre un nodo -->
+                <div class="topology-node-tooltip" id="topologyNodeTooltip" style="display: none;"></div>
+            </div>
+        </section>
+
+        <!-- Barra de Herramientas Unificada: Buscador + Filtros + Botones de Acción Directos -->
+        <section class="toolbar-unified">
+            <div class="toolbar-filters-group">
+                <div class="search-input-wrapper">
+                    <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="filtroBuscador" class="input-search" placeholder="Buscar por ticket, entidad o servicio...">
+                </div>
+                
+                <select id="filtroSeveridad" class="select-filter" aria-label="Filtro de severidad">
+                    <option value="TODOS">Todas las severidades</option>
+                    <option value="CRITICA">Crítica</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="MEDIA">Media</option>
+                    <option value="BAJA">Baja</option>
+                </select>
+
+                <select id="filtroEstado" class="select-filter" aria-label="Filtro de estado">
+                    <option value="TODOS">Todos los estados</option>
+                    <option value="REGISTRADO">Registrado</option>
+                    <option value="EN_EVALUACION">En Evaluación</option>
+                    <option value="EN_MITIGACION">En Mitigación</option>
+                    <option value="RESUELTO">Resuelto</option>
+                    <option value="CERRADO">Cerrado</option>
+                </select>
+            </div>
+
+            <div class="toolbar-actions-group">
+                <button class="btn btn-secondary" id="btnAbrirGuiaModal" style="border-color: #E2B357; color: #E2B357; background: rgba(226, 179, 87, 0.08);" title="Abrir Guía Rápida de Demostración para Jurado (Alt+G)">
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    <span>📋 Guía Jurado (Alt+G)</span>
+                </button>
                 <button class="btn btn-primary" id="btnNuevoManual">
-                    <span class="btn-icon">＋</span> Reportar Incidente
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Nuevo Incidente</span>
                 </button>
                 <button class="btn btn-warning" id="btnSimularCaida">
-                    <span class="btn-icon">⚡</span> Simular Alerta
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>Simular Falla 503</span>
                 </button>
                 <button class="btn btn-bcrp" id="btnGenerarSft">
-                    <span class="btn-icon">↓</span> Exportar SFT (.txt)
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Exportar SFT</span>
                 </button>
-                <a class="btn btn-primary" href="reportes.html" style="text-decoration:none"><span class="btn-icon">📊</span> Reportes Clave</a>
             </div>
         </section>
 
@@ -97,28 +330,14 @@
             <div class="panel-header">
                 <div class="panel-title-group">
                     <h3>Matriz de Incidentes Regulatorios</h3>
-                    <span class="panel-subtitle">Supervisión continua bajo normativa del BCRP</span>
+                    <span class="panel-subtitle">Supervisión continua bajo normativa del BCRP y Circular de Gestión de Continuidad CCE</span>
                 </div>
 
-                <div class="filters-toolbar">
-                    <input type="text" id="filtroBuscador" class="input-search" placeholder="Buscar por ticket o entidad...">
-                    
-                    <select id="filtroSeveridad" class="select-filter">
-                        <option value="TODOS">Todas las severidades</option>
-                        <option value="CRITICA">Crítica</option>
-                        <option value="ALTA">Alta</option>
-                        <option value="MEDIA">Media</option>
-                        <option value="BAJA">Baja</option>
-                    </select>
-
-                    <select id="filtroEstado" class="select-filter">
-                        <option value="TODOS">Todos los estados</option>
-                        <option value="REGISTRADO">Registrado</option>
-                        <option value="EN_EVALUACION">En Evaluación</option>
-                        <option value="EN_MITIGACION">En Mitigación</option>
-                        <option value="RESUELTO">Resuelto</option>
-                        <option value="CERRADO">Cerrado</option>
-                    </select>
+                <div class="matrix-legend">
+                    <span class="legend-item"><span class="legend-dot dot-critical"></span>Crítica</span>
+                    <span class="legend-item"><span class="legend-dot dot-high"></span>Alta</span>
+                    <span class="legend-item"><span class="legend-dot dot-medium"></span>Media</span>
+                    <span class="legend-item"><span class="legend-dot dot-low"></span>Baja</span>
                 </div>
             </div>
 
@@ -137,7 +356,7 @@
                         </tr>
                     </thead>
                     <tbody id="tablaIncidentesBody">
-                        <!-- Renderizado dinámico vía JS -->
+                        <!-- Renderizado dinámico vía app.js -->
                     </tbody>
                 </table>
             </div>
@@ -149,11 +368,13 @@
         <div class="modal-card">
             <div class="modal-header">
                 <h3>Registro Manual Asistido de Incidente</h3>
-                <button class="modal-close" id="btnCerrarModalManual">&times;</button>
+                <button class="modal-close" id="btnCerrarModalManual" aria-label="Cerrar modal">
+                    <svg class="icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
             <form id="formRegistroManual" class="modal-body">
                 <div class="form-group">
-                    <label>Entidad Financiera Afectada *</label>
+                    <label for="manualEntidad">Entidad Financiera Afectada *</label>
                     <select id="manualEntidad" class="form-control" required>
                         <option value="1">Banco de Crédito del Perú - BCP (Yape)</option>
                         <option value="2">Interbank - Plim</option>
@@ -165,7 +386,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Categoría Normativa *</label>
+                        <label for="manualCategoria">Categoría Normativa *</label>
                         <select id="manualCategoria" class="form-control" required>
                             <option value="FRAUDE_FIN">Fraude Financiero (Phishing, Suplantación)</option>
                             <option value="BRECHA_DATOS">Manipulación de Información / Brecha de Seguridad</option>
@@ -173,7 +394,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Severidad Operativa *</label>
+                        <label for="manualSeveridad">Severidad Operativa *</label>
                         <select id="manualSeveridad" class="form-control" required>
                             <option value="CRITICA">Crítica (Interrupción o Daño Severo)</option>
                             <option value="ALTA" selected>Alta (Afectación Transaccional Notoria)</option>
@@ -184,17 +405,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Servicio o Componente Específico *</label>
+                    <label for="manualServicio">Servicio o Componente Específico *</label>
                     <input type="text" id="manualServicio" class="form-control" placeholder="Ej: PASARELA_QR_INTEROPERABLE, API_CONSULTAS" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Descripción Técnica y Hallazgos Forenses *</label>
+                    <label for="manualDescripcion">Descripción Técnica y Hallazgos Forenses *</label>
                     <textarea id="manualDescripcion" class="form-control textarea" rows="3" placeholder="Detalle la causa raíz, números de cuenta involucrados o IP sospechosa..." required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Impacto Estimado de Clientes / Transacciones</label>
+                    <label for="manualImpacto">Impacto Estimado de Clientes / Transacciones</label>
                     <input type="number" id="manualImpacto" class="form-control" value="50" min="0">
                 </div>
 
@@ -211,7 +432,9 @@
         <div class="modal-card modal-lg">
             <div class="modal-header">
                 <h3>Reporte Estructurado Oficial SFT - BCRP</h3>
-                <button class="modal-close" id="btnCerrarModalSft">&times;</button>
+                <button class="modal-close" id="btnCerrarModalSft" aria-label="Cerrar modal">
+                    <svg class="icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
             <div class="modal-body">
                 <p class="modal-desc">
@@ -229,11 +452,265 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnCerrarSft">Cerrar</button>
-                <button type="button" class="btn btn-bcrp" id="btnDescargarTxtFile">Descargar Archivo .TXT</button>
+                <button type="button" class="btn btn-bcrp" id="btnDescargarTxtFile">
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Descargar Archivo .TXT</span>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Modal: Widget de Guía Rápida de Demostración para Frank (Sustentación Jurado) -->
+    <div class="modal-overlay" id="modalGuiaDemo">
+        <div class="modal-card modal-demo-guide">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span class="modal-demo-header-badge">⚖️ JURADO APF1 · SECCIÓN 57524</span>
+                    <h3 style="margin:0;">Guía Interactiva de Demostración Ejecutiva — BCRP</h3>
+                </div>
+                <button class="modal-close" id="btnCerrarModalGuiaDemo" aria-label="Cerrar guía">
+                    <svg class="icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="demo-guide-scroll">
+                <!-- Banner de Metadatos & Atajos -->
+                <div class="demo-guide-intro">
+                    <div>
+                        <strong style="color:#F8FAFC;">Ruta de Sustentación para Frank Vargas Huamán:</strong> Tiempo total de <strong>8 a 10 minutos</strong>. Usa los botones directos de cada paso para disparar la acción visual en vivo sin salir del flujo.
+                    </div>
+                    <span class="kpi-tag" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid rgba(226,179,87,0.3); font-weight:700; white-space:nowrap;">
+                        Atajo: Alt + G
+                    </span>
+                </div>
+
+                <!-- Lista de los 6 Pasos -->
+                <div class="demo-stepper-grid">
+                    
+                    <!-- PASO 1 -->
+                    <div class="demo-step-card" id="stepCard1">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 1</span>
+                                <span class="demo-step-title">Apertura de la Consola NOC &amp; Reloj PET en Vivo</span>
+                            </div>
+                            <span class="demo-step-time">00:00 - 01:15 (75s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Muestra la cabecera institucional BCRP, el reloj sincronizado en tiempo real con la Hora Oficial del Perú (<code>PET / UTC-5</code>) y el estado saludable (latencias &lt; 25ms) de las 5 entidades conectadas (BCP, Interbank, Caja Cusco, Caja de los Andes y CCE).</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "Buenos días, profesor Zamata. Presento la Consola Web del SIGIR, desarrollada para el Switch Interbancario CCE bajo directivas del BCRP. Como puede apreciar, el panel opera en tiempo real con la hora oficial del Perú (PET) y ejecuta un sondeo no bloqueante cada 30 segundos sobre las 5 pasarelas interoperables, manteniendo latencias de enlace sub-25 milisegundos."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <button type="button" class="demo-trigger-btn" id="btnGuiaPaso1TráficoNormal">
+                                <span>🟢 Restablecer Tráfico Normal (Alt+1)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 2 -->
+                    <div class="demo-step-card" id="stepCard2">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 2</span>
+                                <span class="demo-step-title">Explicación de KPIs de Alta Criticidad (Disponibilidad 99.74%, MTTD, MTTR)</span>
+                            </div>
+                            <span class="demo-step-time">01:15 - 02:45 (90s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Recorre las 5 tarjetas de KPI: Disponibilidad Global (99.74% / 99.82% vs umbral BCRP &ge; 99.90%), MTTD (&lt; 30s por sondeo asíncrono), Incidentes Activos (0), Resueltos y Total en Bitácora.</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "En infraestructuras financieras críticas, el factor determinante es el MTTD (Mean Time to Detect). La normativa BCRP exige que una degradación transaccional se detecte en menos de 30 segundos antes de generar quejas de usuarios. Nuestra consola supervisa la disponibilidad ponderada, alertándonos si cae por debajo del umbral de contingencia del 99.90% estipulado en el SLA interbancario."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso2ResaltarKpis">
+                                <span>🔍 Resaltar Tarjetas de KPI</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3 -->
+                    <div class="demo-step-card" id="stepCard3">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 3</span>
+                                <span class="demo-step-title">Disparo de Simulación "Falla 503 LBBCRP01" (Caída Crítica BCP)</span>
+                            </div>
+                            <span class="demo-step-time">02:45 - 04:15 (90s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Clic en 'Simular Falla 503' (o Alt+2). El nodo BCP entra en parpadeo rojo estroboscópico, la latencia conmuta a TIMEOUT, el SLA cae a 98.74%, el contador de activos sube a 1 y se inyecta automáticamente el ticket <code>INC-20261031-10001</code> en la matriz.</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "Voy a inducir una falla crítica en el balanceador de carga LBBCRP01 del BCP simulando error HTTP 503 en el endpoint de transferencias inmediatas de Yape. Observe cómo el semáforo conmuta a parpadeo estroboscópico, la latencia pasa a TIMEOUT y el motor genera el ticket INC-20261031-10001 con severidad CRÍTICA. El SLA global desciende a 98.74%, activando los protocolos de escalamiento del NOC."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <button type="button" class="demo-trigger-btn btn-warning-demo" id="btnGuiaPaso3DispararFalla">
+                                <span>🚨 Inyectar Falla 503 BCP (Alt+2)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 4 -->
+                    <div class="demo-step-card" id="stepCard4">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 4</span>
+                                <span class="demo-step-title">Registro Asistido &amp; Ciclo de Vida del Incidente (SLA y Mitigación)</span>
+                            </div>
+                            <span class="demo-step-time">04:15 - 05:45 (90s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Abre el modal de Registro Manual Asistido (demuestra validación de categorías: Fraude Financiero, Brecha, Disponibilidad y Severidad). Luego ejecuta la mitigación inmutable: <code>REGISTRADO &rarr; EN_MITIGACION &rarr; RESUELTO &rarr; CERRADO</code>, recuperando la salud de BCP.</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "El sistema permite también el registro asistido con tipificación de la Circular BCRP. Al pasar a la contingencia, aplicamos la máquina de estados inmutable: pasa a EN MITIGACIÓN mientras la CCE conmuta al switch secundario, luego a RESUELTO al normalizarse la pasarela a 18ms, y finalmente a CERRADO para su auditoría y sellado."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="demo-trigger-btn" id="btnGuiaPaso4AbrirModalManual">
+                                    <span>📝 Abrir Formulario Manual</span>
+                                </button>
+                                <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso4AvanzarMitigacion">
+                                    <span>🛡️ Mitigación &amp; Cierre (Alt+3)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASO 5 -->
+                    <div class="demo-step-card" id="stepCard5">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 5</span>
+                                <span class="demo-step-title">Módulo de Reportes (reportes.html) &amp; Análisis Pareto / Tendencia</span>
+                            </div>
+                            <span class="demo-step-time">05:45 - 07:15 (90s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Navega a <code>reportes.html</code>. Muestra el gráfico canvas con la curva de Uptime frente a la línea roja discontinua del SLA 99.90% BCRP. En la tabla de indisponibilidad, demuestra el Principio de Pareto (80% del downtime concentrado en BCP y CCE).</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "En el Módulo de Reportes Normativos evaluamos la confiabilidad histórica. Trazamos en el gráfico el umbral regulatorio del 99.90%. El análisis de Pareto confirma que más del 80% de los minutos de indisponibilidad recaen en BCP (191 min) y CCE (120 min), orientando las auditorías técnicas focalizadas del regulador."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <a href="reportes.html" class="demo-trigger-btn">
+                                <span>📊 Abrir Módulo de Reportes (reportes.html)</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PASO 6 -->
+                    <div class="demo-step-card" id="stepCard6">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge">PASO 6</span>
+                                <span class="demo-step-title">Compilación y Exportación del Paquete SFT con Firma SHA-256</span>
+                            </div>
+                            <span class="demo-step-time">07:15 - 08:30 (75s)</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">🖥️</span>
+                                <div><strong>En pantalla:</strong> Clic en 'Exportar SFT' (o Alt+4). Muestra la estructura de texto plano oficial (HEADER | DETALLE | FOOTER) y la caja criptográfica con el Hash SHA-256 de 64 caracteres calculado con Web Crypto API. Descarga el archivo <code>.txt</code>.</div>
+                            </div>
+                            <div class="demo-speech-box">
+                                <strong>🎙️ Guion Verbal de Frank:</strong>
+                                "Culminamos con el requerimiento RF-08: la exportación del archivo plano normativo SFT del BCRP. El archivo sigue la estructura estricta delimitada por tuberías: cabecera con identificador de envío, detalle con incidentes cerrados y pie de control. Computamos el Hash criptográfico SHA-256 del contenido completo para garantizar integridad inalterable y no repudio. Quedo a su disposición para sus preguntas, profesor Zamata."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso6AbrirSft">
+                                <span>📜 Compilar SFT + SHA-256 (Alt+4)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sección: Respuestas Maestras a Preguntas Trampa del Jurado -->
+                <div class="demo-faq-card">
+                    <h4>
+                        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>🛡️ Respuestas Rápidas para Frank ante Preguntas Críticas del Prof. Zamata</span>
+                    </h4>
+                    <div class="demo-faq-list">
+                        <div class="demo-faq-item">
+                            <strong>1. ¿Saturación de red por sondeo cada 30s?</strong> &rarr; "No hay saturación: usamos peticiones HEAD ultralivianas de Spring Boot Actuator (/actuator/health) de pocos bytes en hilos asíncronos desacoplados del tráfico principal."
+                        </div>
+                        <div class="demo-faq-item">
+                            <strong>2. ¿Por qué SHA-256 y no MD5 o CRC32?</strong> &rarr; "MD5 tiene colisiones conocidas y CRC32 no es criptográfico. SBS y BCRP exigen SHA-2 de 256 bits para validez legal, resistencia a preimagen y no repudio."
+                        </div>
+                        <div class="demo-faq-item">
+                            <strong>3. ¿Qué pasa si PostgreSQL o el backend se caen?</strong> &rarr; "Arquitectura con Graceful Degradation: la consola detecta el fallo del canal REST y conmuta automáticamente al motor local reactivo con Web Crypto API sin pantallas en blanco."
+                        </div>
+                        <div class="demo-faq-item">
+                            <strong>4. ¿Problema del antipatrón N+1 en JPA?</strong> &rarr; "Resuelto mediante JPQL con cláusula <code>JOIN FETCH</code> sobre las entidades relacionadas, recuperando todo en un único round-trip a PostgreSQL."
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-tertiary);">
+                    Atajos: Alt+1 (Normal) · Alt+2 (Falla 503) · Alt+3 (Mitigar) · Alt+4 (SFT) · Alt+G (Guía)
+                </div>
+                <button type="button" class="btn btn-primary" id="btnCerrarModalGuiaDemoFooter">
+                    <span>Entendido · Volver a la Consola</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reloj en tiempo real PET -->
+    <script>
+        function actualizarRelojPet() {
+            const el = document.getElementById('relojUtc');
+            if (el) {
+                const ahora = new Date();
+                const horaStr = ahora.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
+                el.textContent = `${horaStr} PET`;
+            }
+        }
+        actualizarRelojPet();
+        setInterval(actualizarRelojPet, 1000);
+    </script>
+    <script src="js/svg-icons.js"></script>
+    <script src="js/sound-fx.js"></script>
+    <script src="js/auth-rbac.js"></script>
+    <script src="js/network-topology-canvas.js"></script>
+    <script src="js/incident-drawer.js"></script>
+    <script src="js/command-palette.js"></script>
+    <script src="js/demo-presets.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

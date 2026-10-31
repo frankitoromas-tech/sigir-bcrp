@@ -44,3 +44,6 @@ desktop.ini
 
 # Logs
 *.log
+
+# Entornos y artefactos de pruebas QA temporales
+scratch/

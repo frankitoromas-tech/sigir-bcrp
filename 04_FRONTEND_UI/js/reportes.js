@@ -16,6 +16,7 @@ const MOCK = [
 ];
 
 let lastSFT = '', lastHash = '', lastName = 'INCIDENTES_PAGOS_SFT.txt';
+let currentViewRows = [];
 
 function qp() {
   const d = document.getElementById('fDesde')?.value;
@@ -33,93 +34,230 @@ async function getJSON(path) {
 }
 
 /**
- * Renderizado de gráfico moderno de barras de disponibilidad con umbral SLA 99.90%
+ * Renderizado de gráfico de líneas ejecutiva moderna de disponibilidad Uptime con umbral SLA 99.90%
+ * Paleta: Fondo oscuro transparente, línea verde esmeralda con área degradada sutil, etiquetas en JetBrains Mono.
  */
 function drawChart(rows) {
   const c = document.getElementById('chartUptime');
   if (!c) return;
   const ctx = c.getContext('2d');
-  
-  // Limpiar lienzo
-  ctx.clearRect(0, 0, c.width, c.height);
+  if (!ctx) return;
 
-  const paddingLeft = 60;
-  const paddingRight = 40;
-  const paddingTop = 30;
-  const paddingBottom = 40;
-  const chartWidth = c.width - paddingLeft - paddingRight;
-  const chartHeight = c.height - paddingTop - paddingBottom;
+  currentViewRows = rows || [];
 
-  // Rango de escala visual (de 99.0% a 100.0%)
-  const minScale = 99.0;
-  const maxScale = 100.0;
-  const scaleRange = maxScale - minScale;
+  // Adaptación de resolución para pantallas Retina / High-DPI
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  const displayWidth = rect.width > 0 ? Math.floor(rect.width) : (c.parentElement ? c.parentElement.clientWidth : 800);
+  const displayHeight = 220;
 
-  // Línea guía de umbral BCRP 99.90%
-  const slaTarget = 99.90;
-  const slaY = paddingTop + chartHeight - ((slaTarget - minScale) / scaleRange) * chartHeight;
+  // Ajustar dimensiones de buffer canvas
+  if (c.width !== displayWidth * dpr || c.height !== displayHeight * dpr) {
+    c.width = displayWidth * dpr;
+    c.height = displayHeight * dpr;
+  }
 
   ctx.save();
-  ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([6, 4]);
-  ctx.beginPath();
-  ctx.moveTo(paddingLeft, slaY);
-  ctx.lineTo(c.width - paddingRight, slaY);
-  ctx.stroke();
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, displayWidth, displayHeight);
 
-  // Etiqueta de umbral SLA
-  ctx.fillStyle = '#EF4444';
-  ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
+  if (!rows || rows.length === 0) {
+    ctx.fillStyle = '#64748B';
+    ctx.font = '500 12px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Sin datos de disponibilidad para el período seleccionado', displayWidth / 2, displayHeight / 2);
+    ctx.restore();
+    return;
+  }
+
+  const paddingLeft = 65;
+  const paddingRight = 45;
+  const paddingTop = 36;
+  const paddingBottom = 48;
+  const chartWidth = displayWidth - paddingLeft - paddingRight;
+  const chartHeight = displayHeight - paddingTop - paddingBottom;
+
+  // Escala vertical dinámica
+  const minVal = Math.min(...rows.map(r => r.uptimePct));
+  const minScale = Math.min(99.0, Math.floor(minVal * 10) / 10);
+  const maxScale = 100.08;
+  const scaleRange = maxScale - minScale;
+
+  const getY = (val) => {
+    const clamped = Math.max(minScale, Math.min(maxScale, val));
+    return paddingTop + chartHeight - ((clamped - minScale) / scaleRange) * chartHeight;
+  };
+
+  // Líneas de grilla de fondo y etiquetas de eje Y en JetBrains Mono
+  const gridLevels = [
+    { val: minScale, label: `${minScale.toFixed(1)}%` },
+    { val: 99.50, label: '99.50%' },
+    { val: 100.00, label: '100.00%' }
+  ];
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#64748B';
+  ctx.font = '500 10px JetBrains Mono, monospace';
   ctx.textAlign = 'right';
-  ctx.fillText('Meta SLA BCRP (99.90%)', c.width - paddingRight - 8, slaY - 6);
+  ctx.textBaseline = 'middle';
+
+  gridLevels.forEach(g => {
+    if (g.val >= minScale && g.val <= maxScale) {
+      const gy = getY(g.val);
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, gy);
+      ctx.lineTo(displayWidth - paddingRight, gy);
+      ctx.stroke();
+
+      ctx.fillText(g.label, paddingLeft - 8, gy);
+    }
+  });
   ctx.restore();
 
-  // Dibujar barras
-  const numBars = rows.length;
-  const barWidth = Math.min(65, (chartWidth / numBars) * 0.55);
-  const gap = chartWidth / numBars;
+  // Línea de referencia normativa SLA BCRP (99.90%)
+  const slaTarget = 99.90;
+  const slaY = getY(slaTarget);
 
-  rows.forEach((r, i) => {
-    const x = paddingLeft + (i * gap) + (gap - barWidth) / 2;
-    const clampedPct = Math.max(minScale, Math.min(maxScale, r.uptimePct));
-    const h = ((clampedPct - minScale) / scaleRange) * chartHeight;
-    const y = paddingTop + chartHeight - h;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(239, 68, 68, 0.75)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(paddingLeft, slaY);
+  ctx.lineTo(displayWidth - paddingRight, slaY);
+  ctx.stroke();
 
-    const cumpleSla = r.uptimePct >= 99.90;
+  // Etiqueta SLA normativa
+  ctx.fillStyle = '#EF4444';
+  ctx.font = 'bold 10px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('Meta SLA BCRP (99.90%)', displayWidth - paddingRight, slaY - 4);
+  ctx.restore();
 
-    // Color de barra con degradado
-    const grad = ctx.createLinearGradient(0, y, 0, y + h);
-    if (cumpleSla) {
-      grad.addColorStop(0, '#10B981');
-      grad.addColorStop(1, '#065F46');
-    } else {
-      grad.addColorStop(0, '#F59E0B');
-      grad.addColorStop(1, '#92400E');
+  // Cálculo de puntos de datos (X, Y)
+  const points = rows.map((r, i) => {
+    const x = rows.length === 1 
+      ? paddingLeft + chartWidth / 2 
+      : paddingLeft + i * (chartWidth / (rows.length - 1));
+    const y = getY(r.uptimePct);
+    return { x, y, row: r };
+  });
+
+  // 1. Área degradada sutil bajo la curva
+  ctx.save();
+  const areaGrad = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + chartHeight);
+  areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.32)'); // Verde esmeralda translúcido superior
+  areaGrad.addColorStop(0.6, 'rgba(16, 185, 129, 0.08)');
+  areaGrad.addColorStop(1, 'rgba(16, 185, 129, 0.00)'); // Transparente en base
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, paddingTop + chartHeight);
+  ctx.lineTo(points[0].x, points[0].y);
+
+  if (points.length > 1) {
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpX1 = prev.x + (curr.x - prev.x) / 2;
+      const cpY1 = prev.y;
+      const cpX2 = prev.x + (curr.x - prev.x) / 2;
+      const cpY2 = curr.y;
+      ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, curr.x, curr.y);
     }
+  }
 
-    ctx.fillStyle = grad;
+  ctx.lineTo(points[points.length - 1].x, paddingTop + chartHeight);
+  ctx.closePath();
+  ctx.fillStyle = areaGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // 2. Línea ejecutiva verde esmeralda con resplandor sutil
+  ctx.save();
+  ctx.shadowColor = 'rgba(16, 185, 129, 0.5)';
+  ctx.shadowBlur = 8;
+  ctx.strokeStyle = '#10B981'; // Esmeralda FinTech
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  if (points.length > 1) {
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpX1 = prev.x + (curr.x - prev.x) / 2;
+      const cpY1 = prev.y;
+      const cpX2 = prev.x + (curr.x - prev.x) / 2;
+      const cpY2 = curr.y;
+      ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, curr.x, curr.y);
+    }
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // 3. Nodos de datos, guías verticales y etiquetas en JetBrains Mono
+  points.forEach(p => {
+    const cumpleSla = p.row.uptimePct >= 99.90;
+    const nodeColor = cumpleSla ? '#10B981' : '#F59E0B';
+    const textColor = cumpleSla ? '#34D399' : '#FBBF24';
+
+    // Guía vertical punteada hacia el eje X
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.setLineDash([2, 3]);
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(x, y, barWidth, h, [4, 4, 0, 0]) : ctx.fillRect(x, y, barWidth, h);
-    ctx.fill();
+    ctx.moveTo(p.x, p.y + 6);
+    ctx.lineTo(p.x, paddingTop + chartHeight);
+    ctx.stroke();
+    ctx.restore();
 
-    // Texto de porcentaje encima de la barra
-    ctx.fillStyle = cumpleSla ? '#34D399' : '#FBBF24';
+    // Halo y punto exterior
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#0F172A';
+    ctx.fill();
+    ctx.strokeStyle = nodeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Punto central
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = nodeColor;
+    ctx.fill();
+    ctx.restore();
+
+    // Etiqueta superior nítida en JetBrains Mono
+    ctx.save();
     ctx.font = 'bold 11px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(`${r.uptimePct.toFixed(2)}%`, x + barWidth / 2, y - 6);
+    ctx.textBaseline = 'bottom';
+    ctx.fillStyle = textColor;
+    ctx.fillText(`${p.row.uptimePct.toFixed(2)}%`, p.x, p.y - 8);
 
-    // Etiqueta de nombre de entidad debajo
-    ctx.fillStyle = '#94A3B8';
-    ctx.font = '500 11px Plus Jakarta Sans, sans-serif';
-    const shortName = r.nombreEntidad.split('(')[0].trim();
-    ctx.fillText(shortName, x + barWidth / 2, c.height - 18);
+    // Etiqueta inferior en el eje X: Nombre de Entidad
+    ctx.font = '600 11px Plus Jakarta Sans, sans-serif';
+    ctx.fillStyle = '#CBD5E1';
+    ctx.textBaseline = 'top';
+    const shortName = p.row.nombreEntidad.split('(')[0].trim();
+    ctx.fillText(shortName, p.x, paddingTop + chartHeight + 10);
 
-    // Código BCRP
+    // Código BCRP en JetBrains Mono
+    ctx.font = '500 10px JetBrains Mono, monospace';
     ctx.fillStyle = '#64748B';
-    ctx.font = '10px JetBrains Mono, monospace';
-    ctx.fillText(`[${r.codigoBcrp}]`, x + barWidth / 2, c.height - 6);
+    ctx.fillText(`[${p.row.codigoBcrp}]`, p.x, paddingTop + chartHeight + 25);
+    ctx.restore();
   });
+
+  ctx.restore();
 }
 
 /**
@@ -130,18 +268,32 @@ async function cargar() {
   try {
     rows = await getJSON('/reportes/indisponibilidad');
     kpis = await getJSON('/reportes/kpis');
-    const pill = document.getElementById('connPill');
+    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
+    const dot = document.getElementById('backendStatusDot');
+    const text = document.getElementById('backendStatusText');
     if (pill) {
-      pill.innerText = 'Backend Conectado (PostgreSQL)';
       pill.className = 'backend-status-pill online';
+      if (text) text.innerText = 'CONECTADO (PostgreSQL)';
+      else pill.innerText = 'Backend Conectado (PostgreSQL)';
+      if (dot) {
+        dot.className = 'status-dot online';
+        dot.style.background = '#10B981';
+      }
     }
   } catch (e) {
     rows = MOCK;
     kpis = { totalIncidentes: 4, activos: 2, cerrados: 2, mttrGlobalMinutos: 71.8, mttdGlobalMinutos: 1.3, uptimeGlobalPct: 99.76 };
-    const pill = document.getElementById('connPill');
+    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
+    const dot = document.getElementById('backendStatusDot');
+    const text = document.getElementById('backendStatusText');
     if (pill) {
-      pill.innerText = 'Modo Simulación (Autónomo)';
       pill.className = 'backend-status-pill offline';
+      if (text) text.innerText = 'MODO DEMO (Local Mock)';
+      else pill.innerText = 'Modo Simulación (Autónomo)';
+      if (dot) {
+        dot.className = 'status-dot';
+        dot.style.background = '#F59E0B';
+      }
     }
   }
 
@@ -150,7 +302,16 @@ async function cargar() {
 
   const tbody = document.getElementById('tbodyIndisp');
   if (tbody) {
-    tbody.innerHTML = view.map(r => `
+    tbody.innerHTML = view.map(r => {
+      const cumpleSla = r.uptimePct >= 99.90;
+      const statusClass = cumpleSla ? 'resuelto' : 'en_mitigacion';
+      const statusLabel = cumpleSla ? 'SLA OK' : 'SLA EN RIESGO';
+      const pctColorClass = cumpleSla ? 'sla-ok' : 'sla-warn';
+      const pctColorHex = cumpleSla ? '#34D399' : '#FBBF24';
+      const barFillGrad = cumpleSla ? 'linear-gradient(90deg, #059669, #10B981)' : 'linear-gradient(90deg, #D97706, #F59E0B)';
+      const clampedPct = Math.min(100, Math.max(0, r.uptimePct));
+
+      return `
       <tr>
         <td style="font-weight:600;color:var(--text-primary);">${r.nombreEntidad}</td>
         <td class="ticket-mono">${r.codigoBcrp}</td>
@@ -159,9 +320,20 @@ async function cargar() {
         <td style="font-family:var(--font-mono);">${r.mttrMinutos.toFixed(1)}</td>
         <td style="font-family:var(--font-mono);">${r.mttdMinutos.toFixed(1)}</td>
         <td style="font-family:var(--font-mono);">${r.minutosIndisponibles}</td>
-        <td><span class="badge-estado ${r.uptimePct >= 99.90 ? 'resuelto' : 'en_mitigacion'}">${r.uptimePct.toFixed(2)}%</span></td>
+        <td>
+          <div class="sla-progress-cell" style="display:flex;flex-direction:column;gap:4px;min-width:130px;">
+            <div class="sla-progress-header" style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="sla-progress-val ${pctColorClass}" style="font-family:var(--font-mono);font-size:0.8rem;font-weight:700;color:${pctColorHex};">${r.uptimePct.toFixed(2)}%</span>
+              <span class="badge-estado ${statusClass}" style="font-size:0.65rem;padding:1px 6px;">${statusLabel}</span>
+            </div>
+            <div class="sla-progress-track" style="height:5px;width:100%;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;position:relative;" title="Uptime: ${r.uptimePct.toFixed(2)}% | Meta SLA: >= 99.90%">
+              <div class="sla-progress-fill ${pctColorClass}" style="height:100%;width:${clampedPct}%;background:${barFillGrad};border-radius:9999px;"></div>
+            </div>
+          </div>
+        </td>
       </tr>
-    `).join('');
+      `;
+    }).join('');
   }
 
   // Actualizar KPIs de cabecera
@@ -214,17 +386,49 @@ document.getElementById('btnAplicar')?.addEventListener('click', cargar);
 document.getElementById('fEntidad')?.addEventListener('change', cargar);
 
 document.getElementById('btnCSV')?.addEventListener('click', () => {
-  const rows = [...document.querySelectorAll('#tbodyIndisp tr')].map(tr => 
-    [...tr.children].map(td => td.innerText.replace(/;/g, ',')).join(';')
-  ).join('\n');
-  const blob = new Blob(['Entidad;CodigoBCRP;IncidentesTotales;Criticos;MTTR_min;MTTD_min;MinutosIndisponibles;Uptime_Pct\n' + rows], { type: 'text/csv;charset=utf-8' });
+  const tableRows = [...document.querySelectorAll('#tbodyIndisp tr')];
+  if (!tableRows.length) {
+    alert('No hay registros de indisponibilidad para exportar.');
+    return;
+  }
+  const rows = tableRows.map(tr => {
+    return [...tr.children].map(td => {
+      // Extraer texto limpio de la celda, priorizando el valor de la barra de progreso SLA
+      const slaVal = td.querySelector('.sla-progress-val');
+      if (slaVal) {
+        return slaVal.innerText.trim();
+      }
+      return td.innerText.replace(/[\r\n]+/g, ' ').replace(/;/g, ',').replace(/\s+/g, ' ').trim();
+    }).join(';');
+  }).join('\r\n');
+
+  const headers = 'Entidad;CodigoBCRP;IncidentesTotales;Criticos;MTTR_min;MTTD_min;MinutosIndisponibles;Uptime_Pct\r\n';
+  // UTF-8 BOM (\uFEFF) para visualización inmediata y correcta en Microsoft Excel sin problemas de codificación
+  const blob = new Blob(['\uFEFF' + headers + rows], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `INDISPONIBILIDAD_BCRP_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
 });
 
-document.getElementById('btnPrint')?.addEventListener('click', () => window.print());
+document.getElementById('btnPrint')?.addEventListener('click', () => {
+  try {
+    window.print();
+  } catch (err) {
+    console.error('Error al invocar impresión de PDF:', err);
+    alert('No se pudo abrir el diálogo de impresión: ' + err.message);
+  }
+});
+
+// Redibujar responsivamente el gráfico al cambiar resolución de pantalla o zoom
+window.addEventListener('resize', () => {
+  if (currentViewRows && currentViewRows.length > 0) {
+    drawChart(currentViewRows);
+  }
+});
 
 document.getElementById('btnSFT')?.addEventListener('click', async () => {
   const ent = document.getElementById('fEntidad')?.value;
@@ -249,26 +453,27 @@ document.getElementById('btnSFT')?.addEventListener('click', async () => {
     }
   } catch (e) {
     // Generación matemática real en modo simulación
-    const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-    const numEnvio = `SFT-BCRP-${timestamp}`;
+    const pad = (n) => String(n).padStart(2, '0');
+    const ahora = new Date();
+    const timestampNorm = `${ahora.getFullYear()}${pad(ahora.getMonth() + 1)}${pad(ahora.getDate())}-${pad(ahora.getHours())}${pad(ahora.getMinutes())}${pad(ahora.getSeconds())}`;
+    const numEnvio = `SFT-BCRP-${timestampNorm}`;
     const entFilter = document.getElementById('fEntidad')?.value;
     const view = entFilter ? MOCK.filter(r => String(r.idEntidad) === entFilter) : MOCK.filter(r => r.totalIncidentes > 0);
 
-    let raw = `01|${numEnvio}|${timestamp.slice(0,6)}|20131370649|MESA_REGULATORIA_BCRP\n`;
+    // Formato oficial normativo BCRP: HEADER 01 | DETALLE 02 | FOOTER 03
+    let raw = `HEADER|${numEnvio}|${timestampNorm}|${view.length}\n`;
     view.forEach((r, idx) => {
-      raw += `02|INC-20261003-${10001 + idx}|${r.codigoBcrp}|${r.nombreEntidad}|DISP_SERV|CRITICA|2026-10-03 09:30:00|2026-10-03 11:05:00|${r.minutosIndisponibles}|AUTOMATICO\n`;
+      raw += `DETALLE|INC-20261003-${10001 + idx}|${r.codigoBcrp}|${r.nombreEntidad}|DISP_SERV|CRITICA|20261003-093000|20261003-110500|AUTOMATICO|SWITCH_PAGOS\n`;
     });
 
-    const totalMinutos = view.reduce((acc, c) => acc + c.minutosIndisponibles, 0);
-
-    // Calcular hash SHA-256 criptográfico con Web Crypto API
+    // Calcular hash SHA-256 criptográfico con Web Crypto API (64 caracteres hex)
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
     const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    raw += `03|${view.length}|${totalMinutos}|${hash}`;
+    raw += `FOOTER|${hash}`;
 
     lastSFT = raw;
     lastHash = hash;
-    lastName = `SFT_BCRP_PAGOS_${timestamp}.txt`;
+    lastName = `SFT_BCRP_PAGOS_${timestampNorm}.txt`;
   }
 
   document.getElementById('sftPreview').innerText = lastSFT;
@@ -325,6 +530,26 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
   }
 });
 
+/**
+ * Reloj Digital en Tiempo Real (PET - America/Lima UTC-5)
+ * Formato oficial: HH:MM:SS PET | DD/MM/YYYY
+ */
+function iniciarRelojUtc() {
+    const relojEl = document.getElementById('relojUtc');
+    if (!relojEl) return;
+    const actualizar = () => {
+        const ahora = new Date();
+        const opcionesHora = { hour12: false, timeZone: 'America/Lima', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const opcionesFecha = { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric' };
+        const horaStr = ahora.toLocaleTimeString('es-PE', opcionesHora);
+        const fechaStr = ahora.toLocaleDateString('es-PE', opcionesFecha);
+        relojEl.textContent = `${horaStr} PET | ${fechaStr}`;
+    };
+    actualizar();
+    setInterval(actualizar, 1000);
+}
+
 // Inicialización
+iniciarRelojUtc();
 inicializarFechas();
 cargar();
