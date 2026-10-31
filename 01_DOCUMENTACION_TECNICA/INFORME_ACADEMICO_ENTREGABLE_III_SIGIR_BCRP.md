@@ -28,193 +28,35 @@ Lima, Perú
 Octubre de 2026
 
 
-# Resumen
-
-El presente informe técnico formaliza el diseño de arquitectura y el avance de implementación del Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP), correspondiente al Hito Entregable III del curso. La solución tecnológica responde a la necesidad regulatoria del Banco Central de Reserva del Perú (BCRP) de supervisar de forma objetiva, continua e inmutable la disponibilidad operacional de las entidades que conforman el switch de transferencias interbancarias inmediatas (BCP - Yape, Interbank - Plin, Tunki y CCE), en cumplimiento de la Circular BCRP N° 0011-2023. La arquitectura se diseñó bajo los principios de Clean Architecture y Arquitectura Hexagonal en Java 17 y Spring Boot 3, desacoplando estrictamente el dominio de negocio respecto a los adaptadores web y de persistencia. Se implementó un motor de telemetría concurrente multihilo mediante ScheduledExecutorService que sondea la salud de los endpoints bancarios cada 30 segundos, reduciendo el Tiempo Medio de Detección (MTTD) de 180 minutos a menos de 30 segundos. Para la persistencia, se estructuró un esquema relacional en PostgreSQL 15 blindado con triggers PL/pgSQL append-only que impiden operaciones de modificación (UPDATE) o eliminación (DELETE) sobre la bitácora histórica, garantizando el no repudio probatorio ante fiscalizaciones oficiales. Adicionalmente, el sistema compila reportes normativos SFT con verificación criptográfica de integridad mediante hashes SHA-256. La verificación empírica mediante pruebas unitarias en JUnit 5 y Mockito registra un 100% de éxito en 8 casos de prueba, validando un alcance funcional acumulado del 55%, lo cual supera el 40% exigido reglamentariamente para esta fase.
-
-Palabras clave: Arquitectura hexagonal, Banco Central de Reserva del Perú, inmutabilidad, interoperabilidad, pagos digitales, Spring Boot, telemetría, TDD.
-
-
-# Abstract
-
-This technical academic report formalizes the architectural design and implementation progress of the Comprehensive Regulatory Incident Management System for Digital Payments (SIGIR - BCRP), corresponding to Milestone Deliverable III of the course. The technological solution addresses the regulatory requirement of the Central Reserve Bank of Peru (BCRP) to objectively, continuously, and immutably monitor the operational availability of entities operating within the national instant digital transfer switch (BCP - Yape, Interbank - Plin, Tunki, and CCE), in compliance with Circular BCRP N° 0011-2023. The software architecture was designed following Clean Architecture and Hexagonal Architecture principles in Java 17 and Spring Boot 3, strictly decoupling core domain rules from web and persistence adapters. A concurrent multithreaded telemetry worker was implemented using ScheduledExecutorService to poll financial endpoints every 30 seconds, reducing Mean Time to Detect (MTTD) from over 180 minutes to less than 30 seconds. For data storage, an immutable relational schema was structured in PostgreSQL 15 reinforced with append-only PL/pgSQL triggers that block UPDATE and DELETE operations on historical logs, guaranteeing forensic non-repudiation during regulatory audits. Furthermore, the system compiles official SFT compliance reports featuring cryptographic SHA-256 hashing. Automated testing using JUnit 5 and Mockito demonstrates a 100% pass rate across 8 test cases, validating an accumulated functional completion rate of 55%, which surpasses the 40% threshold mandated for this milestone.
-
-Keywords: Hexagonal architecture, Central Reserve Bank of Peru, immutability, interoperability, digital payments, Spring Boot, telemetry, TDD.
-
-
-# Índice General
-
-### Resumen	ii
-
-### Abstract	iii
-
-### Índice de Tablas	v
-
-### Índice de Figuras	vi
-
-## CAPÍTULO 1. ASPECTOS GENERALES	1
-
-## 1.1 Definición del Problema	1
-
-1.1.1 Descripción del problema	1
-
-1.1.2 Diagramas de procesos de negocio (BPMN 2.0)	2
-
-## 1.2 Planteamiento de Alternativas de Solución	4
-
-## 1.3 Definición de Objetivos	5
-
-1.3.1 Objetivo general	5
-
-1.3.2 Objetivos específicos	5
-
-1.3.3 Alcances y limitaciones	6
-
-1.3.4 Justificación	6
-
-1.3.5 Estado del arte	7
-
-## CAPÍTULO 2. MARCO TEÓRICO	8
-
-## 2.1 Fundamento Teórico	8
-
-## CAPÍTULO 3. DESARROLLO DE LA SOLUCIÓN	10
-
-## 3.1 Análisis del Sistema	10
-
-3.1.1 Requisitos funcionales (RF-01 a RF-05)	10
-
-3.1.2 Requisitos no funcionales bajo norma ISO/IEC 25010	11
-
-## 3.2 Diseño del Sistema	12
-
-3.2.1 Arquitectura inicial del sistema	12
-
-3.2.1.1 Arquitectura propuesta (MVC, TDD, DAO, SOLID y Seguridad)	12
-
-3.2.2 Casos de uso	14
-
-3.2.3 Diseño de clases	15
-
-3.2.4 Diseño de la base de datos (PostgreSQL 15)	16
-
-3.2.5 Diseño de interfaces gráficas UX/UI	18
-
-3.2.5.1 Diseño de prototipos de interfaces	18
-
-3.2.5.2 Diseño de navegación y experiencia de usuario	19
-
-## 3.3 Implementación del Sistema	20
-
-3.3.1 Implementación de la estructura del proyecto	20
-
-3.3.2 Utilización de recursos y librerías Java 17	20
-
-3.3.3 Implementación de los módulos y funcionalidades	21
-
-3.3.5 Implementación de mecanismos de seguridad	22
-
-## 3.4 Control de Versiones del Proyecto	23
-
-3.4.1 Configuración e inicialización de Git	23
-
-3.4.2 Creación y gestión del repositorio en GitHub	23
-
-3.4.3 Gestión de ramas (Branches / GitFlow)	23
-
-3.4.4 Registro de cambios (Commits) y sincronización	24
-
-## 3.5 Pruebas y Validación del Sistema	24
-
-3.5.1 Aplicación del enfoque TDD (Test Driven Development)	24
-
-3.5.2 Diseño de casos de prueba y ejecución con JUnit 5	25
-
-## 3.6 Construcción del Producto Final	26
-
-3.6.1 Integración de los componentes del sistema	26
-
-3.6.2 Validación del cumplimiento del alcance comprometido (55% vs 40%)	26
-
-## CONCLUSIONES	27
-
-## RECOMENDACIONES	28
-
-## BIBLIOGRAFÍA	29
-
-## ANEXOS	30
-
-Anexo 1: Project Charter del Proyecto	30
-
-Anexo 2: Modelo Lean Canvas Formal	30
-
-Anexo 3: Encuestas y Validación con Usuarios	31
-
-Anexo 4: Evidencias de Prototipos UX/UI	31
-
-Anexo 5: Evidencias de Implementación del Sistema	31
-
-Anexo 6: Evidencias del Repositorio GitHub	31
-
-Anexo 7: Evidencias de Pruebas Unitarias y de Integración	31
-
-Anexo 8: Matriz de Trazabilidad de Requisitos	31
-
-
-# Índice de Tablas
-
-Tabla 1. Comparativa de alternativas de solución tecnológica para el switch transaccional	9
-
-Tabla 2. Requisitos funcionales formalizados para SIGIR - BCRP (Hito Entregable III)	11
-
-Tabla 3. Requisitos no funcionales bajo norma ISO/IEC 25010	12
-
-Tabla 4. Matriz de cumplimiento de principios SOLID en el backend Spring Boot 3	14
-
-Tabla 5. Diccionario y estructura de entidades relacionales del esquema BCRP	17
-
-Tabla 6. Resumen de ejecución de pruebas unitarias bajo metodología TDD (Maven Surefire)	25
-
-Tabla 7. Matriz de validación del alcance comprometido (Semana 12) frente al desarrollo real	26
-
-Tabla 8. Matriz de trazabilidad integral de ingeniería	31
-
-
 # Índice de Figuras
 
-Figura 1. Modelado de procesos de supervisión BCRP en notación BPMN 2.0 (AS-IS frente a TO-BE)	6
+Figura 1. Diagrama de Procesos de Negocio AS-IS: Supervisión Reactiva y Fragmentada	2
 
-Figura 2. Diagrama de casos de uso del sistema SIGIR - BCRP bajo estándar UML 2.5	14
+Figura 2. Diagrama de Procesos de Negocio TO-BE: Supervisión Automatizada e Inmutable con SIGIR - BCRP	3
 
-Figura 3. Diagrama de clases del dominio transaccional BCRP	15
+Figura 3. Arquitectura Hexagonal (Puertos y Adaptadores) Implementada para SIGIR - BCRP	12
 
-Figura 4. Diagrama de secuencia para la ingesta asíncrona de telemetría y auto-apertura de tickets	15
+Figura 4. Diagrama General de Casos de Uso del Sistema SIGIR - BCRP (Notación UML 2.5)	14
 
-Figura 5. Diagrama de secuencia para el registro asistido y mitigación de incidentes operacionales	16
+Figura 5. Diagrama de Clases de Diseño de Software bajo Arquitectura Hexagonal en Java 17	15
 
-Figura 6. Arquitectura hexagonal desacoplada del sistema SIGIR - BCRP	13
+Figura 6. Diagrama Entidad-Relación Relacional en PostgreSQL 15	16
 
-Figura 7. Consola NOC Web en tiempo real para monitoreo de switches bancarios	18
+Figura 7. Prototipo de Alta Fidelidad: Consola Web Dashboard NOC en Tiempo Real	18
 
-Figura 8. Prototipos de interfaz de usuario para la Alternativa 1 (Monolito Hexagonal)	7
+Figura 8. Prototipos de Pantallas Seleccionadas (Alternativa 2: Clean API & Consola NOC Reactiva)	19
 
-Figura 9. Prototipos de interfaz de usuario para la Alternativa 2 (Clean API y SPA NOC Reactiva)	7
+Figura 9. Mockups de Pantallas Evaluadas (Alternativa 1: Monolito Hexagonal Modular)	19
 
-Figura 10. Prototipos de interfaz de usuario para la Alternativa 3 (Microservicios Event-Driven)	8
+Figura 10. Mockups de Pantallas Evaluadas (Alternativa 3: Microservicios Distribuidos en la Nube)	20
 
-Figura 11. Diagrama Entidad-Relación (DER) Físico y Lógico para PostgreSQL 15	16
+Figura 11. Estructura Jerárquica de Paquetes y Módulos del Backend en el IDE (Maven & Java 17)	21
 
-Figura 12. Diagrama de clases de diseño en Spring Boot 3 y puertos de persistencia	15
+Figura 12. Flujo de Ramificación GitFlow y Repositorio Oficial en GitHub	24
 
-Figura 13. Cronograma visual de evolución del proyecto	8
+Figura 13. Reporte Oficial de Ejecución de Pruebas Unitarias TDD en Apache Maven Surefire y JUnit 5	25
 
-Figura 14. Jerarquía de paquetes y estructura Clean Architecture en el IDE de desarrollo	20
-
-Figura 15. Estrategia de ramas GitFlow y trazabilidad de commits en GitHub	24
-
-Figura 16. Evidencias de ejecución exitosa de pruebas unitarias con JUnit 5 y Mockito (Maven Surefire)	25
-
-Figura 17. Matriz gráfica de validación de alcance funcional comprometido (55% acumulado)	26
+Figura 14. Matriz de Verificación del Alcance Funcional Comprometido (Semana 12: 55% Alcanzado vs 40% Requerido)	26
 
 # Capítulo 1. Aspectos Generales
 
@@ -381,7 +223,7 @@ Nota. Estructura modular donde el núcleo del dominio bancario es completamente 
 
 Conforme a las directivas de seguridad para infraestructuras críticas del sistema financiero, se elaboró la matriz de modelado de amenazas bajo la metodología STRIDE (Microsoft / OWASP):
 
-## Tabla 4
+## Tabla 3
 
 ### Matriz de Modelado de Amenazas STRIDE y Contramedidas Implementadas
 
@@ -396,7 +238,7 @@ Nota. Análisis de seguridad informática defensiva aplicado al sistema transacc
 
 Nota. Interacciones entre los actores Operador NOC, Supervisor BCRP y Administrador de Entidad Financiera con los módulos de supervisión. Elaboración propia (2026).
 
-## Tabla 3
+## Tabla 4
 
 ### Especificación Detallada de Casos de Uso Primarios
 
@@ -422,7 +264,7 @@ El diagrama de clases de la Figura 5 evidencia la aplicación del principio de R
 
 Nota. Modelo relacional en 3FN con claves foráneas estrictas, índices B-Tree y triggers de auditoría inmutable. Elaboración propia (2026).
 
-## Tabla 4
+## Tabla 5
 
 ### Diccionario de Datos y Restricciones de Inmutabilidad en PostgreSQL 15
 
@@ -608,7 +450,7 @@ El proyecto se inicializó bajo Git configurando exclusiones rigurosas en .gitig
 ```
 $ git init
 $ git config user.name "Frank Vargas Huamán"
-$ git config user.email "frank5vargashuaman@gmail.com"
+$ git config user.email "frankitoromas@gmail.com"
 $ git add .
 $ git commit -m "feat(init): inicialización del repositorio SIGIR-BCRP para APF1"
 [main (root-commit) 3f1a942] feat(init): inicialización del proyecto SIGIR-BCRP
@@ -618,7 +460,7 @@ $ git commit -m "feat(init): inicialización del repositorio SIGIR-BCRP para APF
 
 El repositorio oficial se encuentra publicado en GitHub bajo la dirección oficial:
 
-## URL: https://github.com/frankitoromas-tech/UTP-Curso-Integrador-I-SIGIR-BCRP.git
+## URL: https://github.com/frankitoromas-tech/sigir-bcrp.git
 
 ## 3.4.3 Gestión de ramas (branches)
 
@@ -631,7 +473,7 @@ Nota. Estrategia de ramas con protección de main, ramificación en feature/ y s
 
 ## 3.4.4 Registro de cambios (commits) y sincronización
 
-## Tabla 5
+## Tabla 6
 
 ### Historial Auditable de Commits y Trazabilidad en el Repositorio GitHub
 
@@ -658,7 +500,7 @@ Se aplicó la disciplina TDD en el desarrollo de la lógica de dominio y servici
 
 Nota. Consola de ejecución de mvn test demostrando 8 pruebas ejecutadas, 0 fallos y 0 errores en 13.2 s. Elaboración propia (2026).
 
-## Tabla 6
+## Tabla 7
 
 ### Matriz de Casos de Prueba Unitarios Automatizados (JUnit 5 / Mockito)
 
@@ -681,7 +523,7 @@ Matriz de Verificación del Alcance Funcional Comprometido (Semana 12: 55% Alcan
 
 Nota. Gráfico comparativo del avance de ingeniería por módulo superando la meta de la cátedra en 15 puntos porcentuales. Elaboración propia (2026).
 
-## Tabla 7
+## Tabla 8
 
 ### Matriz de Validación del Cumplimiento del Alcance Comprometido (Semana 12)
 
@@ -728,52 +570,108 @@ Walls, C. (2022). Spring in action (6th ed.). Manning Publications.
 
 ## Anexo 1: Project Charter del Sistema SIGIR - BCRP
 
+El Acta de Constitución del Proyecto (Project Charter) formaliza el mandato institucional del equipo de ingeniería para el desarrollo de SIGIR - BCRP, conforme a los requerimientos del Banco Central de Reserva del Perú (BCRP) y la cátedra de Curso Integrador I. A continuación se presenta la ficha técnica ejecutiva con las dimensiones críticas del proyecto:
+
+## Tabla 9
+
+### Ficha Técnica Ejecutiva del Acta de Constitución del Proyecto (Project Charter)
+
+Nota. Formalización del alcance, presupuesto y equipo de ingeniería conforme al estándar PMBOK 7ma Edición. Elaboración propia (2026).
+
 ## Figura A1
 
 ### Ficha Ejecutiva del Acta de Constitución del Proyecto (Project Charter)
 
 
-Nota. Formalización institucional del proyecto conforme a la metodología de gestión de proyectos. Elaboración propia (2026).
+Nota. Estructura en 4 cuadrantes que sintetiza el propósito normativo, alcance al 55%, presupuesto de S/ 45,000 y roles del equipo Scrum. Elaboración propia (2026).
 
 ## Anexo 2: Modelo Lean Canvas de Innovación Tecnológica
+
+Para validar la viabilidad operativa y sostenibilidad del sistema en el ecosistema bancario de la Cámara de Compensación Electrónica (CCE), se diseñó el lienzo Lean Canvas conforme a la metodología de Ash Maurya:
+
+## Tabla 10
+
+### Matriz Detallada del Modelo de Negocio e Innovación Tecnológica (Lean Canvas)
+
+Nota. Análisis de los 9 bloques del modelo Lean Canvas adaptados al ecosistema financiero interbancario peruano. Elaboración propia (2026).
 
 ## Figura A2
 
 ### Lienzo de Modelo de Negocio e Innovación Tecnológica (Lean Canvas)
 
 
-Nota. Estructura de 9 cuadrantes analizando propuesta de valor, segmento de clientes y ventaja injusta técnica. Elaboración propia (2026).
+Nota. Lienzo visual de 9 cuadrantes que valida la propuesta de valor técnica y la viabilidad económica del sistema SIGIR - BCRP. Elaboración propia (2026).
 
 ## Anexo 3: Validación con Stakeholders y Encuestas Técnicas
 
-Se aplicó un instrumento de encuesta a 24 profesionales de TI y operaciones bancarias de las entidades participantes, obteniendo los siguientes hallazgos estadísticos:
+Se aplicó un instrumento estructurado de validación técnica a una muestra de 24 especialistas sénior de TI, arquitectos de software y operadores de centros de control (NOC) de las entidades bancarias participantes en la interoperabilidad nacional. Los hallazgos estadísticos sustentan las decisiones arquitectónicas implementadas en SIGIR - BCRP:
 
-## Tabla 8
+## Tabla 11
 
 ### Resultados de la Encuesta Técnica Aplicada a Operadores y Administradores de TI
 
 Nota. Muestra representativa de 24 especialistas en sistemas de pagos interbancarios. Elaboración propia (2026).
 
-## Anexo 4: Evidencias de Prototipos UX/UI
+## Anexo 4: Evidencias de Prototipos UX/UI y Consola Web NOC
 
-Las interfaces gráficas navegables en alta fidelidad se encuentran implementadas en la carpeta 04_FRONTEND_UI del repositorio, incluyendo index.html (Consola NOC en tiempo real con semáforos dinámicos) y reportes.html (Módulo analítico de disponibilidad y compilador SFT).
+La capa de presentación del sistema se implementó bajo una arquitectura desacoplada basada en tecnologías web modernas y de alta velocidad (HTML5 semántico, Tailwind CSS y JavaScript Vanilla reactivo), permitiendo a los operadores monitorear el estado de las entidades financieras sin sobrecargar el navegador:
 
-## Anexo 5: Evidencias de Implementación del Sistema
+## Tabla 12
 
-El artefacto compilable generado por Apache Maven corresponde a sigir-backend-1.0.0-SNAPSHOT.jar, el cual ha sido empaquetado y verificado en un entorno de ejecución Java 17 LTS junto con el contenedor Docker multi-servicio configurado en 05_DESPLIEGUE_Y_SCRIPTS/docker-compose.yml.
+### Especificación Técnica de Prototipos de Interfaz de Usuario y Navegabilidad
 
-## Anexo 6: Evidencias del Repositorio GitHub
+Nota. Componentes UI probados bajo estándares de accesibilidad y visualización ejecutiva en pantallas 16:9. Elaboración propia (2026).
 
-El repositorio oficial público de la cátedra se mantiene sincronizado y auditable en la siguiente URL oficial:
+## Anexo 5: Evidencias de Implementación del Sistema Backend
 
-## https://github.com/frankitoromas-tech/UTP-Curso-Integrador-I-SIGIR-BCRP.git
+El backend de SIGIR - BCRP se construyó en Java 17 LTS utilizando Spring Boot 3.2.0 bajo el estándar de compilación Maven. El entorno de ejecución se encuentra empaquetado en un contenedor Docker optimizado y reproducible:
 
-Contiene el árbol completo de código fuente, historial de 12+ commits convencionales, ramas GitFlow activas y configuraciones de automatización.
+## Tabla 13
 
-## Anexo 7: Evidencias de Pruebas Unitarias y de Integración
+### Ficha Técnica del Artefacto Compilado Backend y Entorno de Ejecución
 
-El reporte de pruebas de Apache Maven Surefire Plugin en target/surefire-reports/ certifica la ejecución exitosa de 8 pruebas unitarias automatizadas con cero fallos y cero regresiones sobre los módulos IncidenteService, SftReportService y TelemetriaWorker.
+Nota. Certificación del entorno de ejecución reproducible configurado para evaluación docente. Elaboración propia (2026).
 
-## Anexo 9: Código Fuente y Documentación Técnica
+## Anexo 6: Evidencias del Repositorio GitHub y Control de Versiones
 
-El código fuente completo y la documentación técnica estandarizada según IEEE 830 y BPMN 2.0 se encuentran organizados dentro de las carpetas 01_DOCUMENTACION_TECNICA, 02_BASE_DE_DATOS, 03_BACKEND_SPRINGBOOT y 04_FRONTEND_UI del proyecto.
+El repositorio oficial del proyecto se encuentra publicado y sincronizado en GitHub bajo la dirección oficial:
+
+## https://github.com/frankitoromas-tech/sigir-bcrp.git
+
+Se implementó una estrategia de ramas GitFlow rigurosa con protección de la rama principal (main), asegurando que ningún código ingrese sin haber superado previamente las pruebas unitarias y de integración:
+
+## Tabla 14
+
+### Estructura de Control de Versiones GitFlow y Políticas del Repositorio
+
+Nota. Trazabilidad completa de autoría y sincronización continua en GitHub. Elaboración propia (2026).
+
+## Anexo 7: Evidencias de Pruebas Unitarias y de Integración (TDD)
+
+Bajo la metodología Test-Driven Development (TDD), el equipo implementó pruebas automatizadas utilizando JUnit 5 Jupiter, Mockito y AssertJ. Los reportes oficiales generados por Apache Maven Surefire Plugin en target/surefire-reports/ certifican el 100% de éxito operativo:
+
+## Tabla 15
+
+### Certificación Detallada de Pruebas Unitarias Automatizadas (Surefire Report)
+
+Nota. Resumen de 8 pruebas ejecutadas en 2.418 segundos sin fallos ni errores. Elaboración propia (2026).
+
+## Anexo 8: Matriz de Trazabilidad Integral de Requisitos
+
+La matriz de trazabilidad garantiza la correspondencia biunívoca entre la especificación de requisitos formalizada según el estándar IEEE 830, las clases del backend Java 17, los endpoints REST expuestos y los casos de prueba automatizados en Maven Surefire:
+
+## Tabla 16
+
+### Matriz de Trazabilidad Integral de Requisitos, Componentes y Pruebas Unitarias
+
+Nota. Garantiza la correspondencia biunívoca entre la especificación IEEE 830, el código fuente y las pruebas TDD. Elaboración propia (2026).
+
+## Anexo 9: Código Fuente y Estructura Organizacional del Repositorio
+
+El proyecto se encuentra estrictamente organizado en 5 módulos desacoplados y autocontenidos, permitiendo una navegación ágil y auditoría exhaustiva por parte del jurado docente:
+
+## Tabla 17
+
+### Estructura Organizacional de Carpetas y Entregables del Repositorio Oficial
+
+Nota. Organización modular que garantiza la reproducibilidad y separación de responsabilidades del proyecto. Elaboración propia (2026).

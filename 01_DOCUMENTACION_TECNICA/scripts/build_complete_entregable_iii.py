@@ -316,7 +316,7 @@ FOR EACH ROW EXECUTE FUNCTION fn_historial_estado_append_only();"""
         p.text = "El proyecto fue inicializado bajo control de versiones Git, configurando exclusiones estrictas en el archivo .gitignore para evitar la inclusión de archivos binarios (.class, .jar, .idea, target/):"
         git_cmds = """$ git init
 $ git config user.name "Frank Vargas Huamán"
-$ git config user.email "frank5vargashuaman@gmail.com"
+$ git config user.email "frankitoromas@gmail.com"
 $ git add .
 $ git commit -m "feat(init): inicialización del proyecto SIGIR-BCRP para APF1"
 [main (root-commit) 3f1a942] feat(init): inicialización del proyecto SIGIR-BCRP"""

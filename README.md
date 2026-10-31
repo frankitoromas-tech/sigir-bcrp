@@ -302,7 +302,7 @@ Endpoints disponibles:
 - **Carrera:** Ingeniería de Sistemas e Informática (7mo ciclo, UTP)
 - **GitHub:** [@frankitoromas-tech](https://github.com/frankitoromas-tech)
 - **LinkedIn:** [Frank Emiliano Vargas Huamán](https://linkedin.com/in/frankosyni-undefined-6a010a378/)
-- **Email:** `frank5vargashuaman@gmail.com`
+- **Email:** `frankitoromas@gmail.com`
 - **WhatsApp:** `(+51) 906 740 940`
 - **Licencia:** [MIT](LICENSE)
 
