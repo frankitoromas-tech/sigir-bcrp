@@ -605,6 +605,8 @@ p_h1("Capítulo 1. Aspectos Generales")
 p_h2("1.1 Definición del Problema")
 
 p_h3("1.1.1 Descripción del problema")
+p_body("A raíz de la promulgación de la Circular BCRP N° 0011-2023-BCRP, el sistema financiero peruano consolidó la interoperabilidad obligatoria de transferencias digitales entre billeteras móviles (Yape, Plin) y entidades bancarias a través de la Cámara de Compensación Electrónica (CCE). De acuerdo con las estadísticas operativas publicadas por la Gerencia de Operaciones Monetarias y Estabilidad Financiera del BCRP y la CCE (2025), el ecosistema peruano de pagos minoristas procesa más de 16.5 millones de transferencias interbancarias inmediatas diarias, con un valor transaccional diario que supera los S/ 1,850 millones de soles. El 88.4% de este flujo se canaliza a través de las dos principales billeteras móviles del país.")
+p_body("No obstante, este volumen masivo expuso una severa asimetría de información operacional: el BCRP carece de una herramienta tecnológica automatizada, reactiva y neutral que audite en tiempo real la disponibilidad y latencia de cada switch bancario. En el esquema operacional previo, cuando una entidad financiera experimenta caídas por saturación HTTP 503, bloqueos de conexión TCP o degradación de bases de datos, la detección por parte del ente regulador depende de reportes manuales emitidos tardíamente por la propia entidad o de reclamos de usuarios en redes sociales. Esto genera un Tiempo Medio de Detección (MTTD) superior a 180 minutos. Bajo un flujo de 16.5 millones de transacciones diarias, una caída no detectada de 30 minutos representa más de 340,000 operaciones frustradas, afectando la cadena de pagos y dificultando la determinación objetiva de penalidades por incumplimiento de Acuerdos de Nivel de Servicio (SLA).")
 p_body("A raíz de la promulgación de la Circular BCRP N° 0011-2023-BCRP, el sistema financiero peruano consolidó la interoperabilidad obligatoria de las transferencias digitales entre billeteras móviles y entidades bancarias a través de la Cámara de Compensación Electrónica (CCE). No obstante, este incremento transaccional expuso una severa asimetría de información: el BCRP carece de una herramienta tecnológica automatizada, reactiva y neutral que audite en tiempo real la disponibilidad y latencia de cada participante.")
 p_body("En el esquema operacional previo, cuando una entidad financiera experimenta fallas de conectividad, caídas de base de datos o saturación por HTTP 503, la detección por parte del ente regulador depende de reportes manuales emitidos por la propia entidad o de reclamos de usuarios finales en redes sociales. Esto genera un Tiempo Medio de Detección (MTTD) superior a 180 minutos y dificulta la determinación objetiva de penalidades por incumplimiento de Acuerdos de Nivel de Servicio (SLA), vulnerando la transparencia y la continuidad del sistema nacional de pagos.")
 
@@ -634,7 +636,7 @@ p_body("Con el propósito de cumplir con la exigencia de que más del 50% del es
 
 p_body("• Alternativa 1: Monolito Hexagonal Modular (Java 17 LTS, Spring Boot 3.3.3, Thymeleaf + HTMX, Spring Security, PostgreSQL 15). Concentra el 75% del código en Java. Ventajas: alta cohesión y despliegue simple. Desventajas: acoplamiento del renderizado web con el ciclo de vida del servidor backend y mayor latencia en refrescos continuos de telemetría.")
 
-p_body("• Alternativa 2: Clean API & SPA NOC (Seleccionada). Backend robusto en Java 17 LTS con Spring Boot 3, servicios de dominio puros, telemetría multihilo mediante ScheduledExecutorService, base de datos relacional PostgreSQL 15 Inmutable y frontend desacoplado Single Page Application (SPA) para la consola NOC. Representa un 55% de peso de ingeniería en Java, garantizando separación absoluta de responsabilidades, alta frecuencia de actualización sin bloqueo y compatibilidad con directivas OpenAPI/Swagger.")
+p_body("• Alternativa 2: Clean API & SPA NOC (Seleccionada). Backend de alto rendimiento desacoplado en capas bajo Java 17 LTS con Spring Boot 3, servicios de dominio puros, telemetría multihilo mediante ScheduledExecutorService, base de datos relacional PostgreSQL 15 Inmutable y frontend desacoplado Single Page Application (SPA) para la consola NOC. Representa un 55% de peso de ingeniería en Java, garantizando separación absoluta de responsabilidades, alta frecuencia de actualización sin bloqueo y compatibilidad con directivas OpenAPI/Swagger.")
 
 p_body("• Alternativa 3: Microservicios Distribuidos en la Nube (Spring Cloud Gateway, Eureka, Kafka, Docker Compose). Asigna un 60% a Java. Ventajas: escalabilidad elástica independiente. Desventajas: excesiva complejidad operativa para el volumen de participantes actual (5 entidades) y sobrecosto de latencia introducido por serialización y consenso distribuido.")
 
@@ -665,6 +667,21 @@ p_body("A nivel internacional, bancos centrales como el Banco Central do Brasil 
 p_h1("Capítulo 2. Marco Teórico")
 
 p_h2("2.1 Fundamento Teórico")
+p_body("La concepción del sistema SIGIR - BCRP se fundamenta en principios rigurosos de ingeniería de software, teoría de sistemas distribuidos y seguridad transaccional bancaria:")
+
+p_body("• Teoría de Detección de Fallas en Sistemas Distribuidos: Basada en los postulados de Chandra y Toueg (1996) sobre detectores de fallas no fiables (Unreliable Failure Detectors). En redes asíncronas con participantes bancarios heterogéneos, el sistema implementa la clase de detectores de sospecha débil con completitud fuerte (Strong Completeness), garantizando que cualquier pasarela caída sea identificada por el motor de sondeo dentro de una ventana de tiempo acotada (t < 30 segundos), evitando falsos positivos mediante histéresis temporal.")
+
+p_body("• Clean Architecture y Arquitectura Hexagonal: Formulada por Cockburn (2005) y consolidada por Martin (2018), postula que las reglas del dominio de negocio deben residir en el núcleo, totalmente aisladas de frameworks, bases de datos y detalles de infraestructura. La comunicación se realiza estrictamente a través de puertos (interfaces) y adaptadores, garantizando que el núcleo de supervisión BCRP permanezca desacoplado y 100% testeable sin requerir servidores web ni bases de datos activas.")
+
+p_body("• Patrón Data Access Object (DAO) y Clean MVC: Formalizado por Gamma et al. (1994) y Fowler (2018). En Spring Boot 3, el patrón DAO se materializa a través de interfaces JpaRepository, abstrayendo la interacción SQL y encapsulando las consultas de agregación telemétrica sin contaminar las entidades del dominio con sentencias de persistencia.")
+
+p_body("• Inmutabilidad Forense en Motores Relacionales (Append-Only): En auditoría regulatoria bancaria, la inmutabilidad no puede depender de validaciones a nivel de aplicación (las cuales son vulnerables a bypass directo por consola SQL). Debe forzarse en el motor de base de datos. Disparadores PL/pgSQL BEFORE UPDATE OR DELETE que disparan excepciones con SQLSTATE '55000' garantizan la integridad probatoria no repudiable de la bitácora histórica ante cualquier fiscalización oficial.")
+
+p_body("• Criptografía de Hashing Seguro SHA-256 (FIPS PUB 180-4): Algoritmo de dispersión criptográfica de 256 bits determinista y unidireccional. Produce un hash unívoco de 64 caracteres hexadecimales para cada archivo regulatorio SFT. Cualquier alteración de un solo bit en los registros normativos produce una divergencia completa del hash (efecto avalancha), invalidando el reporte.")
+
+p_body("• Estándar RFC 7807 (Problem Details for HTTP APIs): Norma de la IETF para la representación estandarizada de errores en APIs REST mediante formato application/problem+json. Garantiza que las respuestas de falla contengan type, title, status, detail e instance, eliminando stack traces que comprometan la seguridad de la infraestructura.")
+
+p_body("• Metodología Test-Driven Development (TDD): Ciclo Red-Green-Refactor impulsado por Beck. Exige la formulación previa de la prueba unitaria automatizada, la implementación del código mínimo de soporte y la posterior optimización arquitectónica.")
 p_body("La concepción del sistema SIGIR - BCRP se fundamenta en principios sólidos de ingeniería de software:")
 
 p_body("• Clean Architecture y Arquitectura Hexagonal: Formulada por Cockburn (2005) y consolidada por Martin (2018), postula que las reglas de negocio deben residir en el núcleo, totalmente aisladas de frameworks, bases de datos y detalles de entrada/salida. La comunicación se realiza a través de puertos (interfaces) y adaptadores.")
@@ -717,6 +734,14 @@ add_apa7_table(
     note_text="Parámetros técnicos medibles verificados en el entorno de pruebas. Elaboración propia (2026)."
 )
 
+p_h3("3.1.3 Modelo Matemático de Disponibilidad y Algoritmo de Detección Anti-Flapping")
+p_body("Para otorgar rigor analítico a la supervisión y dirimir controversias sobre penalidades financieras, se formaliza el modelo matemático de disponibilidad operacional:")
+p_body("1. Disponibilidad Mensual (Uptime %): La disponibilidad acumulada de cada participante regulado se define según la ecuación:")
+p_body("Uptime (%) = [ ( T_total - Sum(D_i) ) / T_total ] * 100")
+p_body("Donde T_total corresponde a 43,200 minutos por periodo mensual estándar (30 días * 24 horas * 60 minutos), y D_i representa la duración en minutos del incidente regulatorio i. Para cumplir con el SLA regulatorio del 99.90% establecido por la Circular BCRP N° 0011-2023, la indisponibilidad mensual acumulada no puede exceder los 43.2 minutos:")
+p_body("Sum(D_i) <= 43.2 minutos / mes  <===>  Uptime >= 99.90%")
+p_body("2. Algoritmo de Detección con Histéresis Temporal (Anti-Flapping): En telecomunicaciones bancarias, una micro-interrupción transitoria de 2 segundos no constituye una caída de servicio justificada para sanción. El motor de telemetría de SIGIR - BCRP implementa una ventana deslizante de evaluación (sliding window) con umbral k = 2 sondeos fallidos consecutivos (intervalo delta_t = 30s) antes de transicionar el semáforo al estado CRÍTICO y disparar el ticket regulatorio correlativo, erradicando falsas alarmas por jitter de red.")
+
 p_h2("3.2 Diseño del Sistema")
 
 p_h3("3.2.1 Arquitectura inicial del sistema")
@@ -732,6 +757,27 @@ add_apa7_figure(
 p_body("• Núcleo de Dominio: Entidades Incidente, EntidadFinanciera, HistorialEstado y ReporteBCRP, que contienen las reglas invariantes de negocio sin anotaciones de persistencia contaminantes.")
 p_body("• Capa de Puertos (Interfaces): IIncidenteService y repositorios que definen contratos operacionales independientes de la tecnología.")
 p_body("• Capa de Adaptadores: Adaptadores primarios (Controladores REST y Workers asíncronos) y adaptadores secundarios (Spring Data JPA hacia PostgreSQL 15).")
+
+
+p_h3("3.2.1.2 Modelado de Amenazas y Seguridad Arquitectónica (Matriz STRIDE)")
+p_body("Conforme a las directivas de seguridad para infraestructuras críticas del sistema financiero, se elaboró la matriz de modelado de amenazas bajo la metodología STRIDE (Microsoft / OWASP):")
+
+stride_headers = ["Categoría STRIDE", "Vector de Amenaza Específico", "Impacto Regulatorio", "Mecanismo Arquitectónico de Mitigación"]
+stride_rows = [
+    ["Spoofing (Suplantación)", "Acceso ilegítimo a la API REST simulando ser operador del NOC.", "Crítico: Registro de incidentes falsos.", "Autenticación HTTP Basic forzada con BCrypt (costo 10) y sesiones RBAC."],
+    ["Tampering (Alteración)", "Modificación manual de timestamps o estados en la base de datos.", "Crítico: Adulteración de auditorías BCRP.", "Disparador PL/pgSQL append-only (SQLSTATE 55000) y firma digital SHA-256."],
+    ["Repudiation (Repudio)", "Una entidad desconoce haber estado indisponible durante la contingencia.", "Alto: Disputas legales de penalidad.", "Bitácora inmutable historial_estados con timestamp ISO-8601 y hash forense."],
+    ["Information Disclosure", "Fuga de datos técnicos de la infraestructura en respuestas de error.", "Medio: Mapeo de vectores de ataque.", "Filtro de excepciones global bajo RFC 7807 (ProblemDetail) sin stack traces."],
+    ["Denial of Service (DoS)", "Saturación del backend por creación descontrolada de tickets telemétricos.", "Alto: Caída de la consola de supervisión.", "Índice parcial único (idx_incidente_abierto_unico) que bloquea tickets duplicados."],
+    ["Elevation of Privilege", "Operador intenta descargar reportes SFT reservados para supervisores.", "Alto: Violación de segregación de funciones.", "Control de acceso RBAC estricto en SecurityConfig (ROLE_SUPERVISOR_BCRP)."]
+]
+add_apa7_table(
+    tbl_num=4,
+    tbl_title="Matriz de Modelado de Amenazas STRIDE y Contramedidas Implementadas",
+    headers=stride_headers,
+    rows_data=stride_rows,
+    note_text="Análisis de seguridad informática defensiva aplicado al sistema transaccional. Elaboración propia (2026)."
+)
 
 p_h3("3.2.2 Casos de uso")
 add_apa7_figure(
@@ -826,7 +872,7 @@ p_body("3.2.5.2 Diseño de navegación y experiencia de usuario. El flujo de int
 p_h2("3.3 Implementación del Sistema")
 
 p_h3("3.3.1 Implementación de la estructura del proyecto")
-p_body("El proyecto se construyó como un backend robusto en Apache Maven bajo Java 17 LTS y Spring Boot 3.3.3. La jerarquía de paquetes respeta de manera estricta los estándares de Clean Architecture:")
+p_body("El proyecto se estructuró como un backend modular desacoplado en Apache Maven bajo Java 17 LTS y Spring Boot 3.3.3. La jerarquía de paquetes respeta de manera estricta los estándares de Clean Architecture:")
 
 add_apa7_figure(
     fig_num=11,
