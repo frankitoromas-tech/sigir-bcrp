@@ -34,12 +34,187 @@ El presente informe técnico formaliza el diseño de arquitectura y el avance de
 
 Palabras clave: Arquitectura hexagonal, Banco Central de Reserva del Perú, inmutabilidad, interoperabilidad, pagos digitales, Spring Boot, telemetría, TDD.
 
+
 # Abstract
 
 This technical academic report formalizes the architectural design and implementation progress of the Comprehensive Regulatory Incident Management System for Digital Payments (SIGIR - BCRP), corresponding to Milestone Deliverable III of the course. The technological solution addresses the regulatory requirement of the Central Reserve Bank of Peru (BCRP) to objectively, continuously, and immutably monitor the operational availability of entities operating within the national instant digital transfer switch (BCP - Yape, Interbank - Plin, Tunki, and CCE), in compliance with Circular BCRP N° 0011-2023. The software architecture was designed following Clean Architecture and Hexagonal Architecture principles in Java 17 and Spring Boot 3, strictly decoupling core domain rules from web and persistence adapters. A concurrent multithreaded telemetry worker was implemented using ScheduledExecutorService to poll financial endpoints every 30 seconds, reducing Mean Time to Detect (MTTD) from over 180 minutes to less than 30 seconds. For data storage, an immutable relational schema was structured in PostgreSQL 15 reinforced with append-only PL/pgSQL triggers that block UPDATE and DELETE operations on historical logs, guaranteeing forensic non-repudiation during regulatory audits. Furthermore, the system compiles official SFT compliance reports featuring cryptographic SHA-256 hashing. Automated testing using JUnit 5 and Mockito demonstrates a 100% pass rate across 8 test cases, validating an accumulated functional completion rate of 55%, which surpasses the 40% threshold mandated for this milestone.
 
 Keywords: Hexagonal architecture, Central Reserve Bank of Peru, immutability, interoperability, digital payments, Spring Boot, telemetry, TDD.
 
+
+# Índice General
+
+### Resumen	ii
+
+### Abstract	iii
+
+### Índice de Tablas	v
+
+### Índice de Figuras	vi
+
+## CAPÍTULO 1. ASPECTOS GENERALES	1
+
+## 1.1 Definición del Problema	1
+
+1.1.1 Descripción del problema	1
+
+1.1.2 Diagramas de procesos de negocio (BPMN 2.0)	2
+
+## 1.2 Planteamiento de Alternativas de Solución	4
+
+## 1.3 Definición de Objetivos	5
+
+1.3.1 Objetivo general	5
+
+1.3.2 Objetivos específicos	5
+
+1.3.3 Alcances y limitaciones	6
+
+1.3.4 Justificación	6
+
+1.3.5 Estado del arte	7
+
+## CAPÍTULO 2. MARCO TEÓRICO	8
+
+## 2.1 Fundamento Teórico	8
+
+## CAPÍTULO 3. DESARROLLO DE LA SOLUCIÓN	10
+
+## 3.1 Análisis del Sistema	10
+
+3.1.1 Requisitos funcionales (RF-01 a RF-05)	10
+
+3.1.2 Requisitos no funcionales bajo norma ISO/IEC 25010	11
+
+## 3.2 Diseño del Sistema	12
+
+3.2.1 Arquitectura inicial del sistema	12
+
+3.2.1.1 Arquitectura propuesta (MVC, TDD, DAO, SOLID y Seguridad)	12
+
+3.2.2 Casos de uso	14
+
+3.2.3 Diseño de clases	15
+
+3.2.4 Diseño de la base de datos (PostgreSQL 15)	16
+
+3.2.5 Diseño de interfaces gráficas UX/UI	18
+
+3.2.5.1 Diseño de prototipos de interfaces	18
+
+3.2.5.2 Diseño de navegación y experiencia de usuario	19
+
+## 3.3 Implementación del Sistema	20
+
+3.3.1 Implementación de la estructura del proyecto	20
+
+3.3.2 Utilización de recursos y librerías Java 17	20
+
+3.3.3 Implementación de los módulos y funcionalidades	21
+
+3.3.5 Implementación de mecanismos de seguridad	22
+
+## 3.4 Control de Versiones del Proyecto	23
+
+3.4.1 Configuración e inicialización de Git	23
+
+3.4.2 Creación y gestión del repositorio en GitHub	23
+
+3.4.3 Gestión de ramas (Branches / GitFlow)	23
+
+3.4.4 Registro de cambios (Commits) y sincronización	24
+
+## 3.5 Pruebas y Validación del Sistema	24
+
+3.5.1 Aplicación del enfoque TDD (Test Driven Development)	24
+
+3.5.2 Diseño de casos de prueba y ejecución con JUnit 5	25
+
+## 3.6 Construcción del Producto Final	26
+
+3.6.1 Integración de los componentes del sistema	26
+
+3.6.2 Validación del cumplimiento del alcance comprometido (55% vs 40%)	26
+
+## CONCLUSIONES	27
+
+## RECOMENDACIONES	28
+
+## BIBLIOGRAFÍA	29
+
+## ANEXOS	30
+
+Anexo 1: Project Charter del Proyecto	30
+
+Anexo 2: Modelo Lean Canvas Formal	30
+
+Anexo 3: Encuestas y Validación con Usuarios	31
+
+Anexo 4: Evidencias de Prototipos UX/UI	31
+
+Anexo 5: Evidencias de Implementación del Sistema	31
+
+Anexo 6: Evidencias del Repositorio GitHub	31
+
+Anexo 7: Evidencias de Pruebas Unitarias y de Integración	31
+
+Anexo 8: Matriz de Trazabilidad de Requisitos	31
+
+
+# Índice de Tablas
+
+Tabla 1. Comparativa de alternativas de solución tecnológica para el switch transaccional	9
+
+Tabla 2. Requisitos funcionales formalizados para SIGIR - BCRP (Hito Entregable III)	11
+
+Tabla 3. Requisitos no funcionales bajo norma ISO/IEC 25010	12
+
+Tabla 4. Matriz de cumplimiento de principios SOLID en el backend Spring Boot 3	14
+
+Tabla 5. Diccionario y estructura de entidades relacionales del esquema BCRP	17
+
+Tabla 6. Resumen de ejecución de pruebas unitarias bajo metodología TDD (Maven Surefire)	25
+
+Tabla 7. Matriz de validación del alcance comprometido (Semana 12) frente al desarrollo real	26
+
+Tabla 8. Matriz de trazabilidad integral de ingeniería	31
+
+
+# Índice de Figuras
+
+Figura 1. Modelado de procesos de supervisión BCRP en notación BPMN 2.0 (AS-IS frente a TO-BE)	6
+
+Figura 2. Diagrama de casos de uso del sistema SIGIR - BCRP bajo estándar UML 2.5	14
+
+Figura 3. Diagrama de clases del dominio transaccional BCRP	15
+
+Figura 4. Diagrama de secuencia para la ingesta asíncrona de telemetría y auto-apertura de tickets	15
+
+Figura 5. Diagrama de secuencia para el registro asistido y mitigación de incidentes operacionales	16
+
+Figura 6. Arquitectura hexagonal desacoplada del sistema SIGIR - BCRP	13
+
+Figura 7. Consola NOC Web en tiempo real para monitoreo de switches bancarios	18
+
+Figura 8. Prototipos de interfaz de usuario para la Alternativa 1 (Monolito Hexagonal)	7
+
+Figura 9. Prototipos de interfaz de usuario para la Alternativa 2 (Clean API y SPA NOC Reactiva)	7
+
+Figura 10. Prototipos de interfaz de usuario para la Alternativa 3 (Microservicios Event-Driven)	8
+
+Figura 11. Diagrama Entidad-Relación (DER) Físico y Lógico para PostgreSQL 15	16
+
+Figura 12. Diagrama de clases de diseño en Spring Boot 3 y puertos de persistencia	15
+
+Figura 13. Cronograma visual de evolución del proyecto	8
+
+Figura 14. Jerarquía de paquetes y estructura Clean Architecture en el IDE de desarrollo	20
+
+Figura 15. Estrategia de ramas GitFlow y trazabilidad de commits en GitHub	24
+
+Figura 16. Evidencias de ejecución exitosa de pruebas unitarias con JUnit 5 y Mockito (Maven Surefire)	25
+
+Figura 17. Matriz gráfica de validación de alcance funcional comprometido (55% acumulado)	26
 
 # Capítulo 1. Aspectos Generales
 

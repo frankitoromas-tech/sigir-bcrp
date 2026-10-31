@@ -43,7 +43,7 @@ FONT_SIZE_CODE = Pt(9.5)
 # ==========================================
 # FUNCIONES AUXILIARES DE ESTILIZACIÓN APA 7
 # ==========================================
-def p_body(text, space_after=6, space_before=0, line_spacing=1.25, bold=False, italic=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
+def p_body(text, space_after=4, space_before=0, line_spacing=1.15, bold=False, italic=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
     p = doc.add_paragraph()
     p.alignment = align
     p.paragraph_format.space_before = Pt(space_before)
@@ -58,11 +58,10 @@ def p_body(text, space_after=6, space_before=0, line_spacing=1.25, bold=False, i
     return p
 
 def p_h1(text):
-    # Nivel 1 APA 7: Centrado, Negrita, Caso de Título
-    p = doc.add_paragraph()
+    p = doc.add_paragraph(style="Heading 1")
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(14)
-    p.paragraph_format.space_after = Pt(8)
+    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_after = Pt(4)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(text)
     r.font.name = FONT_FAMILY
@@ -72,11 +71,10 @@ def p_h1(text):
     return p
 
 def p_h2(text):
-    # Nivel 2 APA 7: Alineado a la izquierda, Negrita, Caso de Título
-    p = doc.add_paragraph()
+    p = doc.add_paragraph(style="Heading 2")
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.space_before = Pt(12)
-    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.space_before = Pt(10)
+    p.paragraph_format.space_after = Pt(3)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(text)
     r.font.name = FONT_FAMILY
@@ -86,11 +84,10 @@ def p_h2(text):
     return p
 
 def p_h3(text):
-    # Nivel 3 APA 7: Alineado a la izquierda, Negrita Cursiva, Caso de Título
-    p = doc.add_paragraph()
+    p = doc.add_paragraph(style="Heading 3")
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.space_before = Pt(10)
-    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.space_before = Pt(8)
+    p.paragraph_format.space_after = Pt(2)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(text)
     r.font.name = FONT_FAMILY
@@ -118,6 +115,42 @@ def p_code(code_text):
         pPr.append(shd)
     except:
         pass
+    return p
+
+
+def add_toc_line(title_text, page_text, level=1, bold=False, italic=False):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.line_spacing = 1.08
+    
+    # Sangrías según nivel
+    if level == 1:
+        p.paragraph_format.left_indent = Inches(0.0)
+    elif level == 2:
+        p.paragraph_format.left_indent = Inches(0.25)
+    elif level == 3:
+        p.paragraph_format.left_indent = Inches(0.50)
+    else:
+        p.paragraph_format.left_indent = Inches(0.70)
+        
+    pPr = p._p.get_or_add_pPr()
+    tabs = parse_xml(f'<w:tabs {nsdecls("w")}><w:tab w:val="right" w:leader="dot" w:pos="9360"/></w:tabs>')
+    pPr.append(tabs)
+    
+    r_t = p.add_run(title_text)
+    r_t.font.name = FONT_FAMILY
+    r_t.font.size = Pt(11 if level <= 2 else 10.5)
+    r_t.font.bold = bold
+    r_t.font.italic = italic
+    r_t.font.color.rgb = RGBColor(15, 23, 42) if bold else RGBColor(51, 65, 85)
+    
+    r_p = p.add_run(f"\t{page_text}")
+    r_p.font.name = FONT_FAMILY
+    r_p.font.size = Pt(11 if level <= 2 else 10.5)
+    r_p.font.bold = bold
+    r_p.font.color.rgb = RGBColor(15, 23, 42)
     return p
 
 def add_apa7_figure(fig_num, fig_title, img_filename, note_text, width_inches=6.0):
@@ -448,12 +481,121 @@ p_body("El presente informe técnico formaliza el diseño de arquitectura y el a
 
 p_body("Palabras clave: Arquitectura hexagonal, Banco Central de Reserva del Perú, inmutabilidad, interoperabilidad, pagos digitales, Spring Boot, telemetría, TDD.", italic=True)
 
+doc.add_page_break()
+
 p_h1("Abstract")
 p_body("This technical academic report formalizes the architectural design and implementation progress of the Comprehensive Regulatory Incident Management System for Digital Payments (SIGIR - BCRP), corresponding to Milestone Deliverable III of the course. The technological solution addresses the regulatory requirement of the Central Reserve Bank of Peru (BCRP) to objectively, continuously, and immutably monitor the operational availability of entities operating within the national instant digital transfer switch (BCP - Yape, Interbank - Plin, Tunki, and CCE), in compliance with Circular BCRP N° 0011-2023. The software architecture was designed following Clean Architecture and Hexagonal Architecture principles in Java 17 and Spring Boot 3, strictly decoupling core domain rules from web and persistence adapters. A concurrent multithreaded telemetry worker was implemented using ScheduledExecutorService to poll financial endpoints every 30 seconds, reducing Mean Time to Detect (MTTD) from over 180 minutes to less than 30 seconds. For data storage, an immutable relational schema was structured in PostgreSQL 15 reinforced with append-only PL/pgSQL triggers that block UPDATE and DELETE operations on historical logs, guaranteeing forensic non-repudiation during regulatory audits. Furthermore, the system compiles official SFT compliance reports featuring cryptographic SHA-256 hashing. Automated testing using JUnit 5 and Mockito demonstrates a 100% pass rate across 8 test cases, validating an accumulated functional completion rate of 55%, which surpasses the 40% threshold mandated for this milestone.")
 
 p_body("Keywords: Hexagonal architecture, Central Reserve Bank of Peru, immutability, interoperability, digital payments, Spring Boot, telemetry, TDD.", italic=True)
 
 doc.add_page_break()
+
+# ==========================================
+# 3. ÍNDICE GENERAL Y DE CONTENIDO
+# ==========================================
+p_h1("Índice General")
+
+add_toc_line("Resumen", "ii", level=1, italic=True)
+add_toc_line("Abstract", "iii", level=1, italic=True)
+add_toc_line("Índice de Tablas", "v", level=1, italic=True)
+add_toc_line("Índice de Figuras", "vi", level=1, italic=True)
+
+add_toc_line("CAPÍTULO 1. ASPECTOS GENERALES", "1", level=1, bold=True)
+add_toc_line("1.1 Definición del Problema", "1", level=2, bold=True)
+add_toc_line("1.1.1 Descripción del problema", "1", level=3)
+add_toc_line("1.1.2 Diagramas de procesos de negocio (BPMN 2.0)", "2", level=3)
+add_toc_line("1.2 Planteamiento de Alternativas de Solución", "4", level=2, bold=True)
+add_toc_line("1.3 Definición de Objetivos", "5", level=2, bold=True)
+add_toc_line("1.3.1 Objetivo general", "5", level=3)
+add_toc_line("1.3.2 Objetivos específicos", "5", level=3)
+add_toc_line("1.3.3 Alcances y limitaciones", "6", level=3)
+add_toc_line("1.3.4 Justificación", "6", level=3)
+add_toc_line("1.3.5 Estado del arte", "7", level=3)
+
+add_toc_line("CAPÍTULO 2. MARCO TEÓRICO", "8", level=1, bold=True)
+add_toc_line("2.1 Fundamento Teórico", "8", level=2, bold=True)
+
+add_toc_line("CAPÍTULO 3. DESARROLLO DE LA SOLUCIÓN", "10", level=1, bold=True)
+add_toc_line("3.1 Análisis del Sistema", "10", level=2, bold=True)
+add_toc_line("3.1.1 Requisitos funcionales (RF-01 a RF-05)", "10", level=3)
+add_toc_line("3.1.2 Requisitos no funcionales bajo norma ISO/IEC 25010", "11", level=3)
+add_toc_line("3.2 Diseño del Sistema", "12", level=2, bold=True)
+add_toc_line("3.2.1 Arquitectura inicial del sistema", "12", level=3)
+add_toc_line("3.2.1.1 Arquitectura propuesta (MVC, TDD, DAO, SOLID y Seguridad)", "12", level=4)
+add_toc_line("3.2.2 Casos de uso", "14", level=3)
+add_toc_line("3.2.3 Diseño de clases", "15", level=3)
+add_toc_line("3.2.4 Diseño de la base de datos (PostgreSQL 15)", "16", level=3)
+add_toc_line("3.2.5 Diseño de interfaces gráficas UX/UI", "18", level=3)
+add_toc_line("3.2.5.1 Diseño de prototipos de interfaces", "18", level=4)
+add_toc_line("3.2.5.2 Diseño de navegación y experiencia de usuario", "19", level=4)
+add_toc_line("3.3 Implementación del Sistema", "20", level=2, bold=True)
+add_toc_line("3.3.1 Implementación de la estructura del proyecto", "20", level=3)
+add_toc_line("3.3.2 Utilización de recursos y librerías Java 17", "20", level=3)
+add_toc_line("3.3.3 Implementación de los módulos y funcionalidades", "21", level=3)
+add_toc_line("3.3.5 Implementación de mecanismos de seguridad", "22", level=3)
+add_toc_line("3.4 Control de Versiones del Proyecto", "23", level=2, bold=True)
+add_toc_line("3.4.1 Configuración e inicialización de Git", "23", level=3)
+add_toc_line("3.4.2 Creación y gestión del repositorio en GitHub", "23", level=3)
+add_toc_line("3.4.3 Gestión de ramas (Branches / GitFlow)", "23", level=3)
+add_toc_line("3.4.4 Registro de cambios (Commits) y sincronización", "24", level=3)
+add_toc_line("3.5 Pruebas y Validación del Sistema", "24", level=2, bold=True)
+add_toc_line("3.5.1 Aplicación del enfoque TDD (Test Driven Development)", "24", level=3)
+add_toc_line("3.5.2 Diseño de casos de prueba y ejecución con JUnit 5", "25", level=3)
+add_toc_line("3.6 Construcción del Producto Final", "26", level=2, bold=True)
+add_toc_line("3.6.1 Integración de los componentes del sistema", "26", level=3)
+add_toc_line("3.6.2 Validación del cumplimiento del alcance comprometido (55% vs 40%)", "26", level=3)
+
+add_toc_line("CONCLUSIONES", "27", level=1, bold=True)
+add_toc_line("RECOMENDACIONES", "28", level=1, bold=True)
+add_toc_line("BIBLIOGRAFÍA", "29", level=1, bold=True)
+add_toc_line("ANEXOS", "30", level=1, bold=True)
+add_toc_line("Anexo 1: Project Charter del Proyecto", "30", level=2)
+add_toc_line("Anexo 2: Modelo Lean Canvas Formal", "30", level=2)
+add_toc_line("Anexo 3: Encuestas y Validación con Usuarios", "31", level=2)
+add_toc_line("Anexo 4: Evidencias de Prototipos UX/UI", "31", level=2)
+add_toc_line("Anexo 5: Evidencias de Implementación del Sistema", "31", level=2)
+add_toc_line("Anexo 6: Evidencias del Repositorio GitHub", "31", level=2)
+add_toc_line("Anexo 7: Evidencias de Pruebas Unitarias y de Integración", "31", level=2)
+add_toc_line("Anexo 8: Matriz de Trazabilidad de Requisitos", "31", level=2)
+
+doc.add_page_break()
+
+# ==========================================
+# 4. ÍNDICE DE TABLAS E ÍNDICE DE FIGURAS
+# ==========================================
+p_h1("Índice de Tablas")
+add_toc_line("Tabla 1. Comparativa de alternativas de solución tecnológica para el switch transaccional", "9", level=1)
+add_toc_line("Tabla 2. Requisitos funcionales formalizados para SIGIR - BCRP (Hito Entregable III)", "11", level=1)
+add_toc_line("Tabla 3. Requisitos no funcionales bajo norma ISO/IEC 25010", "12", level=1)
+add_toc_line("Tabla 4. Matriz de cumplimiento de principios SOLID en el backend Spring Boot 3", "14", level=1)
+add_toc_line("Tabla 5. Diccionario y estructura de entidades relacionales del esquema BCRP", "17", level=1)
+add_toc_line("Tabla 6. Resumen de ejecución de pruebas unitarias bajo metodología TDD (Maven Surefire)", "25", level=1)
+add_toc_line("Tabla 7. Matriz de validación del alcance comprometido (Semana 12) frente al desarrollo real", "26", level=1)
+add_toc_line("Tabla 8. Matriz de trazabilidad integral de ingeniería", "31", level=1)
+
+p = doc.add_paragraph()
+p.paragraph_format.space_before = Pt(8)
+p.paragraph_format.space_after = Pt(4)
+
+p_h1("Índice de Figuras")
+add_toc_line("Figura 1. Modelado de procesos de supervisión BCRP en notación BPMN 2.0 (AS-IS frente a TO-BE)", "6", level=1)
+add_toc_line("Figura 2. Diagrama de casos de uso del sistema SIGIR - BCRP bajo estándar UML 2.5", "14", level=1)
+add_toc_line("Figura 3. Diagrama de clases del dominio transaccional BCRP", "15", level=1)
+add_toc_line("Figura 4. Diagrama de secuencia para la ingesta asíncrona de telemetría y auto-apertura de tickets", "15", level=1)
+add_toc_line("Figura 5. Diagrama de secuencia para el registro asistido y mitigación de incidentes operacionales", "16", level=1)
+add_toc_line("Figura 6. Arquitectura hexagonal desacoplada del sistema SIGIR - BCRP", "13", level=1)
+add_toc_line("Figura 7. Consola NOC Web en tiempo real para monitoreo de switches bancarios", "18", level=1)
+add_toc_line("Figura 8. Prototipos de interfaz de usuario para la Alternativa 1 (Monolito Hexagonal)", "7", level=1)
+add_toc_line("Figura 9. Prototipos de interfaz de usuario para la Alternativa 2 (Clean API y SPA NOC Reactiva)", "7", level=1)
+add_toc_line("Figura 10. Prototipos de interfaz de usuario para la Alternativa 3 (Microservicios Event-Driven)", "8", level=1)
+add_toc_line("Figura 11. Diagrama Entidad-Relación (DER) Físico y Lógico para PostgreSQL 15", "16", level=1)
+add_toc_line("Figura 12. Diagrama de clases de diseño en Spring Boot 3 y puertos de persistencia", "15", level=1)
+add_toc_line("Figura 13. Cronograma visual de evolución del proyecto", "8", level=1)
+add_toc_line("Figura 14. Jerarquía de paquetes y estructura Clean Architecture en el IDE de desarrollo", "20", level=1)
+add_toc_line("Figura 15. Estrategia de ramas GitFlow y trazabilidad de commits en GitHub", "24", level=1)
+add_toc_line("Figura 16. Evidencias de ejecución exitosa de pruebas unitarias con JUnit 5 y Mockito (Maven Surefire)", "25", level=1)
+add_toc_line("Figura 17. Matriz gráfica de validación de alcance funcional comprometido (55% acumulado)", "26", level=1)
+
 
 # ==========================================
 # CAPÍTULO 1 - ASPECTOS GENERALES
