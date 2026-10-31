@@ -55,13 +55,13 @@ flowchart LR
 
 | Bloque / Minutos | Integrante | Rol Oficial en el Proyecto | Diapositivas Clave | Misión Pedagógica en la Exposición |
 | :---: | :--- | :--- | :---: | :--- |
-| **Bloque 1**<br>*(00:00 - 03:30)*<br>*(3.5 min)* | **Fernando Romero Barrientos**<br>`(U20247659)` | **Ingeniero de Requisitos & Procesos** | Diapositivas 1, 2, 3, 4, 6, 7, 8 | Conectar con la empatía humana del ciudadano, evidenciar la falla de mercado (asimetría informativa), el marco legal (Ley 29440) y demostrar disciplina metodológica en Scrum. |
-| **Bloque 2**<br>*(03:30 - 08:00)*<br>*(4.5 min)* | **Frank Vargas Huamán**<br>`(U22204655)` | **Líder Técnico & Arquitecto de Software** | Diapositivas 5, 11, 12, 13, 14, 17 | Desplegar la artillería técnica: explicar con analogías sencillas por qué la Arquitectura Hexagonal y la persistencia inmutable en PostgreSQL blindan al BCRP. |
-| **Bloque 3**<br>*(08:00 - 12:00)*<br>*(4.0 min)* | **Joel Olaya Villegas**<br>`(U19313274)` | **Ingeniero de Software & QA** | Diapositivas 9, 10, 15, 16, 18, 19, 20 + Live Demo | Concretar con hechos: romper un switch financiero en vivo, ver nacer la alerta, demostrar las 8 pruebas JUnit passing y compilar el archivo normativo con hash SHA-256. |
+| **Bloque 1**<br>*(00:00 - 03:30)*<br>*(3.5 min)* | **Fernando Romero Requejo**<br>`(U21216410)` | **Ingeniero de Requisitos & Procesos** | Diapositivas 1, 2, 3, 4, 6, 7, 8 | Conectar con la empatía humana del ciudadano, evidenciar la falla de mercado (asimetría informativa), el marco legal (Ley 29440) y demostrar disciplina metodológica en Scrum. |
+| **Bloque 2**<br>*(03:30 - 08:00)*<br>*(4.5 min)* | **Frank Vargas Huamán**<br>`(U23243651)` | **Líder Técnico & Arquitecto de Software** | Diapositivas 5, 11, 12, 13, 14, 17 | Desplegar la artillería técnica: explicar con analogías sencillas por qué la Arquitectura Hexagonal y la persistencia inmutable en PostgreSQL blindan al BCRP. |
+| **Bloque 3**<br>*(08:00 - 12:00)*<br>*(4.0 min)* | **Joel Olaya Vivas**<br>`(U21221688)` | **Ingeniero de Software & QA** | Diapositivas 9, 10, 15, 16, 18, 19, 20 + Live Demo | Concretar con hechos: romper un switch financiero en vivo, ver nacer la alerta, demostrar las 8 pruebas JUnit passing y compilar el archivo normativo con hash SHA-256. |
 
 ---
 
-# 🏛️ BLOQUE 1: FERNANDO ROMERO BARRIENTOS (00:00 - 03:30)
+# 🏛️ BLOQUE 1: FERNANDO ROMERO REQUEJO (00:00 - 03:30)
 ### *Tema: El Gancho Humano, la Problemática Nacional y la Gobernanza del Proyecto*
 **Diapositivas de Apoyo:** 1 (Portada), 2 (Aspectos Estratégicos), 3 (Canvas BMC), 4 (Realidad Problemática), 6 (Project Charter y RACI), 7 (EDT a 3 Niveles), 8 (Cronograma Gantt Semana 8) e IEEE 830.  
 **Tono sugerido:** Empático, seguro, claro, institucional y cercano.  
@@ -263,7 +263,7 @@ flowchart LR
 
 ---
 
-# 🧪 BLOQUE 3: JOEL OLAYA VILLEGAS (08:00 - 12:00)
+# 🧪 BLOQUE 3: JOEL OLAYA VIVAS (08:00 - 12:00)
 ### *Tema: Casos de Uso, Demostración en Vivo, Pruebas Unitarias JUnit 5 y Compilación SFT*
 **Diapositivas de Apoyo:** 9 (Diagrama de Actores), 10 (Casos de Uso UML), 15 (Matriz de Trazabilidad), 16 (Suite de Pruebas Unitarias), 18 (Distribución de Sustentación), 19 (Conclusiones) y 20 (Cierre y Agradecimientos) + Consola Web NOC (`index.html`), Terminal Maven (`mvn test`) y Módulo de Reportes (`reportes.html`).  
 **Tono sugerido:** Dinámico, empírico, seguro, ágil y enfocado en la evidencia probatoria.  
