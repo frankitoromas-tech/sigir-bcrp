@@ -34,6 +34,109 @@ async function getJSON(path) {
 }
 
 /**
+ * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+ */
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+if (typeof window !== 'undefined' && !window.escapeHTML) {
+  window.escapeHTML = escapeHTML;
+}
+
+/**
+ * Implementación determinista en JavaScript puro de SHA-256 (FIPS 180-4)
+ */
+function sha256PureFallback(ascii) {
+  function rightRotate(value, amount) {
+    return (value >>> amount) | (value << (32 - amount));
+  }
+  const mathPow = Math.pow;
+  const maxWord = mathPow(2, 32);
+  let result = '';
+  const words = [];
+  const utf8Str = unescape(encodeURIComponent(ascii));
+  const asciiBitLength = utf8Str.length * 8;
+  let hash = [];
+  const k = [];
+  let primeCounter = 0;
+  const isComposite = {};
+  for (let candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (let i = candidate * candidate; i < 313; i += candidate) { isComposite[i] = true; }
+      hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+      k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+    }
+  }
+  let padded = utf8Str + '\x80';
+  while ((padded.length % 64) !== 56) padded += '\x00';
+  for (let i = 0; i < padded.length; i++) {
+    const j = padded.charCodeAt(i);
+    words[i >> 2] |= j << (((3 - i) % 4) * 8);
+  }
+  words[words.length] = ((asciiBitLength / maxWord) | 0);
+  words[words.length] = (asciiBitLength | 0);
+  for (let j = 0; j < words.length;) {
+    const w = words.slice(j, j += 16);
+    const oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (let i = 0; i < 64; i++) {
+      const w15 = w[i - 15], w2 = w[i - 2];
+      const s0 = i < 16 ? w[i] : (w[i] = ((rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10)) + w[i - 16]) | 0);
+      const ch = (hash[4] & hash[5]) ^ (~hash[4] & hash[6]);
+      const maj = (hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]);
+      const s1 = rightRotate(hash[4], 6) ^ rightRotate(hash[4], 11) ^ rightRotate(hash[4], 25);
+      const s0_round = rightRotate(hash[0], 2) ^ rightRotate(hash[0], 13) ^ rightRotate(hash[0], 22);
+      const t1 = (hash[7] + s1 + ch + k[i] + w[i]) | 0;
+      const t2 = (s0_round + maj) | 0;
+      hash = [(t1 + t2) | 0].concat(hash);
+      hash[4] = (hash[4] + t1) | 0;
+    }
+    for (let i = 0; i < 8; i++) { hash[i] = (hash[i] + oldHash[i]) | 0; }
+  }
+  for (let i = 0; i < 8; i++) {
+    for (let j = 3; j >= 0; j--) {
+      const b = (hash[i] >> (8 * j)) & 255;
+      result += (b < 16 ? '0' : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+/**
+ * Función criptográfica defensiva SHA-256 nativa con verificación de 64 caracteres hex
+ */
+async function calcularSha256(str) {
+  const raw = String(str || '');
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+    try {
+      const buffer = new TextEncoder().encode(raw);
+      const buf = await window.crypto.subtle.digest('SHA-256', buffer);
+      const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+      if (hash.length === 64 && /^[0-9a-f]{64}$/.test(hash)) {
+        return hash;
+      }
+    } catch (e) {
+      console.warn('[SHA-256] Crypto.subtle fallo en reportes:', e);
+    }
+  }
+  if (typeof window !== 'undefined' && typeof window.calcularSha256 === 'function') {
+    try {
+      const res = await window.calcularSha256(raw);
+      if (res && res.length === 64) return res;
+    } catch (e) {}
+  }
+  const fallbackHex = String(sha256PureFallback(raw) || '').toLowerCase();
+  return fallbackHex.padStart(64, '0').slice(0, 64);
+}
+
+/**
  * Renderizado de gráfico de líneas ejecutiva moderna de disponibilidad Uptime con umbral SLA 99.90%
  * Paleta: Fondo oscuro transparente, línea verde esmeralda con área degradada sutil, etiquetas en JetBrains Mono.
  */
@@ -309,24 +412,34 @@ async function cargar() {
       const pctColorClass = cumpleSla ? 'sla-ok' : 'sla-warn';
       const pctColorHex = cumpleSla ? '#34D399' : '#FBBF24';
       const barFillGrad = cumpleSla ? 'linear-gradient(90deg, #059669, #10B981)' : 'linear-gradient(90deg, #D97706, #F59E0B)';
-      const clampedPct = Math.min(100, Math.max(0, r.uptimePct));
+      const clampedPct = Math.min(100, Math.max(0, Number(r.uptimePct) || 0));
+
+      const nombreSafe = escapeHTML(r.nombreEntidad);
+      const codigoSafe = escapeHTML(r.codigoBcrp);
+      const totalIncSafe = parseInt(r.totalIncidentes, 10) || 0;
+      const criticosSafe = parseInt(r.incidentesCriticos, 10) || 0;
+      const mttrSafe = escapeHTML((Number(r.mttrMinutos) || 0).toFixed(1));
+      const mttdSafe = escapeHTML((Number(r.mttdMinutos) || 0).toFixed(1));
+      const minIndispSafe = parseInt(r.minutosIndisponibles, 10) || 0;
+      const uptimeSafe = escapeHTML((Number(r.uptimePct) || 0).toFixed(2));
+      const statusLabelSafe = escapeHTML(statusLabel);
 
       return `
       <tr>
-        <td style="font-weight:600;color:var(--text-primary);">${r.nombreEntidad}</td>
-        <td class="ticket-mono">${r.codigoBcrp}</td>
-        <td>${r.totalIncidentes}</td>
-        <td><span class="badge-severidad ${r.incidentesCriticos > 0 ? 'critica' : 'baja'}">${r.incidentesCriticos}</span></td>
-        <td style="font-family:var(--font-mono);">${r.mttrMinutos.toFixed(1)}</td>
-        <td style="font-family:var(--font-mono);">${r.mttdMinutos.toFixed(1)}</td>
-        <td style="font-family:var(--font-mono);">${r.minutosIndisponibles}</td>
+        <td style="font-weight:600;color:var(--text-primary);">${nombreSafe}</td>
+        <td class="ticket-mono">${codigoSafe}</td>
+        <td>${totalIncSafe}</td>
+        <td><span class="badge-severidad ${criticosSafe > 0 ? 'critica' : 'baja'}">${criticosSafe}</span></td>
+        <td style="font-family:var(--font-mono);">${mttrSafe}</td>
+        <td style="font-family:var(--font-mono);">${mttdSafe}</td>
+        <td style="font-family:var(--font-mono);">${minIndispSafe}</td>
         <td>
           <div class="sla-progress-cell" style="display:flex;flex-direction:column;gap:4px;min-width:130px;">
             <div class="sla-progress-header" style="display:flex;justify-content:space-between;align-items:center;">
-              <span class="sla-progress-val ${pctColorClass}" style="font-family:var(--font-mono);font-size:0.8rem;font-weight:700;color:${pctColorHex};">${r.uptimePct.toFixed(2)}%</span>
-              <span class="badge-estado ${statusClass}" style="font-size:0.65rem;padding:1px 6px;">${statusLabel}</span>
+              <span class="sla-progress-val ${pctColorClass}" style="font-family:var(--font-mono);font-size:0.8rem;font-weight:700;color:${pctColorHex};">${uptimeSafe}%</span>
+              <span class="badge-estado ${statusClass}" style="font-size:0.65rem;padding:1px 6px;">${statusLabelSafe}</span>
             </div>
-            <div class="sla-progress-track" style="height:5px;width:100%;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;position:relative;" title="Uptime: ${r.uptimePct.toFixed(2)}% | Meta SLA: >= 99.90%">
+            <div class="sla-progress-track" style="height:5px;width:100%;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;position:relative;" title="Uptime: ${uptimeSafe}% | Meta SLA: >= 99.90%">
               <div class="sla-progress-fill ${pctColorClass}" style="height:100%;width:${clampedPct}%;background:${barFillGrad};border-radius:9999px;"></div>
             </div>
           </div>
@@ -466,9 +579,8 @@ document.getElementById('btnSFT')?.addEventListener('click', async () => {
       raw += `DETALLE|INC-20261003-${10001 + idx}|${r.codigoBcrp}|${r.nombreEntidad}|DISP_SERV|CRITICA|20261003-093000|20261003-110500|AUTOMATICO|SWITCH_PAGOS\n`;
     });
 
-    // Calcular hash SHA-256 criptográfico con Web Crypto API (64 caracteres hex)
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    // Calcular hash SHA-256 criptográfico con Web Crypto API defensivo (64 caracteres hex)
+    const hash = await calcularSha256(raw);
     raw += `FOOTER|${hash}`;
 
     lastSFT = raw;
@@ -497,16 +609,23 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
     const r = await fetch(BASE + '/reportes', { headers: { Authorization: AUTH } });
     if (r.ok) {
       const list = await r.json();
-      document.getElementById('tbodyHist').innerHTML = list.map(x => `
+      document.getElementById('tbodyHist').innerHTML = list.map(x => {
+        const idSafe = parseInt(x.idReporte ?? x.id, 10) || 0;
+        const numEnvioSafe = escapeHTML(x.numeroEnvio);
+        const nombreArchivoSafe = escapeHTML(x.nombreArchivo);
+        const totalRegSafe = parseInt(x.totalRegistros, 10) || 0;
+        const hashRaw = String(x.hashSha256 || '');
+        const hashDisplay = escapeHTML(hashRaw.slice(0, 16));
+        return `
         <tr>
-          <td>${x.idReporte ?? x.id ?? ''}</td>
-          <td class="ticket-mono">${x.numeroEnvio}</td>
-          <td>${x.nombreArchivo}</td>
-          <td>${x.totalRegistros}</td>
-          <td style="font-family:var(--font-mono);font-size:.7rem;color:#38BDF8">${(x.hashSha256 || '').slice(0, 16)}…</td>
-          <td><button class="btn-action-table" onclick="window.open('${BASE}/reportes/${x.idReporte ?? x.id}/descargar-txt')">TXT</button></td>
+          <td>${idSafe}</td>
+          <td class="ticket-mono">${numEnvioSafe}</td>
+          <td>${nombreArchivoSafe}</td>
+          <td>${totalRegSafe}</td>
+          <td style="font-family:var(--font-mono);font-size:.7rem;color:#38BDF8">${hashDisplay}…</td>
+          <td><button class="btn-action-table" onclick="window.open('${BASE}/reportes/${idSafe}/descargar-txt')">TXT</button></td>
         </tr>
-      `).join('');
+      `}).join('');
       return;
     }
     throw new Error('Fallback');
@@ -517,16 +636,23 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
       { idReporte: 2, numeroEnvio: 'SFT-BCRP-20260915-1830', nombreArchivo: 'SFT_BCRP_PAGOS_20260915.txt', totalRegistros: 2, hashSha256: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' },
       { idReporte: 3, numeroEnvio: 'SFT-BCRP-20261001-0900', nombreArchivo: 'SFT_BCRP_PAGOS_20261001.txt', totalRegistros: 4, hashSha256: '4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a' }
     ];
-    document.getElementById('tbodyHist').innerHTML = mockHist.map(x => `
+    document.getElementById('tbodyHist').innerHTML = mockHist.map(x => {
+      const idSafe = parseInt(x.idReporte, 10) || 0;
+      const numEnvioSafe = escapeHTML(x.numeroEnvio);
+      const nombreArchivoSafe = escapeHTML(x.nombreArchivo);
+      const totalRegSafe = parseInt(x.totalRegistros, 10) || 0;
+      const hashRaw = String(x.hashSha256 || '');
+      const hashDisplay = escapeHTML(hashRaw.slice(0, 16));
+      return `
       <tr>
-        <td>${x.idReporte}</td>
-        <td class="ticket-mono">${x.numeroEnvio}</td>
-        <td>${x.nombreArchivo}</td>
-        <td>${x.totalRegistros}</td>
-        <td style="font-family:var(--font-mono);font-size:.7rem;color:#38BDF8">${x.hashSha256.slice(0, 16)}…</td>
-        <td><button class="btn-action-table" onclick="alert('Descargando archivo histórico firmado SHA-256: ${x.nombreArchivo}')">TXT</button></td>
+        <td>${idSafe}</td>
+        <td class="ticket-mono">${numEnvioSafe}</td>
+        <td>${nombreArchivoSafe}</td>
+        <td>${totalRegSafe}</td>
+        <td style="font-family:var(--font-mono);font-size:.7rem;color:#38BDF8">${hashDisplay}…</td>
+        <td><button class="btn-action-table" data-filename="${nombreArchivoSafe}" onclick="alert('Descargando archivo histórico firmado SHA-256: ' + this.getAttribute('data-filename'))">TXT</button></td>
       </tr>
-    `).join('');
+    `}).join('');
   }
 });
 

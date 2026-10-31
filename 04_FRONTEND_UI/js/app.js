@@ -192,6 +192,10 @@ function escapeHTML(str) {
         .replace(/'/g, '&#39;');
 }
 
+if (typeof window !== 'undefined') {
+    window.escapeHTML = escapeHTML;
+}
+
 /**
  * Renderiza los nodos de telemetría de cada entidad financiera participante
  * Incluye canal, código BCRP, latencia dinámica y micro-indicadores de salud NOC.
@@ -203,7 +207,7 @@ function renderizarTelemetria() {
 
     grid.innerHTML = AppState.entidades.map(ent => {
         const esCaido = ent.estado === 'CAIDO';
-        const badgeTexto = esCaido ? 'CONTINGENCIA ACTIVA' : 'OPERATIVO';
+        const badgeTexto = esCaido ? 'CONTINGENCIA' : 'OPERATIVO';
         const badgeClase = esCaido ? 'caido' : 'saludable';
         const nodeClase = esCaido ? 'node-caido' : '';
         
@@ -214,7 +218,7 @@ function renderizarTelemetria() {
             const latVal = typeof ent.latencia === 'number' ? ent.latencia : 18;
             latenciaTexto = `${latVal} ms`;
         }
-        const latenciaColor = esCaido ? '#EF4444' : '#10B981';
+        const latenciaColor = esCaido ? '#F87171' : '#34D399';
 
         const nombreSeguro = escapeHTML(ent.nombre);
         const canalSeguro = escapeHTML(ent.canal);
@@ -459,8 +463,14 @@ function actualizarKpis() {
     const elUptime = document.getElementById('kpiUptime');
 
     if (elTotal) elTotal.innerText = total;
-    if (elCriticos) elCriticos.innerText = criticos;
-    if (elResueltos) elResueltos.innerText = resueltos;
+    if (elCriticos) {
+        elCriticos.innerText = criticos;
+        elCriticos.style.color = criticos > 0 ? '#F87171' : '#F8FAFC';
+    }
+    if (elResueltos) {
+        elResueltos.innerText = resueltos;
+        elResueltos.style.color = '#34D399';
+    }
 
     if (elUptime) {
         let uptimeVal;
@@ -473,7 +483,7 @@ function actualizarKpis() {
             uptimeVal = Math.max(98.50, (99.98 - penalidad)).toFixed(2);
         }
         elUptime.innerText = `${uptimeVal}%`;
-        elUptime.style.color = Number(uptimeVal) >= 99.90 ? '#38BDF8' : '#EF4444';
+        elUptime.style.color = Number(uptimeVal) >= 99.90 ? '#38BDF8' : '#F87171';
     }
 }
 
@@ -750,6 +760,7 @@ function sha256Fallback(ascii) {
 
 /**
  * Función criptográfica auxiliar SHA-256 nativa del navegador con fallback universal determinista
+ * Garantiza digest defensivo canónico de exactamente 64 caracteres hexadecimales en minúsculas.
  */
 async function calcularSha256(str) {
     const raw = String(str || '');
@@ -758,12 +769,16 @@ async function calcularSha256(str) {
             const buffer = new TextEncoder().encode(raw);
             const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+            if (hex.length === 64 && /^[0-9a-f]{64}$/.test(hex)) {
+                return hex;
+            }
         } catch (e) {
             console.warn('[SHA-256] Crypto.subtle falló, usando motor criptográfico local:', e);
         }
     }
-    return sha256Fallback(raw);
+    const fallbackHex = String(sha256Fallback(raw) || '').toLowerCase();
+    return fallbackHex.padStart(64, '0').slice(0, 64);
 }
 
 /**
@@ -791,7 +806,7 @@ function configurarEventosUI() {
         modalManual.classList.remove('active');
     });
 
-    // Envío Formulario Manual
+    // Envío Formulario Manual con Validación Operativa Bancaria Real
     document.getElementById('formRegistroManual')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const idEnt = parseInt(document.getElementById('manualEntidad').value);
@@ -799,7 +814,21 @@ function configurarEventosUI() {
         const cat = document.getElementById('manualCategoria').value;
         const sev = document.getElementById('manualSeveridad').value;
         const serv = document.getElementById('manualServicio').value;
-        const desc = document.getElementById('manualDescripcion').value;
+        const desc = (document.getElementById('manualDescripcion').value || '').trim();
+
+        // Validación estricta de campos para trazabilidad BCRP
+        if (!idEnt || isNaN(idEnt)) {
+            alert('⚠️ Validación BCRP: Debe seleccionar una entidad financiera participante.');
+            document.getElementById('manualEntidad')?.focus();
+            return;
+        }
+
+        if (!desc || desc.length < 15) {
+            alert('⚠️ Validación BCRP: La descripción del incidente debe tener al menos 15 caracteres para cumplir con la trazabilidad normativa.');
+            document.getElementById('manualDescripcion')?.focus();
+            return;
+        }
+
         const ahoraISO = new Date().toISOString();
 
         if (isBackendConnected) {
@@ -966,3 +995,4 @@ window.actualizarKpis = actualizarKpis;
 window.generarReporteSft = generarReporteSft;
 window.simularCaidaAutomatica = simularCaidaAutomatica;
 window.calcularSha256 = calcularSha256;
+window.escapeHTML = escapeHTML;

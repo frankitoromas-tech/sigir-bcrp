@@ -13,6 +13,23 @@
     'use strict';
 
     /**
+     * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+     */
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    if (typeof window !== 'undefined' && !window.escapeHTML) {
+        window.escapeHTML = escapeHTML;
+    }
+
+    /**
      * Estado reactivo interno de la Paleta de Comandos
      */
     const PaletteState = {
@@ -365,15 +382,20 @@
 
         let html = '';
         categoriasMap.forEach((cmdList, categoryName) => {
-            html += `<div class="cmd-group-header">${categoryName}</div>`;
+            const catSafe = escapeHTML(categoryName);
+            html += `<div class="cmd-group-header">${catSafe}</div>`;
 
             cmdList.forEach(({ cmd, flatIndex }) => {
                 const isSelected = flatIndex === PaletteState.selectedIndex;
                 const activeClass = isSelected ? 'active' : '';
 
                 const shortcutsHtml = (cmd.shortcut || [])
-                    .map(key => `<kbd class="cmd-item-kbd">${key}</kbd>`)
+                    .map(key => `<kbd class="cmd-item-kbd">${escapeHTML(key)}</kbd>`)
                     .join('');
+
+                const iconSafe = escapeHTML(cmd.icon);
+                const titleSafe = resaltarCoincidencia(cmd.title, PaletteState.searchQuery);
+                const descSafe = escapeHTML(cmd.description);
 
                 html += `
                     <div 
@@ -383,10 +405,10 @@
                         aria-selected="${isSelected ? 'true' : 'false'}"
                     >
                         <div class="cmd-item-left">
-                            <span class="cmd-item-icon">${cmd.icon}</span>
+                            <span class="cmd-item-icon">${iconSafe}</span>
                             <div class="cmd-item-info">
-                                <span class="cmd-item-title">${resaltarCoincidencia(cmd.title, PaletteState.searchQuery)}</span>
-                                <span class="cmd-item-desc">${cmd.description}</span>
+                                <span class="cmd-item-title">${titleSafe}</span>
+                                <span class="cmd-item-desc">${descSafe}</span>
                             </div>
                         </div>
                         <div class="cmd-item-right">
@@ -416,13 +438,15 @@
     }
 
     /**
-     * Resaltado visual sutil de coincidencias en el título
+     * Resaltado visual sutil de coincidencias en el título con sanitización estricta anti-XSS
      */
     function resaltarCoincidencia(texto, query) {
-        if (!query || !query.trim()) return texto;
+        const textoEscapado = escapeHTML(texto);
+        if (!query || !query.trim()) return textoEscapado;
         const qTrim = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${qTrim})`, 'gi');
-        return texto.replace(regex, '<mark class="cmd-mark">$1</mark>');
+        const qEscapado = escapeHTML(qTrim);
+        const regex = new RegExp(`(${qEscapado})`, 'gi');
+        return textoEscapado.replace(regex, '<mark class="cmd-mark">$1</mark>');
     }
 
     /**

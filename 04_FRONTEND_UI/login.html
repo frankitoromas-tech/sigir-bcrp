@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Institucional | SIGIR - BCRP</title>
+    <title>Portal de Acceso Institucional | SIGIR - BCRP</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: radial-gradient(circle at 50% 20%, #111827 0%, #070B14 100%);
+            background: radial-gradient(circle at 50% 15%, #111827 0%, #06090F 100%);
             margin: 0;
             padding: 24px;
             font-family: var(--font-sans);
@@ -23,106 +23,145 @@
         }
         .login-card {
             width: 100%;
-            max-width: 480px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
+            max-width: 460px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            padding: 40px 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            text-align: center;
+            padding: 36px 32px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            text-align: left;
         }
-        .login-emblem {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
+        .login-header-center {
+            text-align: center;
+            margin-bottom: 24px;
         }
         .login-title {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             font-weight: 800;
             color: #F8FAFC;
             letter-spacing: -0.02em;
-            margin: 0 0 6px 0;
+            margin: 12px 0 4px 0;
         }
         .login-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #94A3B8;
-            margin: 0 0 28px 0;
+            margin: 0;
             line-height: 1.4;
         }
-        .role-selector-label {
-            font-size: 0.75rem;
+        .form-group-login {
+            margin-bottom: 14px;
+        }
+        .form-group-login label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #CBD5E1;
+            margin-bottom: 6px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0B0F17;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: #F8FAFC;
+            font-size: 0.85rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: border-color 150ms ease;
+            box-sizing: border-box;
+        }
+        .login-input:focus {
+            border-color: #E2B357;
+            box-shadow: 0 0 0 2px rgba(226, 179, 87, 0.2);
+        }
+        .login-alert-box {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            margin-bottom: 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #FCA5A5;
+        }
+        .login-alert-box.visible {
+            display: block;
+        }
+        .btn-login-submit {
+            width: 100%;
+            padding: 12px;
+            background: #1E3A8A;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 180ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-login-submit:hover {
+            background: #2563EB;
+            transform: translateY(-1px);
+        }
+        .btn-login-submit:active {
+            transform: scale(0.98);
+        }
+        .quick-access-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .quick-access-title {
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             color: #64748B;
             font-weight: 700;
-            text-align: left;
-            margin-bottom: 12px;
-            display: block;
-        }
-        .role-option-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
             margin-bottom: 10px;
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
-            color: #F8FAFC;
+            display: block;
+            text-align: center;
         }
-        .role-option-btn:hover {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(226, 179, 87, 0.4);
-            transform: translateY(-2px);
+        .quick-role-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
         }
-        .role-option-btn:active {
-            transform: scale(0.98);
-        }
-        .role-avatar-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .btn-quick-role {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-        }
-        .role-info-name {
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: #F8FAFC;
-        }
-        .role-info-desc {
-            font-size: 0.75rem;
-            color: #94A3B8;
-            margin-top: 2px;
-        }
-        .btn-enter-guest {
-            margin-top: 20px;
-            background: transparent;
-            border: none;
-            color: #64748B;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(30, 41, 59, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            color: #CBD5E1;
             font-size: 0.8rem;
             cursor: pointer;
-            text-decoration: underline;
-            transition: color 150ms;
+            transition: all 150ms ease;
+            text-align: left;
         }
-        .btn-enter-guest:hover {
-            color: #94A3B8;
+        .btn-quick-role:hover {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(226, 179, 87, 0.3);
+            color: #F8FAFC;
         }
-        .login-footer {
-            margin-top: 28px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 0.72rem;
+        .role-pill-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .login-footer-meta {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7rem;
             color: #475569;
         }
     </style>
@@ -130,8 +169,8 @@
 <body class="login-page">
 
     <div class="login-card">
-        <div class="login-emblem">
-            <svg class="icon-svg bcrp-emblem" width="48" height="48" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="login-header-center">
+            <svg class="icon-svg bcrp-emblem" width="44" height="44" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
                 <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
                 <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
@@ -143,57 +182,143 @@
                 <rect x="10.5" y="24.5" width="15" height="1.5" rx="0.5" fill="#E2B357"/>
                 <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
             </svg>
+            <h1 class="login-title">SIGIR - BCRP</h1>
+            <p class="login-subtitle">Sistema de Supervisión y Gestión de Incidentes Regulatorios<br>Switch Interbancario CCE &bull; Banco Central de Reserva del Perú</p>
         </div>
 
-        <h1 class="login-title">SIGIR - BCRP</h1>
-        <p class="login-subtitle">Sistema de Supervisión y Gestión de Incidentes Regulatorios<br>Switch Interbancario CCE &bull; Banco Central de Reserva del Perú</p>
+        <div id="loginAlertBox" class="login-alert-box"></div>
 
-        <span class="role-selector-label">Selecciona tu perfil de acceso:</span>
-
-        <button type="button" class="role-option-btn" onclick="iniciarSesionComo('ARQUITECTO')">
-            <div class="role-avatar-circle" style="background: rgba(226,179,87,0.15); color: #E2B357; border: 1px solid #E2B357;">FV</div>
-            <div style="flex:1;">
-                <div class="role-info-name">Frank Vargas Huamán</div>
-                <div class="role-info-desc">Líder Técnico &bull; Arquitecto de Software &amp; NOC Lead (Acceso Total)</div>
+        <form id="formLoginBcrp" onsubmit="procesarLogin(event)">
+            <div class="form-group-login">
+                <label for="txtUsuario">Correo Institucional BCRP</label>
+                <input type="email" id="txtUsuario" class="login-input" placeholder="ejemplo: frank.vargas@bcrp.gob.pe" required autocomplete="username">
             </div>
-            <span style="color:#E2B357; font-size:1.1rem;">&rarr;</span>
-        </button>
 
-        <button type="button" class="role-option-btn" onclick="iniciarSesionComo('OPERADOR')">
-            <div class="role-avatar-circle" style="background: rgba(56,189,248,0.15); color: #38BDF8; border: 1px solid #38BDF8;">OP</div>
-            <div style="flex:1;">
-                <div class="role-info-name">Fernando Romero / Joel Olaya</div>
-                <div class="role-info-desc">Mesa de Ayuda &bull; Operador NOC (Gestión de Tickets)</div>
+            <div class="form-group-login">
+                <label for="txtPassword">Contraseña de Red (Active Directory)</label>
+                <input type="password" id="txtPassword" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
             </div>
-            <span style="color:#38BDF8; font-size:1.1rem;">&rarr;</span>
-        </button>
 
-        <button type="button" class="role-option-btn" onclick="iniciarSesionComo('AUDITOR')">
-            <div class="role-avatar-circle" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid #10B981;">PZ</div>
-            <div style="flex:1;">
-                <div class="role-info-name">Prof. Zamata</div>
-                <div class="role-info-desc">Auditor Regulatorio BCRP &bull; Jurado Evaluador UTP (Solo Lectura)</div>
+            <div class="form-group-login">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label for="txtOtp" style="margin:0;">Token Digital de Seguridad (MFA)</label>
+                    <span style="font-size:0.7rem; color:#E2B357; cursor:pointer;" onclick="generarOtpDemo()">Autogenerar Token</span>
+                </div>
+                <input type="text" id="txtOtp" class="login-input" placeholder="6 dígitos (ej: 849201)" maxlength="6" style="font-family:var(--font-mono); letter-spacing:0.15em;">
             </div>
-            <span style="color:#10B981; font-size:1.1rem;">&rarr;</span>
-        </button>
 
-        <br>
-        <button type="button" class="btn-enter-guest" onclick="location.href='index.html'">
-            Entrar directamente a la consola principal &rarr;
-        </button>
+            <button type="submit" id="btnSubmitLogin" class="btn-login-submit">
+                <span id="btnSubmitText">Autenticar &amp; Ingresar al Sistema</span>
+                <span id="btnSubmitSpinner" style="display:none;">⏳ Verificando credenciales...</span>
+            </button>
+        </form>
 
-        <div class="login-footer">
-            Entorno Académico UTP 2026 &bull; Circular BCRP N° 0014-2023 &bull; Seguridad Criptográfica SHA-256
+        <div class="quick-access-section">
+            <span class="quick-access-title">Acceso Rápido para Demostración al Jurado (1 Clic)</span>
+            
+            <div class="quick-role-grid">
+                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('ARQUITECTO')">
+                    <div>
+                        <strong style="color:#F8FAFC;">Frank Vargas Huamán</strong>
+                        <div style="font-size:0.72rem; color:#94A3B8;">Arquitecto de Software &amp; NOC Lead</div>
+                    </div>
+                    <span class="role-pill-badge" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid #E2B357;">Acceso Total</span>
+                </button>
+
+                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('OPERADOR')">
+                    <div>
+                        <strong style="color:#F8FAFC;">Fernando Romero / Joel Olaya</strong>
+                        <div style="font-size:0.72rem; color:#94A3B8;">Operador NOC &amp; Mesa de Ayuda</div>
+                    </div>
+                    <span class="role-pill-badge" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid #38BDF8;">Operación</span>
+                </button>
+
+                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('AUDITOR')">
+                    <div>
+                        <strong style="color:#F8FAFC;">Prof. Zamata</strong>
+                        <div style="font-size:0.72rem; color:#94A3B8;">Auditor Regulatorio BCRP / Jurado</div>
+                    </div>
+                    <span class="role-pill-badge" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981;">Solo Lectura</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="login-footer-meta">
+            Circular BCRP N° 0014-2023 &bull; Canal Seguro TLS 1.3 &bull; SHA-256 Validado
         </div>
     </div>
 
+    <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>
     <script>
-        function iniciarSesionComo(rolId) {
-            AuthRBAC.establecerRol(rolId);
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 300);
+        function generarOtpDemo() {
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('txtOtp').value = otp;
+            if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+                window.SoundFX.playClick();
+            }
+        }
+
+        function autocompletarYAcceder(rolId) {
+            generarOtpDemo();
+            if (rolId === 'ARQUITECTO') {
+                document.getElementById('txtUsuario').value = 'frank.vargas@bcrp.gob.pe';
+                document.getElementById('txtPassword').value = 'Bcrp2026!';
+            } else if (rolId === 'OPERADOR') {
+                document.getElementById('txtUsuario').value = 'operador.noc@bcrp.gob.pe';
+                document.getElementById('txtPassword').value = 'Operador2026!';
+            } else if (rolId === 'AUDITOR') {
+                document.getElementById('txtUsuario').value = 'auditor.zamata@bcrp.gob.pe';
+                document.getElementById('txtPassword').value = 'Auditor2026!';
+            }
+            procesarLogin(new Event('submit'));
+        }
+
+        async function procesarLogin(event) {
+            if (event && event.preventDefault) event.preventDefault();
+
+            const alertBox = document.getElementById('loginAlertBox');
+            alertBox.classList.remove('visible');
+            alertBox.textContent = '';
+
+            const email = document.getElementById('txtUsuario').value.trim();
+            const pass = document.getElementById('txtPassword').value;
+            const otp = document.getElementById('txtOtp').value.trim();
+
+            if (!email || !pass) {
+                alertBox.textContent = 'Por favor complete su usuario y contraseña institucional.';
+                alertBox.classList.add('visible');
+                return;
+            }
+
+            const btnText = document.getElementById('btnSubmitText');
+            const btnSpinner = document.getElementById('btnSubmitSpinner');
+            const btnSubmit = document.getElementById('btnSubmitLogin');
+
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-flex';
+            btnSubmit.disabled = true;
+
+            try {
+                const rol = await AuthRBAC.iniciarSesion(email, pass, otp);
+                if (window.SoundFX && typeof window.SoundFX.playSuccess === 'function') {
+                    window.SoundFX.playSuccess();
+                }
+                const destino = sessionStorage.getItem('sigir_redirect_after_login') || 'index.html';
+                sessionStorage.removeItem('sigir_redirect_after_login');
+                setTimeout(() => {
+                    window.location.href = destino;
+                }, 300);
+            } catch (err) {
+                alertBox.textContent = err.message || 'Error de autenticación.';
+                alertBox.classList.add('visible');
+                btnText.style.display = 'inline-flex';
+                btnSpinner.style.display = 'none';
+                btnSubmit.disabled = false;
+                if (window.SoundFX && typeof window.SoundFX.playAlert === 'function') {
+                    window.SoundFX.playAlert();
+                }
+            }
         }
     </script>
 </body>

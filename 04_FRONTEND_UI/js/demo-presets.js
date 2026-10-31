@@ -48,9 +48,19 @@
 
     /**
      * Motor sintetizador de audio Web Audio API (cero dependencias de archivos externos)
+     * Delegado en BcrpSoundFXEngine para coherencia acústica ejecutiva (Apple Pay / Mercury Bank)
      */
     function reproducirTono(tipo) {
         if (!DEMO_CONFIG.soundEnabled) return;
+        if (window.SoundFX) {
+            if (tipo === 'alerta') {
+                window.SoundFX.playAlert();
+                return;
+            } else if (tipo === 'exito') {
+                window.SoundFX.playSuccess();
+                return;
+            }
+        }
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
@@ -61,21 +71,22 @@
             gain.connect(ctx.destination);
 
             if (tipo === 'alerta') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.35);
-                gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
                 osc.start();
-                osc.stop(ctx.currentTime + 0.35);
+                osc.stop(ctx.currentTime + 0.16);
             } else if (tipo === 'exito') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.12);
-                gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.28);
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.22);
                 osc.start();
-                osc.stop(ctx.currentTime + 0.28);
+                osc.stop(ctx.currentTime + 0.23);
             }
         } catch (e) {
             // Audio no soportado o bloqueado por política de autoplay

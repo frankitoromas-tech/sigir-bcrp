@@ -15,11 +15,33 @@
             this.ctx = null;
             this.masterGain = null;
             this.storageKey = 'sigir_bcrp_audio_muted';
-            this.isMuted = localStorage.getItem(this.storageKey) === 'true';
+            this.isMuted = this._getSavedMuteState();
             this.isUnlocked = false;
 
             // Vincular contexto a la primera interacción del usuario (política de autoplay del navegador)
             this._bindUnlockGestures();
+
+            // Sincronizar UI de inmediato si el DOM ya cuenta con el botón
+            if (typeof document !== 'undefined') {
+                this.updateToggleButtonUI();
+            }
+        }
+
+        _getSavedMuteState() {
+            try {
+                return localStorage.getItem(this.storageKey) === 'true';
+            } catch (e) {
+                console.warn('[SIGIR Audio] No se pudo leer localStorage:', e);
+                return false;
+            }
+        }
+
+        _persistMuteState() {
+            try {
+                localStorage.setItem(this.storageKey, this.isMuted ? 'true' : 'false');
+            } catch (e) {
+                console.warn('[SIGIR Audio] No se pudo guardar preferencia en localStorage:', e);
+            }
         }
 
         /**
@@ -62,9 +84,9 @@
         }
 
         /**
-         * 1. Click / Pop Táctil Ultra-Suave (12ms @ 800Hz)
-         * Diseñado bajo la directiva de Emil Kowalski: respuesta sensorial inmediata
-         * con caída exponencial de tono y envolvente AD ultracorta que simula un switch mecánico de alta gama.
+         * 1. Clic / Pop Táctil Ultra-Suave (12ms @ 750Hz con ganancia atenuada 0.04)
+         * Diseñado bajo la directiva de Emil Kowalski y estética bancaria Apple Pay / Mercury:
+         * Micro-pop ultrasuave sin estridencias para evitar sobresaltos.
          */
         playClick() {
             if (this.isMuted) return;
@@ -75,27 +97,27 @@
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
 
-            // Descenso de pitch ultra-rápido: de 800Hz a 240Hz en 12ms
+            // Descenso de pitch ultra-rápido: de 750Hz a 220Hz en exactamente 12ms
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, t0);
-            osc.frequency.exponentialRampToValueAtTime(240, t0 + 0.012);
+            osc.frequency.setValueAtTime(750, t0);
+            osc.frequency.exponentialRampToValueAtTime(220, t0 + 0.012);
 
-            // Envolvente micro-táctil
+            // Envolvente micro-táctil ultrasuave con ganancia atenuada a 0.04
             gain.gain.setValueAtTime(0.0001, t0);
-            gain.gain.linearRampToValueAtTime(0.12, t0 + 0.002);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.014);
+            gain.gain.linearRampToValueAtTime(0.04, t0 + 0.002);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.012);
 
             osc.connect(gain);
             gain.connect(this.masterGain);
 
             osc.start(t0);
-            osc.stop(t0 + 0.015);
+            osc.stop(t0 + 0.014);
         }
 
         /**
          * 2. Alerta Financiera / Detección Crítica NOC
-         * Dos tonos escalonados ejecutivos de advertencia regulatoria (620Hz -> 440Hz)
-         * Timbre cálido filtrado con LowPass para eliminar asperezas metálicas.
+         * Acorde menor tenue de dos pulsos sin estridencias (estilo Mercury Bank / Bloomberg).
+         * Acorde de A menor (A4: 440Hz, C5: 523.25Hz, E5: 659.25Hz) con filtro lowpass analógico a 1400Hz.
          */
         playAlert() {
             if (this.isMuted) return;
@@ -104,48 +126,58 @@
 
             const t0 = ctx.currentTime;
 
-            // Filtro pasa-bajas corporativo para calidez analógica
+            // Filtro pasa-bajas corporativo a 1400Hz para calidez y eliminación total de asperezas
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1800, t0);
+            filter.frequency.setValueAtTime(1400, t0);
             filter.connect(this.masterGain);
 
-            // Tono 1: Advertencia superior (620 Hz - E♭5 aprox)
-            const osc1 = ctx.createOscillator();
-            const gain1 = ctx.createGain();
-            osc1.type = 'triangle';
-            osc1.frequency.setValueAtTime(620, t0);
+            // Notas del acorde menor tenue (A menor: A4 = 440 Hz, C5 = 523.25 Hz, E5 = 659.25 Hz)
+            const minorChord = [440.00, 523.25, 659.25];
 
-            gain1.gain.setValueAtTime(0.0001, t0);
-            gain1.gain.linearRampToValueAtTime(0.15, t0 + 0.012);
-            gain1.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.080);
+            // Pulso 1: primer toque discreto (duración 75ms, ganancia máx 0.035)
+            const p1Start = t0;
+            const p1Dur = 0.075;
+            minorChord.forEach(freq => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, p1Start);
 
-            osc1.connect(gain1);
-            gain1.connect(filter);
-            osc1.start(t0);
-            osc1.stop(t0 + 0.085);
+                gain.gain.setValueAtTime(0.0001, p1Start);
+                gain.gain.linearRampToValueAtTime(0.035, p1Start + 0.008);
+                gain.gain.exponentialRampToValueAtTime(0.0001, p1Start + p1Dur);
 
-            // Tono 2: Tono de confirmación de severidad (440 Hz - A4)
-            const t1 = t0 + 0.075;
-            const osc2 = ctx.createOscillator();
-            const gain2 = ctx.createGain();
-            osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(440, t1);
+                osc.connect(gain);
+                gain.connect(filter);
+                osc.start(p1Start);
+                osc.stop(p1Start + p1Dur + 0.01);
+            });
 
-            gain2.gain.setValueAtTime(0.0001, t1);
-            gain2.gain.linearRampToValueAtTime(0.18, t1 + 0.015);
-            gain2.gain.exponentialRampToValueAtTime(0.0001, t1 + 0.170);
+            // Pulso 2: segundo toque tenue a los 120ms (duración 110ms, ganancia máx 0.028)
+            const p2Start = t0 + 0.120;
+            const p2Dur = 0.110;
+            minorChord.forEach(freq => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, p2Start);
 
-            osc2.connect(gain2);
-            gain2.connect(filter);
-            osc2.start(t1);
-            osc2.stop(t1 + 0.180);
+                gain.gain.setValueAtTime(0.0001, p2Start);
+                gain.gain.linearRampToValueAtTime(0.028, p2Start + 0.010);
+                gain.gain.exponentialRampToValueAtTime(0.0001, p2Start + p2Dur);
+
+                osc.connect(gain);
+                gain.connect(filter);
+                osc.start(p2Start);
+                osc.stop(p2Start + p2Dur + 0.01);
+            });
         }
 
         /**
-         * 3. Éxito Armónico / Mitigación & Cierre SFT BCRP
-         * Acorde arpegiado brillante y elegante (C5 -> E5 -> G5 -> C6)
-         * Proporciona un cierre satisfactorio al mitigar incidentes o emitir reportes SFT.
+         * 3. Confirmación de Éxito Armónico / Mitigación & Cierre SFT BCRP
+         * Acorde mayor suave y ascendente arpegiado (C5 -> E5 -> G5 -> C6).
+         * Calibrado estilo Apple Pay / Mercury Bank con envolvente aterciopelada y filtro cálido a 2400Hz.
          */
         playSuccess() {
             if (this.isMuted) return;
@@ -153,14 +185,21 @@
             if (!ctx) return;
 
             const t0 = ctx.currentTime;
-            const chord = [
-                { freq: 523.25, offset: 0.000, dur: 0.30, gain: 0.10 }, // C5
-                { freq: 659.25, offset: 0.035, dur: 0.32, gain: 0.11 }, // E5
-                { freq: 783.99, offset: 0.070, dur: 0.38, gain: 0.12 }, // G5
-                { freq: 1046.50, offset: 0.105, dur: 0.44, gain: 0.09 } // C6
+
+            // Filtro pasa-bajas para brillo cálido y sin asperezas (Apple Pay style)
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2400, t0);
+            filter.connect(this.masterGain);
+
+            const notes = [
+                { freq: 523.25, offset: 0.000, dur: 0.24, gain: 0.032 }, // C5
+                { freq: 659.25, offset: 0.035, dur: 0.28, gain: 0.035 }, // E5
+                { freq: 783.99, offset: 0.075, dur: 0.32, gain: 0.038 }, // G5
+                { freq: 1046.50, offset: 0.120, dur: 0.42, gain: 0.030 } // C6
             ];
 
-            chord.forEach(({ freq, offset, dur, gain: targetVol }) => {
+            notes.forEach(({ freq, offset, dur, gain: targetVol }) => {
                 const noteTime = t0 + offset;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
@@ -169,11 +208,11 @@
                 osc.frequency.setValueAtTime(freq, noteTime);
 
                 gain.gain.setValueAtTime(0.0001, noteTime);
-                gain.gain.linearRampToValueAtTime(targetVol, noteTime + 0.018);
+                gain.gain.linearRampToValueAtTime(targetVol, noteTime + 0.014);
                 gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
 
                 osc.connect(gain);
-                gain.connect(this.masterGain);
+                gain.connect(filter);
 
                 osc.start(noteTime);
                 osc.stop(noteTime + dur + 0.01);
@@ -181,7 +220,8 @@
         }
 
         /**
-         * Micro-tono para conmutación de estado (Mute / Unmute)
+         * Micro-tono para conmutación de estado (Unmute)
+         * Tono suave ascendente de 50ms para confirmar activación
          */
         playToggle(unmuting = false) {
             if (this.isMuted && !unmuting) return;
@@ -193,69 +233,78 @@
             const gain = ctx.createGain();
 
             osc.type = 'sine';
-            const fStart = unmuting ? 440 : 660;
-            const fEnd = unmuting ? 660 : 330;
+            const fStart = unmuting ? 480 : 640;
+            const fEnd = unmuting ? 640 : 360;
 
             osc.frequency.setValueAtTime(fStart, t0);
-            osc.frequency.exponentialRampToValueAtTime(fEnd, t0 + 0.06);
+            osc.frequency.exponentialRampToValueAtTime(fEnd, t0 + 0.05);
 
             gain.gain.setValueAtTime(0.0001, t0);
-            gain.gain.linearRampToValueAtTime(0.12, t0 + 0.008);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.07);
+            gain.gain.linearRampToValueAtTime(0.035, t0 + 0.006);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.055);
 
-            // Directo a destino temporalmente para que suene aunque esté muted al encender
             osc.connect(gain);
             gain.connect(ctx.destination);
 
             osc.start(t0);
-            osc.stop(t0 + 0.075);
+            osc.stop(t0 + 0.06);
         }
 
         /**
-         * Alterna el estado de silencio (Mute / Unmute) con persistencia
+         * Establece explícitamente el estado de silencio (Mute / Unmute) con persistencia inmediata
          */
-        toggleMute() {
-            this.isMuted = !this.isMuted;
-            localStorage.setItem(this.storageKey, this.isMuted ? 'true' : 'false');
+        setMuted(muted) {
+            this.isMuted = !!muted;
+            this._persistMuteState();
 
             if (this.masterGain && this.ctx) {
                 const now = this.ctx.currentTime;
                 this.masterGain.gain.cancelScheduledValues(now);
                 this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-                this.masterGain.gain.linearRampToValueAtTime(this.isMuted ? 0.0 : 0.85, now + 0.05);
+                this.masterGain.gain.linearRampToValueAtTime(this.isMuted ? 0.0 : 0.85, now + 0.03);
             }
 
-            this.playToggle(!this.isMuted);
+            if (!this.isMuted) {
+                this.playToggle(true);
+            }
+
             this.updateToggleButtonUI();
             return this.isMuted;
         }
 
         /**
-         * Actualiza el aspecto visual del botón toggle en el header
+         * Alterna el estado de silencio (Mute / Unmute) con persistencia inmediata en localStorage
+         */
+        toggleMute() {
+            return this.setMuted(!this.isMuted);
+        }
+
+        /**
+         * Actualiza el aspecto visual del botón toggle en la cabecera
          */
         updateToggleButtonUI() {
-            const btn = document.getElementById('btnAudioToggle');
-            if (!btn) return;
+            const btns = document.querySelectorAll('#btnAudioToggle, .btn-audio-toggle');
+            btns.forEach(btn => {
+                const iconOn = btn.querySelector('.icon-sound-on');
+                const iconOff = btn.querySelector('.icon-sound-off');
+                const label = btn.querySelector('.audio-label');
 
-            const iconOn = btn.querySelector('.icon-sound-on');
-            const iconOff = btn.querySelector('.icon-sound-off');
-            const label = btn.querySelector('.audio-label');
-
-            if (this.isMuted) {
-                btn.classList.add('muted');
-                btn.title = 'Audio silenciado (Clic para activar sonido háptico)';
-                btn.setAttribute('aria-pressed', 'false');
-                if (iconOn) iconOn.style.display = 'none';
-                if (iconOff) iconOff.style.display = 'inline-block';
-                if (label) label.textContent = 'MUTE';
-            } else {
-                btn.classList.remove('muted');
-                btn.title = 'Audio activo (Web Audio API - Emil Kowalski)';
-                btn.setAttribute('aria-pressed', 'true');
-                if (iconOn) iconOn.style.display = 'inline-block';
-                if (iconOff) iconOff.style.display = 'none';
-                if (label) label.textContent = 'AUDIO';
-            }
+                if (this.isMuted) {
+                    btn.classList.add('muted');
+                    btn.title = 'Audio silenciado (Clic para activar sonido háptico)';
+                    btn.setAttribute('aria-pressed', 'false');
+                    if (iconOn) iconOn.style.display = 'none';
+                    if (iconOff) iconOff.style.display = 'inline-block';
+                    if (label) label.textContent = 'MUTE';
+                } else {
+                    btn.classList.remove('muted');
+                    btn.title = 'Audio activo (Web Audio API - Emil Kowalski)';
+                    btn.setAttribute('aria-pressed', 'true');
+                    if (iconOn) iconOn.style.display = 'inline-block';
+                    if (iconOff) iconOff.style.display = 'none';
+                    if (label) label.textContent = 'AUDIO';
+                }
+            });
         }
 
         /**
@@ -296,6 +345,7 @@
             }
 
             btn.onclick = (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 this.toggleMute();
             };
@@ -307,10 +357,10 @@
          * Vincula automáticamente retroalimentación táctil a elementos interactivos clave
          */
         bindTactileFeedback() {
-            // Manejador delegado para respuesta instantánea en pointerdown/click
+            // Manejador delegado para respuesta instantánea en pointerdown
             document.addEventListener('pointerdown', (e) => {
                 const target = e.target.closest('button, .btn, .nav-tab, .modal-close, .filter-select, .btn-action-table');
-                if (target && !target.disabled && target.id !== 'btnAudioToggle') {
+                if (target && !target.disabled && !target.closest('#btnAudioToggle, .btn-audio-toggle')) {
                     this.playClick();
                 }
             }, { passive: true });
