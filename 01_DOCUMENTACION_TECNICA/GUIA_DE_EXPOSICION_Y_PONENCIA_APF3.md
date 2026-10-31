@@ -153,3 +153,4 @@
 ### P4 (Para Fernando): *"¿Qué sucede si un banco sufre interrupciones intermitentes de 5 segundos cada minuto? ¿El sistema colapsa creando cientos de tickets?"*
 > **Respuesta Maestra (Fernando):**  
 > *"No, profesor. Diseñamos la regla de negocio **RN-01**: el sistema evalúa la persistencia del fallo y comprueba mediante un índice parcial único (`idx_incidente_abierto_unico`) si la entidad ya cuenta con un ticket en estado `REGISTRADO` o `EN_EVALUACION`. Si ya existe una incidencia abierta, las nuevas caídas se anexan como eventos de telemetría a la bitácora sin generar tickets duplicados, evitando la saturación del NOC."*
+

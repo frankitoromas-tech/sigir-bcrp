@@ -1,19 +1,31 @@
 
-Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP): Diseño de Arquitectura, Persistencia Inmutable y Avance de Implementación (Entregable III)
+# UNIVERSIDAD TECNOLÓGICA DEL PERÚ
 
-Frank Emiliano Vargas Huamán (Código: U23243651)
+# FACULTAD DE INGENIERÍA
 
-Fernando Alber Alfredo Romero Requejo (Código: U21216410)
+# CARRERA PROFESIONAL DE INGENIERÍA DE SISTEMAS E INFORMÁTICA
 
-Joel Leonardo Olaya Vivas (Código: U21221688)
+# INFORME ACADÉMICO — ENTREGABLE III (AVANCE 3)
 
-Facultad de Ingeniería de Sistemas e Informática, Universidad Tecnológica del Perú
+## Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP)
 
-Curso Integrador I: Sistemas Software (Sección 57524)
+### Diseño de Arquitectura Clean MVC, Persistencia Inmutable y Avance de Implementación al 55%
 
-Docente Evaluador: Ing. Yony Zamata Condori
+# AUTORES (EQUIPO DE PROYECTO):
 
-31 de octubre de 2026
+## Frank Emiliano Vargas Huamán (Código: U23243651) — Líder Técnico & Arquitecto de Software
+
+## Fernando Alber Alfredo Romero Requejo (Código: U21216410) — Ingeniero de Requisitos & Procesos
+
+# Joel Leonardo Olaya Vivas (Código: U21221688) — Ingeniero de Software & QA
+
+Curso: Curso Integrador I — Sistemas Software (Sección 57524)
+
+# Docente Evaluador: Ing. Yony Zamata Condori
+
+Lima, Perú
+
+Octubre de 2026
 
 
 # Resumen

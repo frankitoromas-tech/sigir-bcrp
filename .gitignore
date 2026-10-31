@@ -25,11 +25,18 @@ target/
 *.ipr
 out/
 
-# Visual Studio Code
+# Visual Studio Code & IDEs
 .vscode/
 *.code-workspace
 
-# OS files & Office temp files
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.Python
+
+# OS files & Office temporary locks
 .DS_Store
 Thumbs.db
 desktop.ini

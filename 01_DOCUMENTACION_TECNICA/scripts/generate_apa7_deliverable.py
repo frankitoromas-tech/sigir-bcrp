@@ -37,13 +37,13 @@ for s in doc.sections:
     run_ft.font.color.rgb = RGBColor(120, 120, 120)
 
 FONT_FAMILY = "Times New Roman"
-FONT_SIZE_BODY = Pt(11)
-FONT_SIZE_CODE = Pt(8.5)
+FONT_SIZE_BODY = Pt(12)
+FONT_SIZE_CODE = Pt(9.5)
 
 # ==========================================
 # FUNCIONES AUXILIARES DE ESTILIZACIÓN APA 7
 # ==========================================
-def p_body(text, space_after=6, space_before=0, line_spacing=1.15, bold=False, italic=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
+def p_body(text, space_after=6, space_before=0, line_spacing=1.25, bold=False, italic=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
     p = doc.add_paragraph()
     p.alignment = align
     p.paragraph_format.space_before = Pt(space_before)
@@ -66,7 +66,7 @@ def p_h1(text):
     p.paragraph_format.keep_with_next = True
     r = p.add_run(text)
     r.font.name = FONT_FAMILY
-    r.font.size = Pt(13)
+    r.font.size = Pt(15)
     r.font.bold = True
     r.font.color.rgb = RGBColor(0, 0, 0)
     return p
@@ -80,7 +80,7 @@ def p_h2(text):
     p.paragraph_format.keep_with_next = True
     r = p.add_run(text)
     r.font.name = FONT_FAMILY
-    r.font.size = Pt(12)
+    r.font.size = Pt(13.5)
     r.font.bold = True
     r.font.color.rgb = RGBColor(0, 0, 0)
     return p
@@ -166,12 +166,12 @@ def add_apa7_figure(fig_num, fig_title, img_filename, note_text, width_inches=6.
     p_note.paragraph_format.space_after = Pt(12)
     r_lbl = p_note.add_run("Nota. ")
     r_lbl.font.name = FONT_FAMILY
-    r_lbl.font.size = Pt(9)
+    r_lbl.font.size = Pt(10)
     r_lbl.font.italic = True
     r_lbl.font.color.rgb = RGBColor(60, 60, 60)
     r_txt = p_note.add_run(note_text)
     r_txt.font.name = FONT_FAMILY
-    r_txt.font.size = Pt(9)
+    r_txt.font.size = Pt(10)
     r_txt.font.color.rgb = RGBColor(60, 60, 60)
 
 def add_apa7_table(tbl_num, tbl_title, headers, rows_data, note_text, col_widths=None):
@@ -239,7 +239,7 @@ def add_apa7_table(tbl_num, tbl_title, headers, rows_data, note_text, col_widths
         p.paragraph_format.line_spacing = 1.0
         r = p.add_run(h_text)
         r.font.name = FONT_FAMILY
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(10.5)
         r.font.bold = True
         r.font.color.rgb = RGBColor(0, 0, 0)
 
@@ -264,7 +264,7 @@ def add_apa7_table(tbl_num, tbl_title, headers, rows_data, note_text, col_widths
             p.paragraph_format.line_spacing = 1.1
             r = p.add_run(str(val))
             r.font.name = FONT_FAMILY
-            r.font.size = Pt(9.0)
+            r.font.size = Pt(10.5)
             r.font.color.rgb = RGBColor(0, 0, 0)
 
     # Anchos de columna si existen
@@ -281,12 +281,12 @@ def add_apa7_table(tbl_num, tbl_title, headers, rows_data, note_text, col_widths
     p_note.paragraph_format.space_after = Pt(12)
     r_lbl = p_note.add_run("Nota. ")
     r_lbl.font.name = FONT_FAMILY
-    r_lbl.font.size = Pt(9)
+    r_lbl.font.size = Pt(10)
     r_lbl.font.italic = True
     r_lbl.font.color.rgb = RGBColor(60, 60, 60)
     r_txt = p_note.add_run(note_text)
     r_txt.font.name = FONT_FAMILY
-    r_txt.font.size = Pt(9)
+    r_txt.font.size = Pt(10)
     r_txt.font.color.rgb = RGBColor(60, 60, 60)
 
 print("Construyendo documento maestro bajo norma APA 7...")
@@ -294,59 +294,149 @@ print("Construyendo documento maestro bajo norma APA 7...")
 # ==========================================
 # 1. PORTADA ESTUDIANTIL OFICIAL (APA 7)
 # ==========================================
-p_cover_space = doc.add_paragraph()
-p_cover_space.paragraph_format.space_before = Pt(40)
+# 1.1 Logotipo Institucional Oficial UTP Centrado
+logo_path = os.path.join(IMG_DIR, "logo_utp.png")
+if os.path.exists(logo_path):
+    p_logo = doc.add_paragraph()
+    p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_logo.paragraph_format.space_before = Pt(8)
+    p_logo.paragraph_format.space_after = Pt(8)
+    r_logo = p_logo.add_run()
+    r_logo.add_picture(logo_path, width=Inches(3.3))
+
+# 1.2 Jerarquía Institucional
+p_inst = doc.add_paragraph()
+p_inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_inst.paragraph_format.space_before = Pt(4)
+p_inst.paragraph_format.space_after = Pt(2)
+r_inst = p_inst.add_run("UNIVERSIDAD TECNOLÓGICA DEL PERÚ")
+r_inst.font.name = FONT_FAMILY
+r_inst.font.size = Pt(16)
+r_inst.font.bold = True
+r_inst.font.color.rgb = RGBColor(200, 16, 46)
+
+p_fac = doc.add_paragraph()
+p_fac.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_fac.paragraph_format.space_before = Pt(2)
+p_fac.paragraph_format.space_after = Pt(2)
+r_fac = p_fac.add_run("FACULTAD DE INGENIERÍA")
+r_fac.font.name = FONT_FAMILY
+r_fac.font.size = Pt(13)
+r_fac.font.bold = True
+r_fac.font.color.rgb = RGBColor(30, 41, 59)
+
+p_carr = doc.add_paragraph()
+p_carr.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_carr.paragraph_format.space_before = Pt(2)
+p_carr.paragraph_format.space_after = Pt(16)
+r_carr = p_carr.add_run("CARRERA PROFESIONAL DE INGENIERÍA DE SISTEMAS E INFORMÁTICA")
+r_carr.font.name = FONT_FAMILY
+r_carr.font.size = Pt(11.5)
+r_carr.font.bold = True
+r_carr.font.color.rgb = RGBColor(71, 85, 105)
+
+# 1.3 Bloque de Título del Proyecto
+p_ent = doc.add_paragraph()
+p_ent.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_ent.paragraph_format.space_before = Pt(10)
+p_ent.paragraph_format.space_after = Pt(4)
+r_ent = p_ent.add_run("INFORME ACADÉMICO — ENTREGABLE III (AVANCE 3)")
+r_ent.font.name = FONT_FAMILY
+r_ent.font.size = Pt(13.5)
+r_ent.font.bold = True
+r_ent.font.color.rgb = RGBColor(200, 16, 46)
 
 p_title = doc.add_paragraph()
 p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_title.paragraph_format.space_after = Pt(24)
-r_t = p_title.add_run("Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP): Diseño de Arquitectura, Persistencia Inmutable y Avance de Implementación (Entregable III)")
+p_title.paragraph_format.space_before = Pt(4)
+p_title.paragraph_format.space_after = Pt(6)
+r_t = p_title.add_run("Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP)")
 r_t.font.name = FONT_FAMILY
-r_t.font.size = Pt(14)
+r_t.font.size = Pt(17)
 r_t.font.bold = True
-r_t.font.color.rgb = RGBColor(0, 0, 0)
+r_t.font.color.rgb = RGBColor(15, 23, 42)
+
+p_sub = doc.add_paragraph()
+p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_sub.paragraph_format.space_before = Pt(2)
+p_sub.paragraph_format.space_after = Pt(20)
+r_sub = p_sub.add_run("Diseño de Arquitectura Clean MVC, Persistencia Inmutable y Avance de Implementación al 55%")
+r_sub.font.name = FONT_FAMILY
+r_sub.font.size = Pt(12)
+r_sub.font.italic = True
+r_sub.font.color.rgb = RGBColor(71, 85, 105)
+
+# 1.4 Equipo de Autores (Detallado y Profesional)
+p_aut_lbl = doc.add_paragraph()
+p_aut_lbl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_aut_lbl.paragraph_format.space_before = Pt(6)
+p_aut_lbl.paragraph_format.space_after = Pt(4)
+r_lbl = p_aut_lbl.add_run("AUTORES (EQUIPO DE PROYECTO):")
+r_lbl.font.name = FONT_FAMILY
+r_lbl.font.size = Pt(11)
+r_lbl.font.bold = True
+r_lbl.font.color.rgb = RGBColor(15, 23, 42)
 
 authors = [
-    "Frank Emiliano Vargas Huamán (Código: U23243651)",
-    "Fernando Alber Alfredo Romero Requejo (Código: U21216410)",
-    "Joel Leonardo Olaya Vivas (Código: U21221688)"
+    ("Frank Emiliano Vargas Huamán", "U23243651", "Líder Técnico & Arquitecto de Software"),
+    ("Fernando Alber Alfredo Romero Requejo", "U21216410", "Ingeniero de Requisitos & Procesos"),
+    ("Joel Leonardo Olaya Vivas", "U21221688", "Ingeniero de Software & QA")
 ]
-for auth in authors:
+for name, code, role in authors:
     p_a = doc.add_paragraph()
     p_a.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_a.paragraph_format.space_after = Pt(4)
-    r_a = p_a.add_run(auth)
-    r_a.font.name = FONT_FAMILY
-    r_a.font.size = Pt(11)
+    p_a.paragraph_format.space_before = Pt(1)
+    p_a.paragraph_format.space_after = Pt(2)
+    r1 = p_a.add_run(name)
+    r1.font.name = FONT_FAMILY
+    r1.font.size = Pt(11.5)
+    r1.font.bold = True
+    r2 = p_a.add_run(f" (Código: {code}) — ")
+    r2.font.name = FONT_FAMILY
+    r2.font.size = Pt(11)
+    r3 = p_a.add_run(role)
+    r3.font.name = FONT_FAMILY
+    r3.font.size = Pt(11)
+    r3.font.italic = True
 
-p_aff = doc.add_paragraph()
-p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_aff.paragraph_format.space_before = Pt(12)
-p_aff.paragraph_format.space_after = Pt(4)
-r_aff = p_aff.add_run("Facultad de Ingeniería de Sistemas e Informática, Universidad Tecnológica del Perú")
-r_aff.font.name = FONT_FAMILY
-r_aff.font.size = Pt(11)
-
+# 1.5 Asignatura y Docente
 p_cur = doc.add_paragraph()
 p_cur.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_cur.paragraph_format.space_after = Pt(4)
-r_cur = p_cur.add_run("Curso Integrador I: Sistemas Software (Sección 57524)")
+p_cur.paragraph_format.space_before = Pt(14)
+p_cur.paragraph_format.space_after = Pt(2)
+r_cur = p_cur.add_run("Curso: Curso Integrador I — Sistemas Software (Sección 57524)")
 r_cur.font.name = FONT_FAMILY
-r_cur.font.size = Pt(11)
+r_cur.font.size = Pt(11.5)
+r_cur.font.color.rgb = RGBColor(30, 41, 59)
 
 p_doc = doc.add_paragraph()
 p_doc.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_doc.paragraph_format.space_after = Pt(4)
+p_doc.paragraph_format.space_before = Pt(2)
+p_doc.paragraph_format.space_after = Pt(18)
 r_doc = p_doc.add_run("Docente Evaluador: Ing. Yony Zamata Condori")
 r_doc.font.name = FONT_FAMILY
-r_doc.font.size = Pt(11)
+r_doc.font.size = Pt(11.5)
+r_doc.font.bold = True
+r_doc.font.color.rgb = RGBColor(30, 41, 59)
+
+# 1.6 Lugar y Fecha
+p_loc = doc.add_paragraph()
+p_loc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+p_loc.paragraph_format.space_before = Pt(6)
+p_loc.paragraph_format.space_after = Pt(1)
+r_loc = p_loc.add_run("Lima, Perú")
+r_loc.font.name = FONT_FAMILY
+r_loc.font.size = Pt(11)
+r_loc.font.color.rgb = RGBColor(100, 116, 139)
 
 p_date = doc.add_paragraph()
 p_date.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_date.paragraph_format.space_after = Pt(12)
-r_date = p_date.add_run("31 de octubre de 2026")
+p_date.paragraph_format.space_before = Pt(1)
+p_date.paragraph_format.space_after = Pt(0)
+r_date = p_date.add_run("Octubre de 2026")
 r_date.font.name = FONT_FAMILY
 r_date.font.size = Pt(11)
+r_date.font.color.rgb = RGBColor(100, 116, 139)
 
 doc.add_page_break()
 
