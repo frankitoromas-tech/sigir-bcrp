@@ -62,3 +62,4 @@ psql -U postgres -d bcrp_incident_db -f 01_SCHEMA_DDL_POSTGRESQL.sql
 psql -U postgres -d bcrp_incident_db -f 02_SEED_DATA_INICIAL.sql
 ```
 Para detalles de cada columna y tipo de dato, consulte [`DICCIONARIO_DE_DATOS.md`](DICCIONARIO_DE_DATOS.md).
+
