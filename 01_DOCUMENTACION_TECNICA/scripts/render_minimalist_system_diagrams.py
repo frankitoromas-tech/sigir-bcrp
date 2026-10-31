@@ -66,11 +66,11 @@ C_PURPLE_BG     = "#F5F3FF"
 C_PURPLE_BORDER = "#8B5CF6"
 
 
-def draw_top_header(draw, title, subtitle, badge_text="SIGIR - BCRP", badge_bg="#1E3A8A"):
+def draw_top_header(draw, title, subtitle, badge_text="SIGIR - BCRP", badge_bg="#1E3A8A", w=1280):
     # Header bar
-    draw.rectangle([0, 0, 1280, 85], fill="#0F172A")
+    draw.rectangle([0, 0, w, 85], fill="#0F172A")
     # Red accent line (UTP Red)
-    draw.rectangle([0, 82, 1280, 85], fill="#C8102E")
+    draw.rectangle([0, 82, w, 85], fill="#C8102E")
     
     # Badge
     badge_w = 140
@@ -144,9 +144,9 @@ def render_anexo1_project_charter():
             "badge": "SCRUM TEAM", "badge_bg": C_PURPLE,
             "border": C_PURPLE_BORDER, "bg": C_PURPLE_BG,
             "items": [
-                ("Frank E. Vargas Huamán:", "Backend Lead & DevOps (Java 17, Spring Boot, Docker)."),
-                ("Fernando Vargas Huamán:", "Frontend Lead & QA (Consola NOC Web, Playwright)."),
-                ("Joel Mendoza:", "Especialista en BD & Negocio (PostgreSQL 15, DDL/DML).")
+                ("Frank E. Vargas Huamán:", "Líder Técnico & Arquitecto (Java 17, Spring Boot, Docker)."),
+                ("Fernando A. Romero Requejo:", "Ingeniero de Requisitos, Procesos & Frontend Lead."),
+                ("Joel L. Olaya Vivas:", "Ingeniero de Software, Persistencia & QA Automation.")
             ]
         }
     ]
@@ -181,74 +181,73 @@ def render_anexo1_project_charter():
 # 2. ANEXO 2: MODELO LEAN CANVAS (1280 x 760)
 # =============================================================
 def render_anexo2_lean_canvas():
-    im = Image.new('RGB', (1280, 760), C_BG)
+    # Lienzo ampliado a 1300 x 820 para garantizar espacio holgado sin solapamientos ni cortes
+    canvas_w, canvas_h = 1300, 820
+    im = Image.new('RGB', (canvas_w, canvas_h), C_BG)
     draw = ImageDraw.Draw(im)
     
     draw_top_header(draw, 
                     "LIENZO DE MODELO DE NEGOCIO (LEAN CANVAS)", 
                     "Innovación Tecnológica en Supervisión Financiera según Circular BCRP 0011-2023",
-                    "ANEXO 2", "#1E3A8A")
+                    "ANEXO 2", "#1E3A8A", w=canvas_w)
     
-    # 9-Box Grid on 1280 x 760
-    # Top 5 columns (y: 95 to 535)
-    # Bottom 2 columns (y: 550 to 715)
-    
+    # Grid de 9 Bloques: 5 columnas arriba (y: 95 a 530), 2 cajas grandes abajo (y: 545 a 745)
     boxes = [
         # 1. Problema
         {
-            "coords": [25, 95, 270, 535], "title": "1. PROBLEMA", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "DOLOR", "badge_bg": C_RED,
+            "coords": [25, 95, 270, 530], "title": "1. PROBLEMA", "sub": "Puntos de Dolor",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_RED,
             "bullets": [
                 "• Cortes detectados >45 min tarde.",
                 "• Notificación manual por correo.",
                 "• Disputas por falta de inmutabilidad.",
-                "• Riesgo de multas hasta 100 UIT."
+                "• Riesgo de multas de hasta 100 UIT."
             ]
         },
         # 4. Solución
         {
-            "coords": [280, 95, 520, 305], "title": "4. SOLUCIÓN", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "SISTEMA", "badge_bg": C_PRIMARY,
+            "coords": [280, 95, 525, 305], "title": "4. SOLUCIÓN", "sub": "Sistema Propuesto",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_PRIMARY,
             "bullets": [
                 "• Telemetría periódica cada 30 s.",
-                "• Detección y auto-apertura de tickets.",
+                "• Auto-apertura de tickets reglamentarios.",
                 "• Tablero NOC web en tiempo real."
             ]
         },
         # 8. Métricas Clave
         {
-            "coords": [280, 315, 520, 535], "title": "8. MÉTRICAS CLAVE", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "KPIS", "badge_bg": C_GREEN,
+            "coords": [280, 315, 525, 530], "title": "8. MÉTRICAS CLAVE", "sub": "Indicadores SLA",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_GREEN,
             "bullets": [
-                "• MTTD < 30 seg (vs 45 min previo).",
+                "• MTTD < 30 s (vs 45 min manual).",
                 "• Disponibilidad mensual > 99.90%.",
                 "• 100% reportes SFT conformes."
             ]
         },
-        # 3. Propuesta de Valor Única
+        # 3. Propuesta de Valor Única (Caja Destacada Central)
         {
-            "coords": [530, 95, 770, 535], "title": "3. PROPUESTA DE VALOR", "bg": C_PRIMARY_LIGHT, "border": C_BLUE_BORDER,
-            "badge": "VALOR ÚNICO", "badge_bg": C_PRIMARY,
+            "coords": [535, 95, 785, 530], "title": "3. PROPUESTA DE VALOR", "sub": "Diferencial Competitivo",
+            "bg": C_PRIMARY_LIGHT, "border": C_BLUE_BORDER, "tag_col": C_PRIMARY,
             "bullets": [
-                "• Detección, clasificación y reporte de incidentes en <30 s.",
-                "• Bitácora forense inmutable sellada con hash SHA-256.",
-                "• Compilador oficial del formato plano SFT BCRP en 1 clic.",
+                "• Detección y reporte en <30 s.",
+                "• Bitácora inmutable sellada con SHA-256.",
+                "• Compilador oficial SFT BCRP en 1 clic.",
                 "• 'Cero multas y máxima disponibilidad interbancaria'."
             ]
         },
         # 9. Ventaja Injusta
         {
-            "coords": [780, 95, 1020, 305], "title": "9. VENTAJA INJUSTA", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "DEFENSA", "badge_bg": C_PURPLE,
+            "coords": [795, 95, 1040, 305], "title": "9. VENTAJA INJUSTA", "sub": "Barrera de Entrada",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_PURPLE,
             "bullets": [
-                "• Algoritmo anti-flapping para supresión de falsos positivos.",
-                "• Adaptación 100% nativa a Circular BCRP 0011-2023."
+                "• Algoritmo anti-flapping nativo.",
+                "• Adaptación 100% a Circular 0011-2023."
             ]
         },
         # 5. Canales
         {
-            "coords": [780, 315, 1020, 535], "title": "5. CANALES", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "ACCESO", "badge_bg": C_AMBER,
+            "coords": [795, 315, 1040, 530], "title": "5. CANALES", "sub": "Puntos de Acceso",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_AMBER,
             "bullets": [
                 "• Consola Web NOC en vivo.",
                 "• API REST segura TLS 1.3.",
@@ -257,30 +256,30 @@ def render_anexo2_lean_canvas():
         },
         # 2. Segmento
         {
-            "coords": [1030, 95, 1255, 535], "title": "2. SEGMENTO", "bg": C_PANEL, "border": C_BORDER,
-            "badge": "CLIENTES", "badge_bg": C_PRIMARY,
+            "coords": [1050, 95, 1275, 530], "title": "2. SEGMENTO", "sub": "Clientes & Regulador",
+            "bg": C_PANEL, "border": C_BORDER, "tag_col": C_PRIMARY,
             "bullets": [
-                "• Bancos y Financieras integrantes de la CCE (BCP, BBVA, etc.).",
-                "• Cajas Municipales y Rurales interoperables.",
+                "• Bancos y Financieras CCE (BCP, BBVA, etc.).",
+                "• Cajas Municipales y Rurales.",
                 "• BCRP (Supervisión macroprudencial)."
             ]
         },
         # 7. Estructura de Costos
         {
-            "coords": [25, 550, 630, 715], "title": "7. ESTRUCTURA DE COSTOS", "bg": C_AMBER_BG, "border": C_AMBER_BORDER,
-            "badge": "S/ 45,000", "badge_bg": C_AMBER,
+            "coords": [25, 545, 640, 745], "title": "7. ESTRUCTURA DE COSTOS", "sub": "Presupuesto Total: S/ 45,000",
+            "bg": C_AMBER_BG, "border": C_AMBER_BORDER, "tag_col": C_AMBER,
             "bullets": [
-                "• Desarrollo de Software (Java 17, Spring Boot, PostgreSQL): S/ 30,000.",
+                "• Desarrollo de Software (Java 17, Spring Boot, PostgreSQL 15): S/ 30,000.",
                 "• Infraestructura Cloud, Servidores y Contenedores Docker: S/ 8,000.",
                 "• Pruebas de Carga, Seguridad y Certificación Regulatoria: S/ 7,000."
             ]
         },
         # 6. Fuentes de Ingresos
         {
-            "coords": [650, 550, 1255, 715], "title": "6. FUENTES DE INGRESOS", "bg": C_GREEN_BG, "border": C_GREEN_BORDER,
-            "badge": "B2B / SAAS", "badge_bg": C_GREEN,
+            "coords": [660, 545, 1275, 745], "title": "6. FUENTES DE INGRESOS", "sub": "Modelo Comercial B2B / SaaS",
+            "bg": C_GREEN_BG, "border": C_GREEN_BORDER, "tag_col": C_GREEN,
             "bullets": [
-                "• Suscripción SaaS mensual por entidad financiera conectada.",
+                "• Suscripción SaaS mensual por entidad financiera supervisada.",
                 "• Servicios de integración y parametrización de switches interbancarios.",
                 "• Soporte enterprise 24/7 y auditoría de cumplimiento regulatorio."
             ]
@@ -291,12 +290,12 @@ def render_anexo2_lean_canvas():
         x0, y0, x1, y1 = b["coords"]
         draw.rounded_rectangle([x0, y0, x1, y1], radius=8, fill=b["bg"], outline=b["border"], width=2)
         
-        # Header inside box
+        # Header inside box: Línea 1 Título, Línea 2 Subtítulo/Tag (CERO colisiones)
         draw.text((x0 + 10, y0 + 8), b["title"], fill=C_TEXT_MAIN, font=F_CARD_SUB)
-        draw_badge(draw, x1 - 95, y0 + 6, b["badge"], b["badge_bg"], font=F_BADGE, pad_x=6, pad_y=2)
+        draw.text((x0 + 10, y0 + 26), f"[{b['sub']}]", fill=b["tag_col"], font=F_BADGE)
         
-        # Bullets
-        cur_y = y0 + 38
+        # Bullets con ajuste dinámico de texto
+        cur_y = y0 + 48
         for bullet in b["bullets"]:
             words = bullet.split()
             line = ""
@@ -304,26 +303,24 @@ def render_anexo2_lean_canvas():
                 test_line = line + " " + w if line else w
                 bbox = F_BODY.getbbox(test_line)
                 if (bbox[2] - bbox[0]) > (x1 - x0 - 20):
-                    draw.text((x0 + 10, cur_y), line, fill=C_TEXT_MAIN if "•" in line else C_TEXT_MUTED, font=F_BODY)
-                    cur_y += 22
+                    draw.text((x0 + 10, cur_y), line, fill=C_TEXT_MAIN, font=F_BODY)
+                    cur_y += 20
                     line = "   " + w
                 else:
                     line = test_line
             if line:
-                draw.text((x0 + 10, cur_y), line, fill=C_TEXT_MAIN if "•" in line else C_TEXT_MUTED, font=F_BODY)
-                cur_y += 26
+                draw.text((x0 + 10, cur_y), line, fill=C_TEXT_MAIN, font=F_BODY)
+                cur_y += 24
 
     # Bottom status bar
-    draw.rectangle([0, 728, 1280, 760], fill="#0F172A")
-    draw.text((30, 735), "MODELO VALIDADO :: CONFORME A METODOLOGÍA LEAN DE ASH MAURYA | UTP CURSO INTEGRADOR I", fill="#38BDF8", font=F_BADGE)
+    draw.rectangle([0, 765, canvas_w, canvas_h], fill="#0F172A")
+    draw.text((30, 778), "MODELO VALIDADO :: CONFORME A METODOLOGÍA LEAN DE ASH MAURYA | UTP CURSO INTEGRADOR I", fill="#38BDF8", font=F_BADGE)
 
     out_path = os.path.join(IMG_DIR, 'anexo2_modelo_lean_canvas.png')
     im.save(out_path, quality=95)
     print("SUCCESS: Generado", out_path)
 
 
-# =============================================================
-# 3. FIGURA 14: ARQUITECTURA MODULAR DE PAQUETES (1280 x 760)
 # =============================================================
 def render_figura14_arbol_paquetes():
     im = Image.new('RGB', (1280, 760), C_BG)
@@ -607,28 +604,31 @@ def render_figura17_matriz_alcance():
                     "Verificación Formal de Entrega según Rúbrica UTP: 40% Requerido vs 55% Alcanzado",
                     "FIGURA 14", "#1E3A8A")
     
-    # Progress Comparison Banner
-    draw.rounded_rectangle([30, 105, 1250, 240], radius=12, fill=C_PANEL, outline=C_BORDER, width=2)
-    draw.text((50, 120), "COMPARACIÓN DE ALCANCE EXIGIDO VS ALCANZADO (SEMANA 12):", fill=C_TEXT_MAIN, font=F_CARD_TIT)
+    # Progress Comparison Banner (y: 105 to 245)
+    draw.rounded_rectangle([30, 105, 1250, 245], radius=12, fill=C_PANEL, outline=C_BORDER, width=2)
+    
+    # Línea superior de título: CERO solapamientos
+    draw.text((50, 116), "EVALUACIÓN DE AVANCE SEGÚN RÚBRICA UTP (SEMANA 12):", fill=C_TEXT_MAIN, font=F_CARD_TIT)
     
     # Big Bar track
-    bar_x0, bar_y0, bar_x1, bar_y1 = 50, 155, 960, 205
+    bar_x0, bar_y0, bar_x1, bar_y1 = 50, 150, 960, 196
     draw.rounded_rectangle([bar_x0, bar_y0, bar_x1, bar_y1], radius=8, fill="#E2E8F0")
     
     # Real progress 55%
     fill_w = int((bar_x1 - bar_x0) * 0.55)
     draw.rounded_rectangle([bar_x0, bar_y0, bar_x0 + fill_w, bar_y1], radius=8, fill=C_GREEN)
+    draw.text((bar_x0 + 20, bar_y0 + 10), "Alcanzado: 55.0% (Verificado en Suite de Tests)", fill="#FFFFFF", font=F_CARD_TIT)
     
-    # Reference marker 40%
+    # Reference marker 40% (Línea naranja y texto DEBAJO de la barra, CERO colisión con el título)
     mark_40 = bar_x0 + int((bar_x1 - bar_x0) * 0.40)
-    draw.line([mark_40, bar_y0 - 10, mark_40, bar_y1 + 10], fill=C_AMBER, width=4)
-    draw.text((mark_40 - 90, bar_y0 - 30), "Meta UTP: 40.0%", fill=C_AMBER, font=F_BODY_BD)
-    draw.text((bar_x0 + fill_w - 180, bar_y0 + 12), "Alcanzado: 55.0%", fill="#FFFFFF", font=F_CARD_TIT)
+    draw.line([mark_40, bar_y0 - 6, mark_40, bar_y1 + 6], fill=C_AMBER, width=4)
+    draw.text((mark_40 - 60, bar_y1 + 10), "▲ Meta Mínima UTP: 40.0%", fill="#D97706", font=F_BODY_BD)
     
-    # Callout badge on right
-    draw.rounded_rectangle([990, 120, 1230, 225], radius=10, fill=C_GREEN_BG, outline=C_GREEN, width=2)
-    draw.text((1010, 130), "+15.0%", fill=C_GREEN, font=F_KPI)
-    draw.text((1010, 175), "SUPERÁVIT ALCANZADO", fill=C_TEXT_MAIN, font=F_CARD_SUB)
+    # Callout badge on right (+15% superávit)
+    draw.rounded_rectangle([990, 115, 1235, 235], radius=10, fill=C_GREEN_BG, outline=C_GREEN, width=2)
+    draw.text((1015, 122), "+15.0%", fill=C_GREEN, font=F_KPI)
+    draw.text((1015, 168), "SUPERÁVIT REAL", fill=C_TEXT_MAIN, font=F_CARD_TIT)
+    draw.text((1015, 198), "40% Requerido vs 55% Entregado", fill=C_TEXT_MUTED, font=F_BODY)
 
     # 4 Deliverable Milestone Cards
     cards = [
@@ -651,7 +651,7 @@ def render_figura17_matriz_alcance():
             "items": [
                 ("Ciclo de Vida:", "Transiciones controladas."),
                 ("Cálculo de SLA:", "Fórmula mensual (99.90%)."),
-                ("Auditoría Append-Only:", "Bitácora protegida en PostgreSQL.")
+                ("Auditoría Inmutable:", "Bitácora protegida en PostgreSQL.")
             ]
         },
         {
@@ -682,14 +682,14 @@ def render_figura17_matriz_alcance():
         x0, y0, x1, y1 = c["coords"]
         draw.rounded_rectangle([x0, y0, x1, y1], radius=10, fill=C_PANEL, outline=C_BORDER, width=2)
         
-        # Header inside card
-        draw.rounded_rectangle([x0, y0, x1, y0 + 60], radius=8, fill="#FFFFFF", outline=C_BORDER, width=1)
+        # Header inside card: Línea 1 Título (Ancho completo, CERO colisión), Línea 2 Peso + Badge
+        draw.rounded_rectangle([x0, y0, x1, y0 + 64], radius=8, fill="#FFFFFF", outline=C_BORDER, width=1)
         draw.text((x0 + 12, y0 + 8), c["title"], fill=C_TEXT_MAIN, font=F_CARD_TIT)
-        draw.text((x0 + 12, y0 + 34), c["weight"], fill=C_PRIMARY, font=F_BADGE)
-        draw_badge(draw, x1 - 100, y0 + 12, c["badge"], c["badge_bg"], font=F_BADGE)
+        draw.text((x0 + 12, y0 + 36), c["weight"], fill=C_PRIMARY, font=F_BADGE)
+        draw_badge(draw, x1 - 95, y0 + 34, c["badge"], c["badge_bg"], font=F_BADGE)
         
         # Items
-        cur_y = y0 + 75
+        cur_y = y0 + 78
         for title, desc in c["items"]:
             draw.text((x0 + 12, cur_y), "• " + title, fill=C_TEXT_MAIN, font=F_CARD_SUB)
             draw.text((x0 + 22, cur_y + 24), desc, fill=C_TEXT_MUTED, font=F_BODY)
@@ -705,11 +705,256 @@ def render_figura17_matriz_alcance():
 
 
 # =============================================================
-# RUNNER
+def render_figura11_der_postgresql():
+    # Lienzo calibrado de 1360 x 820 para garantizar espacio amplio sin desbordamiento
+    w, h = 1360, 820
+    im = Image.new('RGB', (w, h), C_BG)
+    draw = ImageDraw.Draw(im)
+    
+    draw_top_header(draw, 
+                    "DIAGRAMA ENTIDAD-RELACIÓN RELACIONAL :: POSTGRESQL 15", 
+                    "Modelo Inmutable en 3FN con Triggers Append-Only y Llaves Foráneas Estrictas",
+                    "FIGURA 6", "#1E3A8A", w=w)
+    
+    # 5 Tablas Relacionales Estratégicamente Distribuidas
+    # Columna Izquierda: participante (top) y telemetria_log (bottom) -> x: 30 a 420
+    # Columna Central: incidente (gran tabla central) -> x: 450 a 890
+    # Columna Derecha: reporte_sft (top) y auditoria_inmutable (bottom) -> x: 920 a 1330
+    
+    tables = [
+        # 1. PARTICIPANTE
+        {
+            "x": 30, "y": 105, "w": 390, "h": 280,
+            "name": "participante", "comment": "Entidades Financieras (CCE)",
+            "header_bg": C_PRIMARY,
+            "cols": [
+                ("PK", "id_participante", "SERIAL"),
+                ("UQ", "codigo_bcrp", "VARCHAR(10)"),
+                ("  ", "razon_social", "VARCHAR(150)"),
+                ("  ", "ip_nodo_interop", "VARCHAR(45)"),
+                ("  ", "estado_operativo", "VARCHAR(20)"),
+                ("  ", "sla_contratado", "NUMERIC(5,2)")
+            ]
+        },
+        # 2. TELEMETRIA_LOG
+        {
+            "x": 30, "y": 415, "w": 390, "h": 285,
+            "name": "telemetria_log", "comment": "Sondeo Heartbeat (Cada 30s)",
+            "header_bg": C_PURPLE,
+            "cols": [
+                ("PK", "id_telemetria", "BIGSERIAL"),
+                ("FK", "id_participante", "INTEGER -> part."),
+                ("  ", "latencia_ms", "INTEGER"),
+                ("  ", "estado_nodo", "VARCHAR(20)"),
+                ("  ", "http_status", "INTEGER"),
+                ("  ", "fecha_registro", "TIMESTAMP NOT NULL")
+            ]
+        },
+        # 3. INCIDENTE (TABLA MAESTRA CENTRAL)
+        {
+            "x": 450, "y": 105, "w": 440, "h": 410,
+            "name": "incidente", "comment": "Gestión de Fallas y Disponibilidad",
+            "header_bg": C_RED,
+            "cols": [
+                ("PK", "id_incidente", "BIGSERIAL"),
+                ("FK", "id_participante", "INTEGER -> part."),
+                ("UQ", "codigo_ticket", "VARCHAR(30)"),
+                ("  ", "tipo_falla", "VARCHAR(50)"),
+                ("  ", "severidad", "VARCHAR(20)"),
+                ("  ", "estado", "VARCHAR(20)"),
+                ("  ", "fecha_inicio", "TIMESTAMP NOT NULL"),
+                ("  ", "fecha_cierre", "TIMESTAMP"),
+                ("  ", "disponibilidad_calc", "NUMERIC(5,2)")
+            ]
+        },
+        # 4. REPORTE_SFT
+        {
+            "x": 920, "y": 105, "w": 410, "h": 280,
+            "name": "reporte_sft", "comment": "Archivos Circ. 0011-2023",
+            "header_bg": C_GREEN,
+            "cols": [
+                ("PK", "id_reporte", "BIGSERIAL"),
+                ("FK", "id_incidente", "BIGINT -> inc."),
+                ("UQ", "codigo_sft", "VARCHAR(40)"),
+                ("  ", "contenido_plano", "TEXT"),
+                ("  ", "hash_sha256", "CHAR(64) NOT NULL"),
+                ("  ", "fecha_generacion", "TIMESTAMP NOT NULL")
+            ]
+        },
+        # 5. AUDITORIA_INMUTABLE
+        {
+            "x": 920, "y": 415, "w": 410, "h": 285,
+            "name": "auditoria_inmutable", "comment": "Bitácora Forense Append-Only",
+            "header_bg": C_AMBER,
+            "cols": [
+                ("PK", "id_auditoria", "BIGSERIAL"),
+                ("FK", "id_incidente", "BIGINT -> inc."),
+                ("  ", "accion_realizada", "VARCHAR(50)"),
+                ("  ", "usuario_responsable", "VARCHAR(100)"),
+                ("  ", "hash_previo", "CHAR(64)"),
+                ("  ", "fecha_auditoria", "TIMESTAMP NOT NULL")
+            ]
+        }
+    ]
+    
+    for t in tables:
+        x, y, tw, th = t["x"], t["y"], t["w"], t["h"]
+        draw.rounded_rectangle([x, y, x + tw, y + th], radius=10, fill="#FFFFFF", outline=C_BORDER_DARK, width=2)
+        
+        # Table Header
+        draw.rounded_rectangle([x, y, x + tw, y + 54], radius=8, fill=t["header_bg"])
+        draw.text((x + 14, y + 8), t["name"], fill="#FFFFFF", font=F_CARD_TIT)
+        draw.text((x + 14, y + 32), t["comment"], fill="#E2E8F0", font=F_BADGE)
+        
+        # Columns
+        cur_y = y + 66
+        for badge, cname, ctype in t["cols"]:
+            if badge == "PK":
+                draw.rounded_rectangle([x + 10, cur_y, x + 44, cur_y + 22], radius=4, fill=C_AMBER)
+                draw.text((x + 15, cur_y + 2), "PK", fill="#FFFFFF", font=F_BADGE)
+            elif badge == "FK":
+                draw.rounded_rectangle([x + 10, cur_y, x + 44, cur_y + 22], radius=4, fill=C_PRIMARY)
+                draw.text((x + 15, cur_y + 2), "FK", fill="#FFFFFF", font=F_BADGE)
+            elif badge == "UQ":
+                draw.rounded_rectangle([x + 10, cur_y, x + 44, cur_y + 22], radius=4, fill=C_PURPLE)
+                draw.text((x + 14, cur_y + 2), "UQ", fill="#FFFFFF", font=F_BADGE)
+            
+            draw.text((x + 52, cur_y + 1), cname, fill=C_TEXT_MAIN, font=F_CODE)
+            draw.text((x + 245, cur_y + 1), ctype, fill=C_TEXT_MUTED, font=F_BODY)
+            cur_y += 32
+
+    # Líneas Conectoras de Relaciones (Con etiquetas de cardinalidad bien visibles)
+    # 1. participante (1) -> incidente (N)
+    draw.line([420, 210, 450, 210], fill=C_PRIMARY, width=4)
+    draw.text((422, 185), "1:N", fill=C_PRIMARY, font=F_CARD_SUB)
+    
+    # 2. participante (1) -> telemetria_log (N)
+    draw.line([220, 385, 220, 415], fill=C_PURPLE, width=4)
+    draw.text((228, 390), "1:N", fill=C_PURPLE, font=F_CARD_SUB)
+    
+    # 3. incidente (1) -> reporte_sft (1:1)
+    draw.line([890, 210, 920, 210], fill=C_GREEN, width=4)
+    draw.text((892, 185), "1:1", fill=C_GREEN, font=F_CARD_SUB)
+    
+    # 4. incidente (1) -> auditoria_inmutable (1:N)
+    draw.line([890, 470, 920, 470], fill=C_AMBER, width=4)
+    draw.text((892, 445), "1:N", fill=C_AMBER, font=F_CARD_SUB)
+
+    # Tarjeta Central Inferior: BLINDAJE DE DATOS (NUNCA SE CORTA NI SOBRESALE)
+    # Ubicada debajo de 'incidente' (x: 450 a 890, y: 535 a 700)
+    draw.rounded_rectangle([450, 535, 890, 700], radius=10, fill=C_PRIMARY_LIGHT, outline=C_BLUE_BORDER, width=2)
+    draw.text((468, 545), "BLINDAJE DE DATOS & REGLAS INMUTABLES", fill=C_PRIMARY, font=F_CARD_SUB)
+    
+    blindaje_bullets = [
+        ("• Triggers Append-Only:", "Bloqueo total de UPDATE y DELETE en auditoría."),
+        ("• Integridad SHA-256:", "Firma criptográfica de 64 caracteres en reportes SFT."),
+        ("• Normalización 3FN:", "Cero redundancia en entidades y claves foráneas estrictas."),
+        ("• Índices B-Tree:", "Búsquedas en <5 ms sobre codigo_ticket y fechas.")
+    ]
+    cur_y = 574
+    for title, desc in blindaje_bullets:
+        draw.text((468, cur_y), title, fill=C_TEXT_MAIN, font=F_BODY_BD)
+        draw.text((640, cur_y), desc, fill=C_TEXT_MUTED, font=F_BODY)
+        cur_y += 28
+
+    # Barra Inferior Completa
+    draw.rectangle([0, 725, w, h], fill="#0F172A")
+    draw.text((30, 745), "ESQUEMA POSTGRESQL 15 DDL EN: 02_BASE_DE_DATOS/SIGIR_BCRP_SCHEMA_POSTGRESQL.sql", fill="#38BDF8", font=F_CARD_SUB)
+    draw.text((30, 780), "CONFORMIDAD: Compatible con Row-Level Security (RLS) y auditoría formal BCRP Circular 0011-2023", fill="#94A3B8", font=F_BODY)
+
+    out_path = os.path.join(IMG_DIR, 'figura11_der_fisico_logico_postgresql.png')
+    im.save(out_path, quality=95)
+    print("SUCCESS: Generado figura11_der_fisico_logico_postgresql.png (sin desbordamiento)")
+
+
+# =============================================================
+# FIGURA 2: CASOS DE USO (MODERNO UML 2.5 SIN OBJETOS TOSCOS)
+# =============================================================
+def render_figura2_casos_de_uso():
+    w, h = 1280, 760
+    w, h = 1280, 760
+    im = Image.new('RGB', (w, h), C_BG)
+    draw = ImageDraw.Draw(im)
+
+    draw_top_header(draw, 
+                    "DIAGRAMA GENERAL DE CASOS DE USO (UML 2.5) :: SIGIR - BCRP", 
+                    "Subsistema de Gestión de Incidentes, Telemetría y Reportabilidad Regulatoria BCRP",
+                    "FIGURA 4", "#1E3A8A", w=w)
+
+    # Límite del Sistema (Caja Central)
+    bx0, by0, bx1, by1 = 280, 105, 1000, 705
+    draw.rounded_rectangle([bx0, by0, bx1, by1], radius=10, fill=C_PANEL, outline="#2563EB", width=2)
+    draw.rounded_rectangle([bx0, by0, bx1, by0 + 42], radius=8, fill="#1E3A8A")
+    draw.text((bx0 + 20, by0 + 10), "LÍMITE DEL SISTEMA: SIGIR - BCRP (NÚCLEO HEXAGONAL)", fill="#FFFFFF", font=F_CARD_TIT)
+
+    # Actores Izquierda
+    draw.rounded_rectangle([30, 160, 250, 275], radius=8, fill=C_PRIMARY_LIGHT, outline=C_BLUE_BORDER, width=2)
+    draw.rounded_rectangle([30, 160, 250, 202], radius=6, fill=C_PRIMARY)
+    draw.text((45, 172), "ACTOR: OPERADOR NOC", fill="#FFFFFF", font=F_BADGE)
+    draw.text((48, 215), "Entidad Financiera", fill=C_TEXT_MAIN, font=F_CARD_SUB)
+    draw.text((48, 242), "(BCP, BBVA, Interbank)", fill=C_TEXT_MUTED, font=F_BODY)
+
+    draw.rounded_rectangle([30, 420, 250, 535], radius=8, fill=C_PURPLE_BG, outline=C_PURPLE_BORDER, width=2)
+    draw.rounded_rectangle([30, 420, 250, 462], radius=6, fill=C_PURPLE)
+    draw.text((42, 432), "ACTOR: WORKER DAEMON", fill="#FFFFFF", font=F_BADGE)
+    draw.text((48, 475), "Telemetría Asíncrona", fill=C_TEXT_MAIN, font=F_CARD_SUB)
+    draw.text((48, 502), "@Scheduled (cada 30s)", fill=C_TEXT_MUTED, font=F_BODY)
+
+    # Actores Derecha
+    draw.rounded_rectangle([1030, 160, 1250, 275], radius=8, fill=C_GREEN_BG, outline=C_GREEN_BORDER, width=2)
+    draw.rounded_rectangle([1030, 160, 1250, 202], radius=6, fill=C_GREEN)
+    draw.text((1045, 172), "ACTOR: SUPERVISOR BCRP", fill="#FFFFFF", font=F_BADGE)
+    draw.text((1050, 215), "Órgano Regulador", fill=C_TEXT_MAIN, font=F_CARD_SUB)
+    draw.text((1050, 242), "Supervisión CCE", fill=C_TEXT_MUTED, font=F_BODY)
+
+    draw.rounded_rectangle([1030, 420, 1250, 535], radius=8, fill=C_AMBER_BG, outline=C_AMBER_BORDER, width=2)
+    draw.rounded_rectangle([1030, 420, 1250, 462], radius=6, fill=C_AMBER)
+    draw.text((1045, 432), "ACTOR: POSTGRESQL 15", fill="#FFFFFF", font=F_BADGE)
+    draw.text((1050, 475), "Persistencia Inmutable", fill=C_TEXT_MAIN, font=F_CARD_SUB)
+    draw.text((1050, 502), "Triggers Append-Only", fill=C_TEXT_MUTED, font=F_BODY)
+
+    # Casos de Uso (Píldoras Modernas)
+    ucs = [
+        (160, "CU-01: Monitoreo y Sondeo Periódico Heartbeat (30s)", C_PRIMARY, C_PRIMARY_LIGHT),
+        (270, "CU-02: Detección y Auto-Apertura de Incidentes por Timeout", C_RED, C_RED_BG),
+        (380, "CU-03: Mitigación Asistida, Clasificación y Cierre con SLA", C_AMBER, C_AMBER_BG),
+        (490, "CU-04: Compilación Oficial de Archivo SFT (Circ. 0011-2023)", C_GREEN, C_GREEN_BG),
+        (600, "CU-05: Auditoría Forense y Validación de Hash SHA-256", C_PURPLE, C_PURPLE_BG)
+    ]
+
+    for y_pos, label, border_col, bg_col in ucs:
+        draw.rounded_rectangle([320, y_pos, 960, y_pos + 65], radius=25, fill=bg_col, outline=border_col, width=2)
+        draw.text((350, y_pos + 20), label, fill=C_TEXT_MAIN, font=F_CARD_SUB)
+
+    # Líneas conectoras limpias
+    draw.line([250, 215, 320, 290], fill=C_BLUE_BORDER, width=2)
+    draw.line([250, 215, 320, 400], fill=C_BLUE_BORDER, width=2)
+    draw.line([250, 475, 320, 200], fill=C_PURPLE_BORDER, width=2)
+    draw.line([250, 475, 320, 310], fill=C_PURPLE_BORDER, width=2)
+
+    draw.line([960, 520, 1030, 220], fill=C_GREEN_BORDER, width=2)
+    draw.line([960, 630, 1030, 240], fill=C_GREEN_BORDER, width=2)
+    draw.line([960, 310, 1030, 460], fill=C_AMBER_BORDER, width=2)
+    draw.line([960, 530, 1030, 480], fill=C_AMBER_BORDER, width=2)
+    draw.line([960, 635, 1030, 500], fill=C_AMBER_BORDER, width=2)
+
+    # Footer
+    draw.rectangle([0, 728, w, h], fill="#0F172A")
+    draw.text((30, 735), "NOTACIÓN FORMAL UML 2.5 | CERO ACOPLAMIENTO | TRAZABILIDAD IEEE 830 CON RF-01 A RF-05", fill="#38BDF8", font=F_BADGE)
+
+    out_path = os.path.join(IMG_DIR, 'figura2_casos_de_uso.png')
+    im.save(out_path, quality=95)
+    print("SUCCESS: Generado figura2_casos_de_uso.png")
+
+
+# =============================================================
+
+# =============================================================
+# RUNNER COMPLETO
 # =============================================================
 if __name__ == '__main__':
     print("=============================================================")
-    print("RE-RENDERIZANDO DIAGRAMAS Y ANEXOS ULTRA-LEGIBLES (1280x760)")
+    print("RE-RENDERIZANDO DIAGRAMAS Y ANEXOS ULTRA-LEGIBLES")
     print("=============================================================")
     render_anexo1_project_charter()
     render_anexo2_lean_canvas()
@@ -717,6 +962,8 @@ if __name__ == '__main__':
     render_figura15_gitflow_ramas()
     render_figura16_evidencias_junit5()
     render_figura17_matriz_alcance()
+    render_figura11_der_postgresql()
+    render_figura2_casos_de_uso()
     print("=============================================================")
-    print("GENERACIÓN COMPLETADA CON ÉXITO")
+    print("TODOS LOS DIAGRAMAS ACTUALIZADOS Y SIN DESBORDAMIENTO")
     print("=============================================================")

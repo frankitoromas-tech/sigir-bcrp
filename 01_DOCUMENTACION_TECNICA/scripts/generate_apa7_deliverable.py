@@ -474,24 +474,139 @@ r_date.font.color.rgb = RGBColor(100, 116, 139)
 doc.add_page_break()
 
 # ==========================================
-# 2. RESUMEN Y ABSTRACT (PÁGINA 2)
+# 2. RESUMEN Y ABSTRACT (PÁGINAS 2 Y 3)
+# ==========================================
+p_h1("Resumen")
+p_body("El presente informe técnico formaliza el diseño de arquitectura y el avance de implementación del Sistema Integral de Gestión de Incidentes Regulatorios para Pagos Digitales (SIGIR - BCRP), correspondiente al Hito Entregable III del curso. La solución tecnológica responde a la necesidad regulatoria del Banco Central de Reserva del Perú (BCRP) de supervisar de forma objetiva, continua e inmutable la disponibilidad operacional de las entidades que conforman el switch de transferencias interbancarias inmediatas (BCP - Yape, Interbank - Plin, Tunki y CCE), en cumplimiento de la Circular BCRP N° 0011-2023. La arquitectura se diseñó bajo los principios de Clean Architecture y Arquitectura Hexagonal en Java 17 y Spring Boot 3, desacoplando estrictamente el dominio de negocio respecto a los adaptadores web y de persistencia. Se implementó un motor de telemetría concurrente multihilo mediante ScheduledExecutorService que sondea la salud de los endpoints bancarios cada 30 segundos, reduciendo el Tiempo Medio de Detección (MTTD) de 180 minutos a menos de 30 segundos. Para la persistencia, se estructuró un esquema relacional en PostgreSQL 15 blindado con triggers PL/pgSQL append-only que impiden operaciones de modificación (UPDATE) o eliminación (DELETE) sobre la bitácora histórica, garantizando el no repudio probatorio ante fiscalizaciones oficiales. Adicionalmente, el sistema compila reportes normativos SFT con verificación criptográfica de integridad mediante hashes SHA-256. La verificación empírica mediante pruebas unitarias en JUnit 5 y Mockito registra un 100% de éxito en 8 casos de prueba, validando un alcance funcional acumulado del 55%, lo cual supera el 40% exigido reglamentariamente para esta fase.")
+
+p_body("Palabras clave: Arquitectura hexagonal, Banco Central de Reserva del Perú, inmutabilidad, interoperabilidad, pagos digitales, Spring Boot, telemetría, TDD.", italic=True)
+
+doc.add_page_break()
+
+p_h1("Abstract")
+p_body("This technical academic report formalizes the architectural design and implementation progress of the Comprehensive Regulatory Incident Management System for Digital Payments (SIGIR - BCRP), corresponding to Milestone Deliverable III of the course. The technological solution addresses the regulatory requirement of the Central Reserve Bank of Peru (BCRP) to objectively, continuously, and immutably monitor the operational availability of entities operating within the national instant digital transfer switch (BCP - Yape, Interbank - Plin, Tunki, and CCE), in compliance with Circular BCRP N° 0011-2023. The software architecture was designed following Clean Architecture and Hexagonal Architecture principles in Java 17 and Spring Boot 3, strictly decoupling core domain rules from web and persistence adapters. A concurrent multithreaded telemetry worker was implemented using ScheduledExecutorService to poll financial endpoints every 30 seconds, reducing Mean Time to Detect (MTTD) from over 180 minutes to less than 30 seconds. For data storage, an immutable relational schema was structured in PostgreSQL 15 reinforced with append-only PL/pgSQL triggers that block UPDATE and DELETE operations on historical logs, guaranteeing forensic non-repudiation during regulatory audits. Furthermore, the system compiles official SFT compliance reports featuring cryptographic SHA-256 hashing. Automated testing using JUnit 5 and Mockito demonstrates a 100% pass rate across 8 test cases, validating an accumulated functional completion rate of 55%, which surpasses the 40% threshold mandated for this milestone.")
+
+p_body("Keywords: Hexagonal architecture, Central Reserve Bank of Peru, immutability, interoperability, digital payments, Spring Boot, telemetry, TDD.", italic=True)
+
+doc.add_page_break()
+
+# ==========================================
+# 3. ÍNDICE GENERAL (PÁGINAS 4 Y 5)
+# ==========================================
+p_h1("Índice General")
+
+add_toc_line("Resumen", "ii", level=1, italic=True)
+add_toc_line("Abstract", "iii", level=1, italic=True)
+add_toc_line("Índice de Tablas", "vi", level=1, italic=True)
+add_toc_line("Índice de Figuras", "vii", level=1, italic=True)
+
+add_toc_line("CAPÍTULO 1. ASPECTOS GENERALES", "1", level=1, bold=True)
+add_toc_line("1.1 Definición del Problema", "1", level=2, bold=True)
+add_toc_line("1.1.1 Descripción del problema", "1", level=3)
+add_toc_line("1.1.2 Diagramas de procesos de negocio (BPMN 2.0)", "2", level=3)
+add_toc_line("1.2 Planteamiento de Alternativas de Solución", "3", level=2, bold=True)
+add_toc_line("1.3 Definición de Objetivos", "4", level=2, bold=True)
+add_toc_line("1.3.1 Objetivo general", "4", level=3)
+add_toc_line("1.3.2 Objetivos específicos", "4", level=3)
+add_toc_line("1.3.3 Alcances y limitaciones", "4", level=3)
+add_toc_line("1.3.4 Justificación", "4", level=3)
+add_toc_line("1.3.5 Estado del arte", "5", level=3)
+
+add_toc_line("CAPÍTULO 2. MARCO TEÓRICO", "5", level=1, bold=True)
+add_toc_line("2.1 Fundamento Teórico", "5", level=2, bold=True)
+
+add_toc_line("CAPÍTULO 3. DESARROLLO DE LA SOLUCIÓN", "6", level=1, bold=True)
+add_toc_line("3.1 Análisis del Sistema", "6", level=2, bold=True)
+add_toc_line("3.1.1 Requisitos funcionales (RF-01 a RF-05)", "6", level=3)
+add_toc_line("3.1.2 Requisitos no funcionales bajo norma ISO/IEC 25010", "7", level=3)
+add_toc_line("3.2 Diseño del Sistema", "8", level=2, bold=True)
+add_toc_line("3.2.1 Arquitectura inicial del sistema", "8", level=3)
+add_toc_line("3.2.1.1 Arquitectura propuesta (MVC, TDD, DAO, SOLID y Seguridad)", "9", level=4)
+add_toc_line("3.2.2 Casos de uso", "11", level=3)
+add_toc_line("3.2.3 Diseño de clases", "12", level=3)
+add_toc_line("3.2.4 Diseño de la base de datos (PostgreSQL 15)", "13", level=3)
+add_toc_line("3.2.5 Diseño de interfaces gráficas UX/UI", "14", level=3)
+add_toc_line("3.2.5.1 Diseño de prototipos de interfaces", "14", level=4)
+add_toc_line("3.2.5.2 Diseño de navegación y experiencia de usuario", "16", level=4)
+add_toc_line("3.3 Implementación del Sistema", "16", level=2, bold=True)
+add_toc_line("3.3.1 Implementación de la estructura del proyecto", "16", level=3)
+add_toc_line("3.3.2 Utilización de recursos y librerías Java 17", "17", level=3)
+add_toc_line("3.3.3 Implementación de los módulos y funcionalidades", "18", level=3)
+add_toc_line("3.3.5 Implementación de mecanismos de seguridad", "18", level=3)
+add_toc_line("3.4 Control de Versiones del Proyecto", "19", level=2, bold=True)
+add_toc_line("3.4.1 Configuración e inicialización de Git", "19", level=3)
+add_toc_line("3.4.2 Creación y gestión del repositorio en GitHub", "19", level=3)
+add_toc_line("3.4.3 Gestión de ramas (Branches / GitFlow)", "20", level=3)
+add_toc_line("3.4.4 Registro de cambios (Commits) y sincronización", "20", level=3)
+add_toc_line("3.5 Pruebas y Validación del Sistema", "21", level=2, bold=True)
+add_toc_line("3.5.1 Aplicación del enfoque TDD (Test Driven Development)", "21", level=3)
+add_toc_line("3.5.2 Diseño de casos de prueba y ejecución con JUnit 5", "22", level=3)
+add_toc_line("3.6 Construcción del Producto Final", "23", level=2, bold=True)
+add_toc_line("3.6.1 Integración de los componentes del sistema", "23", level=3)
+add_toc_line("3.6.2 Validación del cumplimiento del alcance comprometido (55% vs 40%)", "24", level=3)
+
+add_toc_line("CONCLUSIONES", "25", level=1, bold=True)
+add_toc_line("RECOMENDACIONES", "25", level=1, bold=True)
+add_toc_line("BIBLIOGRAFÍA", "26", level=1, bold=True)
+add_toc_line("ANEXOS", "27", level=1, bold=True)
+add_toc_line("Anexo 1: Project Charter del Proyecto", "27", level=2)
+add_toc_line("Anexo 2: Modelo Lean Canvas Formal", "28", level=2)
+add_toc_line("Anexo 3: Encuestas y Validación con Usuarios", "30", level=2)
+add_toc_line("Anexo 4: Evidencias de Prototipos UX/UI", "30", level=2)
+add_toc_line("Anexo 5: Evidencias de Implementación del Sistema", "31", level=2)
+add_toc_line("Anexo 6: Evidencias del Repositorio GitHub", "32", level=2)
+add_toc_line("Anexo 7: Evidencias de Pruebas Unitarias y de Integración", "32", level=2)
+add_toc_line("Anexo 8: Matriz de Trazabilidad de Requisitos", "34", level=2)
+add_toc_line("Anexo 9: Cuadro Comparativo de Alternativas de Solución", "35", level=2)
+
+doc.add_page_break()
+
+# ==========================================
+# 4. ÍNDICE DE TABLAS (PÁGINA 6)
+# ==========================================
+p_h1("Índice de Tablas")
+add_toc_line("Tabla 1. Matriz de Requisitos Funcionales del Sistema SIGIR - BCRP", "6", level=1)
+add_toc_line("Tabla 2. Matriz de Requisitos No Funcionales del Sistema (ISO/IEC 25010)", "7", level=1)
+add_toc_line("Tabla 3. Matriz de Modelado de Amenazas STRIDE y Contramedidas Implementadas", "9", level=1)
+add_toc_line("Tabla 4. Especificación Detallada de Casos de Uso Primarios", "11", level=1)
+add_toc_line("Tabla 5. Diccionario de Datos y Restricciones de Inmutabilidad en PostgreSQL 15", "13", level=1)
+add_toc_line("Tabla 6. Historial Auditable de Commits y Trazabilidad en el Repositorio GitHub", "20", level=1)
+add_toc_line("Tabla 7. Matriz de Casos de Prueba Unitarios Automatizados (JUnit 5 / Mockito)", "22", level=1)
+add_toc_line("Tabla 8. Matriz de Validación del Cumplimiento del Alcance Comprometido (Semana 12)", "24", level=1)
+add_toc_line("Tabla 9. Ficha Técnica Ejecutiva del Acta de Constitución del Proyecto (Project Charter)", "27", level=1)
+add_toc_line("Tabla 10. Matriz Detallada del Modelo de Negocio e Innovación Tecnológica (Lean Canvas)", "28", level=1)
+add_toc_line("Tabla 11. Resultados de la Encuesta Técnica Aplicada a Operadores y Administradores de TI", "30", level=1)
+add_toc_line("Tabla 12. Especificación Técnica de Prototipos de Interfaz de Usuario y Navegabilidad", "30", level=1)
+add_toc_line("Tabla 13. Ficha Técnica del Artefacto Compilado Backend y Entorno de Ejecución", "31", level=1)
+add_toc_line("Tabla 14. Estructura de Control de Versiones GitFlow y Políticas del Repositorio", "32", level=1)
+add_toc_line("Tabla 15. Certificación Detallada de Pruebas Unitarias Automatizadas (Surefire Report)", "32", level=1)
+add_toc_line("Tabla 16. Matriz de Trazabilidad Integral de Requisitos, Componentes y Pruebas Unitarias", "34", level=1)
+add_toc_line("Tabla 17. Estructura Organizacional de Carpetas y Entregables del Repositorio Oficial", "35", level=1)
+
+doc.add_page_break()
+
+# ==========================================
+# 5. ÍNDICE DE FIGURAS (PÁGINA 7)
 # ==========================================
 p_h1("Índice de Figuras")
 add_toc_line("Figura 1. Diagrama de Procesos de Negocio AS-IS: Supervisión Reactiva y Fragmentada", "2", level=1)
-add_toc_line("Figura 2. Diagrama de Procesos de Negocio TO-BE: Supervisión Automatizada e Inmutable con SIGIR - BCRP", "3", level=1)
-add_toc_line("Figura 3. Arquitectura Hexagonal (Puertos y Adaptadores) Implementada para SIGIR - BCRP", "12", level=1)
-add_toc_line("Figura 4. Diagrama General de Casos de Uso del Sistema SIGIR - BCRP (Notación UML 2.5)", "14", level=1)
-add_toc_line("Figura 5. Diagrama de Clases de Diseño de Software bajo Arquitectura Hexagonal en Java 17", "15", level=1)
-add_toc_line("Figura 6. Diagrama Entidad-Relación Relacional en PostgreSQL 15", "16", level=1)
-add_toc_line("Figura 7. Prototipo de Alta Fidelidad: Consola Web Dashboard NOC en Tiempo Real", "18", level=1)
-add_toc_line("Figura 8. Prototipos de Pantallas Seleccionadas (Alternativa 2: Clean API & Consola NOC Reactiva)", "19", level=1)
-add_toc_line("Figura 9. Mockups de Pantallas Evaluadas (Alternativa 1: Monolito Hexagonal Modular)", "19", level=1)
-add_toc_line("Figura 10. Mockups de Pantallas Evaluadas (Alternativa 3: Microservicios Distribuidos en la Nube)", "20", level=1)
-add_toc_line("Figura 11. Estructura Jerárquica de Paquetes y Módulos del Backend en el IDE (Maven & Java 17)", "21", level=1)
-add_toc_line("Figura 12. Flujo de Ramificación GitFlow y Repositorio Oficial en GitHub", "24", level=1)
-add_toc_line("Figura 13. Reporte Oficial de Ejecución de Pruebas Unitarias TDD en Apache Maven Surefire y JUnit 5", "25", level=1)
-add_toc_line("Figura 14. Matriz de Verificación del Alcance Funcional Comprometido (Semana 12: 55% Alcanzado vs 40% Requerido)", "26", level=1)
+add_toc_line("Figura 2. Diagrama de Procesos de Negocio TO-BE: Supervisión Automatizada e Inmutable", "3", level=1)
+add_toc_line("Figura 3. Arquitectura Hexagonal (Puertos y Adaptadores) Implementada para SIGIR - BCRP", "9", level=1)
+add_toc_line("Figura 4. Diagrama General de Casos de Uso del Sistema SIGIR - BCRP (Notación UML 2.5)", "11", level=1)
+add_toc_line("Figura 5. Diagrama de Clases de Diseño de Software bajo Arquitectura Hexagonal en Java 17", "12", level=1)
+add_toc_line("Figura 6. Diagrama Entidad-Relación Físico y Lógico Inmutable en PostgreSQL 15", "13", level=1)
+add_toc_line("Figura 7. Prototipo de Alta Fidelidad: Consola Web Dashboard NOC en Tiempo Real", "14", level=1)
+add_toc_line("Figura 8. Prototipos de Pantallas Seleccionadas (Alternativa 2: Clean API & Consola NOC Reactiva)", "15", level=1)
+add_toc_line("Figura 9. Mockups de Pantallas Evaluadas (Alternativa 1: Monolito Hexagonal Modular)", "15", level=1)
+add_toc_line("Figura 10. Mockups de Pantallas Evaluadas (Alternativa 3: Microservicios Distribuidos en la Nube)", "16", level=1)
+add_toc_line("Figura 11. Estructura Jerárquica de Paquetes y Módulos del Backend en el IDE (Maven & Java 17)", "17", level=1)
+add_toc_line("Figura 12. Flujo de Ramificación GitFlow y Repositorio Oficial en GitHub", "20", level=1)
+add_toc_line("Figura 13. Reporte Oficial de Ejecución de Pruebas Unitarias TDD en Apache Maven Surefire y JUnit 5", "22", level=1)
+add_toc_line("Figura 14. Matriz de Verificación del Alcance Funcional Comprometido (Semana 12: 55% vs 40%)", "24", level=1)
+add_toc_line("Figura A1. Ficha Ejecutiva del Acta de Constitución del Proyecto (Project Charter)", "28", level=1)
+add_toc_line("Figura A2. Lienzo de Modelo de Negocio e Innovación Tecnológica (Lean Canvas)", "29", level=1)
 
+doc.add_page_break()
 
 # ==========================================
 # CAPÍTULO 1 - ASPECTOS GENERALES
@@ -1066,7 +1181,7 @@ charter_rows = [
     ["Alcance Comprometido (APF3)", "Implementación verificada del 55% del alcance total: (1) Telemetría automática cada 30s, (2) Gestión de incidentes con cálculo de SLA (99.90%), (3) Compilador oficial SFT con firma SHA-256, y (4) Consola NOC web reactiva."],
     ["Presupuesto Asignado", "S/ 45,000.00 PEN desglosados en: S/ 30,000 desarrollo de software, S/ 8,000 infraestructura cloud/Docker y S/ 7,000 aseguramiento de calidad."],
     ["Cronograma y Metodología", "16 Semanas lectivas distribuidas en 4 Sprints Scrum de 4 semanas. Hito actual: Semana 12 (Entregable III / APF3)."],
-    ["Equipo de Ingeniería", "• Frank E. Vargas Huamán (Backend Lead, Arquitecto de Software & DevOps)\n• Fernando Vargas Huamán (Frontend Lead, Consola NOC & Pruebas E2E)\n• Joel Mendoza (Especialista en Base de Datos & Negocio)"],
+    ["Equipo de Ingeniería", "• Frank E. Vargas Huamán (Líder Técnico & Arquitecto de Software)\n• Fernando A. Romero Requejo (Ingeniero de Requisitos, Procesos & Frontend Lead)\n• Joel L. Olaya Vivas (Ingeniero de Software, Persistencia & QA Automation)"],
     ["Criterios de Aceptación", "100% de pruebas unitarias exitosas (8/8 en JUnit 5), cero fallas en compilación de archivos SFT y aprobación de la cátedra."]
 ]
 add_apa7_table(

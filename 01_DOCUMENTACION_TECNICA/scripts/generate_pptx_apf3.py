@@ -145,7 +145,7 @@ def create_deck():
     # 3 Member Cards
     team_members = [
         ("Frank Emiliano Vargas Huamán", "Líder Técnico & Arquitecto de Software", "U23243651 | Backend & DevOps Lead"),
-        ("Fernando Alber Alfredo Romero", "Ingeniero de Requisitos & Procesos", "U21216410 | Frontend & UX Lead"),
+        ("Fernando Alber Alfredo Romero Requejo", "Ingeniero de Requisitos & Procesos", "U21216410 | Frontend & UX Lead"),
         ("Joel Leonardo Olaya Vivas", "Ingeniero de Software & QA", "U21221688 | Base de Datos & Negocio")
     ]
     cur_x = 0.8
