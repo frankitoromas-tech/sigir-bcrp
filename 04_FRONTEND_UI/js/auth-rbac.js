@@ -147,11 +147,11 @@ const AuthRBAC = {
             setTimeout(() => {
                 const cred = CREDENCIALES_DEMO[email.trim().toLowerCase()];
                 if (!cred) {
-                    reject(new Error('Usuario no registrado en el Active Directory del BCRP.'));
+                    reject(new Error('Usuario no registrado en el directorio institucional del BCRP.'));
                     return;
                 }
                 if (cred.password !== password) {
-                    reject(new Error('Contraseña incorrecta para el dominio BCRP.LOCAL.'));
+                    reject(new Error('Contraseña incorrecta para el usuario institucional.'));
                     return;
                 }
                 if (otp && otp.trim().length !== 6) {

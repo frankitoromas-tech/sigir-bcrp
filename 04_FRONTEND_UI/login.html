@@ -9,266 +9,761 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <!-- Librerías de Vanguardia para Animación y Seguridad -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
     <style>
+        /* ==========================================================================
+           ESTÁNDAR VISUAL ÉLITE FINTECH - LOGIN PORTAL SIGIR BCRP
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body.login-page {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: radial-gradient(circle at 50% 15%, #111827 0%, #06090F 100%);
             margin: 0;
-            padding: 24px;
-            font-family: var(--font-sans);
+            padding: 40px 16px;
+            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
             color: #F8FAFC;
+            background-color: #070B12;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.32) 0%, transparent 60%),
+                radial-gradient(circle at 85% 90%, rgba(226, 179, 87, 0.08) 0%, transparent 50%),
+                radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 28px 28px;
+            background-position: 0 0, 0 0, 0 0;
+            overflow-x: hidden;
         }
+
+        .login-shell {
+            width: 100%;
+            max-width: 470px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Halo resplandeciente exterior */
         .login-card {
             width: 100%;
-            max-width: 460px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 36px 32px;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(226, 179, 87, 0.22);
+            border-radius: 20px;
+            padding: 34px 30px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 25px 70px -15px rgba(0, 0, 0, 0.85),
+                0 0 50px rgba(226, 179, 87, 0.07);
+            position: relative;
+            overflow: hidden;
             text-align: left;
+            transition: border-color 240ms ease, box-shadow 240ms ease;
         }
+
+        .card-top-glow {
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #E2B357, #38BDF8, transparent);
+            opacity: 0.9;
+        }
+
+        /* Encabezado Institucional BCRP */
         .login-header-center {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
+            position: relative;
         }
+
+        .emblem-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(226, 179, 87, 0.16) 0%, rgba(11, 19, 43, 0.9) 100%);
+            border: 1.5px solid rgba(226, 179, 87, 0.55);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 24px rgba(226, 179, 87, 0.28);
+            margin-bottom: 12px;
+            transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+        }
+
+        .emblem-wrapper:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 32px rgba(226, 179, 87, 0.45);
+        }
+
+        .login-auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10B981;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .badge-live-pulse {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 8px #10B981;
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
         .login-title {
-            font-size: 1.45rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #F8FAFC;
             letter-spacing: -0.02em;
-            margin: 12px 0 4px 0;
-        }
-        .login-subtitle {
-            font-size: 0.8rem;
-            color: #94A3B8;
-            margin: 0;
-            line-height: 1.4;
-        }
-        .form-group-login {
-            margin-bottom: 14px;
-        }
-        .form-group-login label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #CBD5E1;
-            margin-bottom: 6px;
-        }
-        .login-input {
-            width: 100%;
-            padding: 10px 14px;
-            background: #0B0F17;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            color: #F8FAFC;
-            font-size: 0.85rem;
-            font-family: var(--font-sans);
-            outline: none;
-            transition: border-color 150ms ease;
-            box-sizing: border-box;
-        }
-        .login-input:focus,
-        .login-input:focus-visible {
-            outline: 2px solid #E2B357 !important;
-            outline-offset: 1px !important;
-            border-color: #E2B357;
-            box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.25);
-        }
-        .login-alert-box {
-            display: none;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.78rem;
-            margin-bottom: 16px;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #FCA5A5;
-        }
-        .login-alert-box.visible {
-            display: block;
-        }
-        .btn-login-submit {
-            width: 100%;
-            padding: 12px;
-            background: #1E3A8A;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 0.88rem;
-            cursor: pointer;
-            transition: all 180ms ease;
+            margin: 0 0 6px 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 8px;
         }
-        .btn-login-submit:hover {
-            background: #2563EB;
+
+        .login-title .gold-dot {
+            color: #E2B357;
+            font-size: 1.2rem;
+        }
+
+        .login-subtitle {
+            font-size: 0.78rem;
+            color: #94A3B8;
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .login-subtitle span {
+            color: #CBD5E1;
+            font-weight: 500;
+        }
+
+        /* Alerta Dinámica */
+        .login-alert-box {
+            display: none;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            margin-bottom: 18px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #FCA5A5;
+            align-items: center;
+            gap: 10px;
+            animation: fadeInDown 200ms ease;
+        }
+
+        .login-alert-box.visible {
+            display: flex;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Campos de Entrada Modernos */
+        .form-group-login {
+            margin-bottom: 16px;
+        }
+
+        .form-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 7px;
+        }
+
+        .form-group-login label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #CBD5E1;
+            margin: 0;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            left: 13px;
+            color: #64748B;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 150ms ease;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            background: rgba(11, 15, 23, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: #F8FAFC;
+            font-size: 0.85rem;
+            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+            outline: none;
+            transition: all 180ms ease;
+        }
+
+        .login-input::placeholder {
+            color: #475569;
+        }
+
+        .login-input:focus {
+            background: rgba(11, 15, 23, 0.95);
+            border-color: #E2B357;
+            box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.22);
+        }
+
+        .login-input:focus + .input-icon-left,
+        .input-wrapper:focus-within .input-icon-left {
+            color: #E2B357;
+        }
+
+        /* Botón Mostrar/Ocultar Contraseña */
+        .btn-input-action {
+            position: absolute;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: #64748B;
+            padding: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 150ms ease, background 150ms ease;
+        }
+
+        .btn-input-action:hover {
+            color: #E2B357;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Botón Generar Token Demo */
+        .btn-gen-token {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.71rem;
+            font-weight: 600;
+            color: #E2B357;
+            background: rgba(226, 179, 87, 0.12);
+            border: 1px solid rgba(226, 179, 87, 0.28);
+            padding: 3px 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 150ms ease;
+        }
+
+        .btn-gen-token:hover {
+            background: rgba(226, 179, 87, 0.22);
+            border-color: #E2B357;
             transform: translateY(-1px);
         }
+
+        .btn-gen-token:active {
+            transform: scale(0.97);
+        }
+
+        /* Botón Principal FinTech */
+        .btn-login-submit {
+            width: 100%;
+            padding: 13px 18px;
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #1D4ED8 100%);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 10px;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 600ms ease;
+        }
+
+        .btn-login-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -4px rgba(37, 99, 235, 0.65);
+            border-color: rgba(147, 197, 253, 0.6);
+        }
+
+        .btn-login-submit:hover::before {
+            left: 100%;
+        }
+
         .btn-login-submit:active {
             transform: scale(0.98);
         }
+
         .btn-login-submit:focus-visible {
             outline: 2px solid #E2B357 !important;
             outline-offset: 2px !important;
             box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
         }
-        .quick-access-section {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+        .btn-arrow-icon {
+            transition: transform 200ms ease;
         }
-        .quick-access-title {
-            font-size: 0.72rem;
+
+        .btn-login-submit:hover .btn-arrow-icon {
+            transform: translateX(4px);
+        }
+
+        /* Sección de Acceso Rápido para Demostración */
+        .quick-access-section {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .quick-access-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.07em;
             color: #94A3B8;
             font-weight: 700;
-            margin-bottom: 10px;
-            display: block;
+            margin-bottom: 12px;
             text-align: center;
         }
+
         .quick-role-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 8px;
         }
+
         .btn-quick-role {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 10px 14px;
-            background: rgba(30, 41, 59, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.38);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
             color: #CBD5E1;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all 150ms ease;
+            transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
+            position: relative;
         }
+
         .btn-quick-role:hover {
-            background: rgba(30, 41, 59, 0.7);
-            border-color: rgba(226, 179, 87, 0.3);
-            color: #F8FAFC;
+            background: rgba(30, 41, 59, 0.75);
+            border-color: rgba(226, 179, 87, 0.35);
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.4);
         }
+
+        .btn-quick-role:active {
+            transform: scale(0.99);
+        }
+
         .btn-quick-role:focus-visible {
             outline: 2px solid #E2B357 !important;
             outline-offset: 2px !important;
             box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
         }
-        .role-pill-badge {
-            font-size: 0.68rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 12px;
+
+        .role-left-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .login-footer-meta {
+
+        .role-monogram {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono, monospace);
+            font-weight: 800;
+            font-size: 0.78rem;
+            flex-shrink: 0;
+            transition: transform 200ms ease;
+        }
+
+        .btn-quick-role:hover .role-monogram {
+            transform: scale(1.08);
+        }
+
+        .role-name-bold {
+            color: #F8FAFC;
+            font-weight: 700;
+            font-size: 0.82rem;
+            line-height: 1.25;
+        }
+
+        .role-desc-dim {
+            font-size: 0.71rem;
+            color: #94A3B8;
+            margin-top: 1px;
+        }
+
+        .role-pill-badge {
+            font-size: 0.67rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        /* Footer Regulatorio de Confianza */
+        .login-trust-footer {
             text-align: center;
             margin-top: 20px;
-            font-size: 0.7rem;
-            color: #8898AA;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            font-size: 0.68rem;
+            color: #64748B;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trust-item svg {
+            color: #E2B357;
+            opacity: 0.8;
+        }
+
+        /* Responsividad en Pantallas Pequeñas */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 26px 20px;
+                border-radius: 16px;
+            }
+            .login-title {
+                font-size: 1.35rem;
+            }
+            .btn-quick-role {
+                padding: 9px 12px;
+            }
         }
     </style>
 </head>
 <body class="login-page">
 
-    <div class="login-card">
-        <div class="login-header-center">
-            <svg class="icon-svg bcrp-emblem" width="44" height="44" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
-                <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
-                <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
-                <rect x="11" y="15" width="14" height="1.5" rx="0.5" fill="#E2B357"/>
-                <rect x="12" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
-                <rect x="15.3" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
-                <rect x="18.7" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
-                <rect x="22" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
-                <rect x="10.5" y="24.5" width="15" height="1.5" rx="0.5" fill="#E2B357"/>
-                <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
-            </svg>
-            <h1 class="login-title">SIGIR - BCRP</h1>
-            <p class="login-subtitle">Sistema de Supervisión y Gestión de Incidentes Regulatorios<br>Switch Interbancario CCE &bull; Banco Central de Reserva del Perú</p>
-        </div>
+    <main class="login-shell">
+        <div class="login-card">
+            <div class="card-top-glow" aria-hidden="true"></div>
 
-        <div id="loginAlertBox" class="login-alert-box"></div>
-
-        <form id="formLoginBcrp" onsubmit="procesarLogin(event)">
-            <div class="form-group-login">
-                <label for="txtUsuario">Correo Institucional BCRP</label>
-                <input type="email" id="txtUsuario" class="login-input" placeholder="ejemplo: frank.vargas@bcrp.gob.pe" required autocomplete="username">
-            </div>
-
-            <div class="form-group-login">
-                <label for="txtPassword">Contraseña de Red (Active Directory)</label>
-                <input type="password" id="txtPassword" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
-            </div>
-
-            <div class="form-group-login">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                    <label for="txtOtp" style="margin:0;">Token Digital de Seguridad (MFA)</label>
-                    <span style="font-size:0.7rem; color:#E2B357; cursor:pointer;" onclick="generarOtpDemo()">Autogenerar Token</span>
+            <!-- Encabezado Institucional -->
+            <header class="login-header-center">
+                <div class="emblem-wrapper" title="Banco Central de Reserva del Perú - CCE">
+                    <svg class="icon-svg bcrp-emblem" width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
+                        <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
+                        <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
+                        <rect x="11" y="15" width="14" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="12" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="15.3" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="18.7" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="22" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="10.5" y="24.5" width="15" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
+                    </svg>
                 </div>
-                <input type="text" id="txtOtp" class="login-input" placeholder="6 dígitos (ej: 849201)" maxlength="6" style="font-family:var(--font-mono); letter-spacing:0.15em;">
+
+                <div class="login-auth-badge">
+                    <span class="badge-live-pulse" aria-hidden="true"></span>
+                    <span>Consola Oficial de Supervisión &bull; BCRP</span>
+                </div>
+
+                <h1 class="login-title">SIGIR <span class="gold-dot">&bull;</span> BCRP</h1>
+                <p class="login-subtitle">
+                    Supervisión y Control de Incidentes Regulatorios<br>
+                    <span>Switch Interbancario CCE &bull; Pagos Digitales Inmediatos</span>
+                </p>
+            </header>
+
+            <!-- Alerta Dinámica de Error -->
+            <div id="loginAlertBox" class="login-alert-box" role="alert">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="loginAlertText"></span>
             </div>
 
-            <button type="submit" id="btnSubmitLogin" class="btn-login-submit">
-                <span id="btnSubmitText">Autenticar &amp; Ingresar al Sistema</span>
-                <span id="btnSubmitSpinner" style="display:none;">⏳ Verificando credenciales...</span>
-            </button>
-        </form>
-
-        <div class="quick-access-section">
-            <span class="quick-access-title">Acceso Rápido para Demostración al Jurado (1 Clic)</span>
-            
-            <div class="quick-role-grid">
-                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('ARQUITECTO')">
-                    <div>
-                        <strong style="color:#F8FAFC;">Frank Vargas Huamán</strong>
-                        <div style="font-size:0.72rem; color:#94A3B8;">Arquitecto de Software &amp; NOC Lead</div>
+            <!-- Formulario de Acceso Institucional -->
+            <form id="formLoginBcrp" onsubmit="procesarLogin(event)" novalidate>
+                <!-- Correo Institucional -->
+                <div class="form-group-login">
+                    <div class="form-label-row">
+                        <label for="txtUsuario">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            <span>Correo Institucional BCRP</span>
+                        </label>
                     </div>
-                    <span class="role-pill-badge" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid #E2B357;">Acceso Total</span>
-                </button>
-
-                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('OPERADOR')">
-                    <div>
-                        <strong style="color:#F8FAFC;">Fernando Romero / Joel Olaya</strong>
-                        <div style="font-size:0.72rem; color:#94A3B8;">Operador NOC &amp; Mesa de Ayuda</div>
+                    <div class="input-wrapper">
+                        <span class="input-icon-left" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>
+                            </svg>
+                        </span>
+                        <input type="email" id="txtUsuario" class="login-input" placeholder="ejemplo: frank.vargas@bcrp.gob.pe" required autocomplete="username" spellcheck="false">
                     </div>
-                    <span class="role-pill-badge" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid #38BDF8;">Operación</span>
-                </button>
+                </div>
 
-                <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('AUDITOR')">
-                    <div>
-                        <strong style="color:#F8FAFC;">Prof. Zamata</strong>
-                        <div style="font-size:0.72rem; color:#94A3B8;">Auditor Regulatorio BCRP / Jurado</div>
+                <!-- Contraseña Institucional (Zero Tecnicismos) -->
+                <div class="form-group-login">
+                    <div class="form-label-row">
+                        <label for="txtPassword">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <span>Contraseña Institucional</span>
+                        </label>
                     </div>
-                    <span class="role-pill-badge" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981;">Solo Lectura</span>
+                    <div class="input-wrapper">
+                        <span class="input-icon-left" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="txtPassword" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
+                        <button type="button" class="btn-input-action" id="btnTogglePassword" onclick="alternarVisibilidadPassword()" title="Mostrar/Ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                            <svg id="iconEye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Token Digital de Seguridad (MFA) -->
+                <div class="form-group-login">
+                    <div class="form-label-row">
+                        <label for="txtOtp">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <span>Token Digital de Seguridad (MFA)</span>
+                        </label>
+                        <button type="button" class="btn-gen-token" onclick="generarOtpDemo()" title="Generar código temporal aleatorio de 6 dígitos">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            <span>Generar Token Demo</span>
+                        </button>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="input-icon-left" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="txtOtp" class="login-input" placeholder="6 dígitos (ej: 849201)" maxlength="6" inputmode="numeric" style="font-family:var(--font-mono, monospace); letter-spacing:0.18em; font-weight:600;">
+                    </div>
+                </div>
+
+                <!-- Botón de Envío Principal -->
+                <button type="submit" id="btnSubmitLogin" class="btn-login-submit">
+                    <span id="btnSubmitText" style="display:inline-flex; align-items:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        <span>Autenticar &amp; Ingresar al Sistema</span>
+                        <svg class="btn-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </span>
+                    <span id="btnSubmitSpinner" style="display:none; align-items:center; gap:8px;">
+                        <svg class="spinner-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;">
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                        </svg>
+                        <span>Validando credenciales...</span>
+                    </span>
                 </button>
-            </div>
+            </form>
+
+            <!-- Sección de Acceso Rápido para Demostración -->
+            <section class="quick-access-section" aria-label="Acceso Rápido para Demostración">
+                <div class="quick-access-divider">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>ACCESO RÁPIDO PARA EVALUACIÓN AL JURADO (1 CLIC)</span>
+                </div>
+                
+                <div class="quick-role-grid">
+                    <!-- Perfil Frank Vargas (NOC Lead / SuperAdmin) -->
+                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('ARQUITECTO')" title="Ingresar de inmediato como Frank Vargas Huamán">
+                        <div class="role-left-group">
+                            <span class="role-monogram" style="background:rgba(226,179,87,0.18); color:#E2B357; border:1px solid rgba(226,179,87,0.45);">FV</span>
+                            <div>
+                                <div class="role-name-bold">Frank Vargas Huamán</div>
+                                <div class="role-desc-dim">Arquitecto de Software &bull; NOC Lead BCRP</div>
+                            </div>
+                        </div>
+                        <span class="role-pill-badge" style="background:rgba(226,179,87,0.14); color:#E2B357; border:1px solid rgba(226,179,87,0.38);">Acceso Total</span>
+                    </button>
+
+                    <!-- Perfil Operador NOC -->
+                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('OPERADOR')" title="Ingresar de inmediato como Fernando Romero / Joel Olaya">
+                        <div class="role-left-group">
+                            <span class="role-monogram" style="background:rgba(56,189,248,0.18); color:#38BDF8; border:1px solid rgba(56,189,248,0.45);">OP</span>
+                            <div>
+                                <div class="role-name-bold">Fernando Romero / Joel Olaya</div>
+                                <div class="role-desc-dim">Operador NOC &bull; Mesa de Ayuda</div>
+                            </div>
+                        </div>
+                        <span class="role-pill-badge" style="background:rgba(56,189,248,0.14); color:#38BDF8; border:1px solid rgba(56,189,248,0.38);">Operación</span>
+                    </button>
+
+                    <!-- Perfil Jurado / Auditor -->
+                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('AUDITOR')" title="Ingresar de inmediato como Prof. Zamata">
+                        <div class="role-left-group">
+                            <span class="role-monogram" style="background:rgba(16,185,129,0.18); color:#10B981; border:1px solid rgba(16,185,129,0.45);">PZ</span>
+                            <div>
+                                <div class="role-name-bold">Prof. Zamata</div>
+                                <div class="role-desc-dim">Auditor Regulatorio BCRP &bull; Jurado</div>
+                            </div>
+                        </div>
+                        <span class="role-pill-badge" style="background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.38);">Solo Lectura</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sellos de Confianza y Regulación -->
+            <footer class="login-trust-footer">
+                <span class="trust-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Circular BCRP N° 0014-2023</span>
+                </span>
+                <span class="trust-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span>Canal Seguro TLS 1.3</span>
+                </span>
+                <span class="trust-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>Sellado SHA-256 Validado</span>
+                </span>
+            </footer>
         </div>
-
-        <div class="login-footer-meta">
-            Circular BCRP N° 0014-2023 &bull; Canal Seguro TLS 1.3 &bull; SHA-256 Validado
-        </div>
-    </div>
+    </main>
 
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>
     <script>
+        // Animación giratoria para spinner
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = "@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }";
+        document.head.appendChild(styleSheet);
+
+        function alternarVisibilidadPassword() {
+            const passInput = document.getElementById('txtPassword');
+            const iconEye = document.getElementById('iconEye');
+            if (!passInput) return;
+
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                iconEye.innerHTML = '<path d="m2 2 20 20"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>';
+            } else {
+                passInput.type = 'password';
+                iconEye.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+
         function generarOtpDemo() {
             const otp = Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('txtOtp').value = otp;
+            const inputOtp = document.getElementById('txtOtp');
+            if (inputOtp) {
+                inputOtp.value = otp;
+                inputOtp.style.borderColor = '#E2B357';
+                inputOtp.style.boxShadow = '0 0 0 3px rgba(226, 179, 87, 0.25)';
+                setTimeout(() => {
+                    inputOtp.style.borderColor = '';
+                    inputOtp.style.boxShadow = '';
+                }, 600);
+            }
             if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
                 window.SoundFX.playClick();
+            }
+        }
+
+        function dispararConfettiExito() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#E2B357', '#38BDF8', '#10B981', '#3B82F6']
+                });
             }
         }
 
@@ -284,6 +779,7 @@
                 document.getElementById('txtUsuario').value = 'auditor.zamata@bcrp.gob.pe';
                 document.getElementById('txtPassword').value = 'Auditor2026!';
             }
+            dispararConfettiExito();
             procesarLogin(new Event('submit'));
         }
 
@@ -291,15 +787,16 @@
             if (event && event.preventDefault) event.preventDefault();
 
             const alertBox = document.getElementById('loginAlertBox');
+            const alertText = document.getElementById('loginAlertText');
             alertBox.classList.remove('visible');
-            alertBox.textContent = '';
+            if (alertText) alertText.textContent = '';
 
             const email = document.getElementById('txtUsuario').value.trim();
             const pass = document.getElementById('txtPassword').value;
             const otp = document.getElementById('txtOtp').value.trim();
 
             if (!email || !pass) {
-                alertBox.textContent = 'Por favor complete su usuario y contraseña institucional.';
+                if (alertText) alertText.textContent = 'Por favor complete su correo institucional y su contraseña de acceso.';
                 alertBox.classList.add('visible');
                 return;
             }
@@ -317,13 +814,14 @@
                 if (window.SoundFX && typeof window.SoundFX.playSuccess === 'function') {
                     window.SoundFX.playSuccess();
                 }
+                dispararConfettiExito();
                 const destino = sessionStorage.getItem('sigir_redirect_after_login') || 'index.html';
                 sessionStorage.removeItem('sigir_redirect_after_login');
                 setTimeout(() => {
                     window.location.href = destino;
-                }, 300);
+                }, 350);
             } catch (err) {
-                alertBox.textContent = err.message || 'Error de autenticación.';
+                if (alertText) alertText.textContent = err.message || 'Error de autenticación.';
                 alertBox.classList.add('visible');
                 btnText.style.display = 'inline-flex';
                 btnSpinner.style.display = 'none';
