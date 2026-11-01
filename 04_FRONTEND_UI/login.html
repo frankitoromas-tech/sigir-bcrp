@@ -16,10 +16,20 @@
 
     <style>
         /* ==========================================================================
-           ESTÁNDAR VISUAL ÉLITE FINTECH - LOGIN PORTAL SIGIR BCRP
+           ESTÁNDAR VISUAL ÉLITE FINTECH - LOGIN INSTITUCIONAL BCRP (SPLIT COCKPIT)
            ========================================================================== */
         *, *::before, *::after {
             box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+            background-color: #060A12;
+            color: #F8FAFC;
+            overflow-x: hidden;
         }
 
         body.login-page {
@@ -27,104 +37,165 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 40px 16px;
-            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-            color: #F8FAFC;
-            background-color: #070B12;
+            padding: 20px 24px;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.32) 0%, transparent 60%),
-                radial-gradient(circle at 85% 90%, rgba(226, 179, 87, 0.08) 0%, transparent 50%),
-                radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+                radial-gradient(circle at 20% 20%, rgba(30, 58, 138, 0.28) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(226, 179, 87, 0.12) 0%, transparent 45%),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 28px 28px;
             background-position: 0 0, 0 0, 0 0;
-            overflow-x: hidden;
         }
 
-        .login-shell {
+        /* Contenedor Split Screen Ejecutivo */
+        .login-split-shell {
             width: 100%;
-            max-width: 470px;
+            max-width: 1040px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            align-items: center;
             position: relative;
             z-index: 10;
         }
 
-        /* Halo resplandeciente exterior */
-        .login-card {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.88);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(226, 179, 87, 0.22);
-            border-radius: 20px;
-            padding: 34px 30px;
-            box-shadow: 
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 25px 70px -15px rgba(0, 0, 0, 0.85),
-                0 0 50px rgba(226, 179, 87, 0.07);
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-            transition: border-color 240ms ease, box-shadow 240ms ease;
+        /* --------------------------------------------------------------------------
+           COLUMNA IZQUIERDA: SHOWCASE INSTITUCIONAL BCRP
+           -------------------------------------------------------------------------- */
+        .login-showcase-column {
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .card-top-glow {
-            position: absolute;
-            top: 0;
-            left: 15%;
-            right: 15%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #E2B357, #38BDF8, transparent);
-            opacity: 0.9;
+        .showcase-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        /* Encabezado Institucional BCRP */
-        .login-header-center {
-            text-align: center;
-            margin-bottom: 22px;
-            position: relative;
-        }
-
-        .emblem-wrapper {
-            width: 60px;
-            height: 60px;
+        .emblem-wrapper-lg {
+            width: 62px;
+            height: 62px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(226, 179, 87, 0.16) 0%, rgba(11, 19, 43, 0.9) 100%);
-            border: 1.5px solid rgba(226, 179, 87, 0.55);
-            display: inline-flex;
+            background: radial-gradient(circle, rgba(226, 179, 87, 0.2) 0%, rgba(11, 19, 43, 0.95) 100%);
+            border: 1.5px solid rgba(226, 179, 87, 0.6);
+            display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 24px rgba(226, 179, 87, 0.28);
-            margin-bottom: 12px;
+            box-shadow: 0 0 28px rgba(226, 179, 87, 0.35);
+            flex-shrink: 0;
             transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
         }
 
-        .emblem-wrapper:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 32px rgba(226, 179, 87, 0.45);
+        .emblem-wrapper-lg:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 36px rgba(226, 179, 87, 0.5);
         }
 
-        .login-auth-badge {
+        .showcase-brand-title h1 {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .showcase-brand-title p {
+            margin: 4px 0 0 0;
+            font-size: 0.76rem;
+            color: #E2B357;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .showcase-hero-desc {
+            font-size: 0.84rem;
+            color: #94A3B8;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        .showcase-hero-desc strong {
+            color: #F8FAFC;
+        }
+
+        /* Tarjetas de Pilares Operativos */
+        .showcase-pillars-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .pillar-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            transition: all 180ms ease;
+        }
+
+        .pillar-card:hover {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(226, 179, 87, 0.3);
+            transform: translateX(4px);
+        }
+
+        .pillar-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(226, 179, 87, 0.12);
+            border: 1px solid rgba(226, 179, 87, 0.3);
+            color: #E2B357;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pillar-content h4 {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .pillar-content p {
+            margin: 2px 0 0 0;
+            font-size: 0.72rem;
+            color: #94A3B8;
+            line-height: 1.4;
+        }
+
+        .showcase-status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 3px 10px;
-            border-radius: 9999px;
-            background: rgba(16, 185, 129, 0.12);
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            font-size: 0.72rem;
             color: #10B981;
-            font-size: 0.67rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-top: 6px;
+            align-self: flex-start;
         }
 
-        .badge-live-pulse {
-            width: 6px;
-            height: 6px;
+        .status-dot-pulse {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #10B981;
-            box-shadow: 0 0 8px #10B981;
+            box-shadow: 0 0 10px #10B981;
             animation: pulseDot 2s infinite ease-in-out;
         }
 
@@ -133,42 +204,61 @@
             50% { opacity: 0.4; transform: scale(0.85); }
         }
 
-        .login-title {
-            font-size: 1.5rem;
+        /* --------------------------------------------------------------------------
+           COLUMNA DERECHA: TERMINAL DE ACCESO EJECUTIVO
+           -------------------------------------------------------------------------- */
+        .login-auth-card {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(226, 179, 87, 0.25);
+            border-radius: 18px;
+            padding: 26px 24px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 25px 60px -15px rgba(0, 0, 0, 0.85),
+                0 0 45px rgba(226, 179, 87, 0.08);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .card-top-accent {
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #E2B357, #38BDF8, transparent);
+            opacity: 0.9;
+        }
+
+        .auth-card-header {
+            margin-bottom: 18px;
+        }
+
+        .auth-card-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
             font-weight: 800;
             color: #F8FAFC;
-            letter-spacing: -0.02em;
-            margin: 0 0 6px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            letter-spacing: -0.01em;
         }
 
-        .login-title .gold-dot {
-            color: #E2B357;
-            font-size: 1.2rem;
-        }
-
-        .login-subtitle {
-            font-size: 0.78rem;
+        .auth-card-header p {
+            margin: 4px 0 0 0;
+            font-size: 0.76rem;
             color: #94A3B8;
-            margin: 0;
-            line-height: 1.45;
-        }
-
-        .login-subtitle span {
-            color: #CBD5E1;
-            font-weight: 500;
         }
 
         /* Alerta Dinámica */
         .login-alert-box {
             display: none;
-            padding: 11px 14px;
+            padding: 10px 12px;
             border-radius: 10px;
-            font-size: 0.78rem;
-            margin-bottom: 18px;
+            font-size: 0.76rem;
+            margin-bottom: 14px;
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.35);
             color: #FCA5A5;
@@ -186,23 +276,23 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Campos de Entrada Modernos */
+        /* Inputs Modernos */
         .form-group-login {
-            margin-bottom: 16px;
+            margin-bottom: 13px;
         }
 
         .form-label-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 7px;
+            margin-bottom: 5px;
         }
 
         .form-group-login label {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.76rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #CBD5E1;
             margin: 0;
@@ -216,7 +306,7 @@
 
         .input-icon-left {
             position: absolute;
-            left: 13px;
+            left: 12px;
             color: #64748B;
             pointer-events: none;
             display: flex;
@@ -227,12 +317,12 @@
 
         .login-input {
             width: 100%;
-            padding: 11px 14px 11px 40px;
+            padding: 9.5px 12px 9.5px 38px;
             background: rgba(11, 15, 23, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
+            border-radius: 9px;
             color: #F8FAFC;
-            font-size: 0.85rem;
+            font-size: 0.83rem;
             font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
             outline: none;
             transition: all 180ms ease;
@@ -248,44 +338,40 @@
             box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.22);
         }
 
-        .login-input:focus + .input-icon-left,
         .input-wrapper:focus-within .input-icon-left {
             color: #E2B357;
         }
 
-        /* Botón Mostrar/Ocultar Contraseña */
         .btn-input-action {
             position: absolute;
-            right: 10px;
+            right: 8px;
             background: transparent;
             border: none;
             color: #64748B;
-            padding: 5px;
+            padding: 4px;
             border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 150ms ease, background 150ms ease;
+            transition: color 150ms ease;
         }
 
         .btn-input-action:hover {
             color: #E2B357;
-            background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Botón Generar Token Demo */
         .btn-gen-token {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.71rem;
+            gap: 4px;
+            font-size: 0.69rem;
             font-weight: 600;
             color: #E2B357;
             background: rgba(226, 179, 87, 0.12);
             border: 1px solid rgba(226, 179, 87, 0.28);
-            padding: 3px 9px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 150ms ease;
         }
@@ -296,197 +382,141 @@
             transform: translateY(-1px);
         }
 
-        .btn-gen-token:active {
-            transform: scale(0.97);
-        }
-
-        /* Botón Principal FinTech */
+        /* Botón de Autenticación */
         .btn-login-submit {
             width: 100%;
-            padding: 13px 18px;
+            padding: 11px 16px;
             background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #1D4ED8 100%);
             border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 10px;
+            border-radius: 9px;
             color: #FFFFFF;
             font-weight: 700;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.45);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-login-submit::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            transition: left 600ms ease;
+            gap: 8px;
+            margin-top: 8px;
+            box-shadow: 0 6px 20px -3px rgba(37, 99, 235, 0.45);
         }
 
         .btn-login-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px -4px rgba(37, 99, 235, 0.65);
+            transform: translateY(-1.5px);
+            box-shadow: 0 10px 25px -4px rgba(37, 99, 235, 0.65);
             border-color: rgba(147, 197, 253, 0.6);
-        }
-
-        .btn-login-submit:hover::before {
-            left: 100%;
         }
 
         .btn-login-submit:active {
             transform: scale(0.98);
         }
 
-        .btn-login-submit:focus-visible {
-            outline: 2px solid #E2B357 !important;
-            outline-offset: 2px !important;
-            box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
-        }
-
-        .btn-arrow-icon {
-            transition: transform 200ms ease;
-        }
-
-        .btn-login-submit:hover .btn-arrow-icon {
-            transform: translateX(4px);
-        }
-
         /* Sección de Acceso Rápido para Demostración */
         .quick-access-section {
-            margin-top: 22px;
-            padding-top: 18px;
+            margin-top: 16px;
+            padding-top: 14px;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            position: relative;
         }
 
         .quick-access-divider {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 0.68rem;
+            gap: 6px;
+            font-size: 0.66rem;
             text-transform: uppercase;
-            letter-spacing: 0.07em;
+            letter-spacing: 0.06em;
             color: #94A3B8;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 9px;
             text-align: center;
         }
 
         .quick-role-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-quick-role {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 14px;
-            background: rgba(30, 41, 59, 0.38);
+            padding: 8px 12px;
+            background: rgba(30, 41, 59, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 10px;
+            border-radius: 8px;
             color: #CBD5E1;
-            font-size: 0.8rem;
+            font-size: 0.77rem;
             cursor: pointer;
-            transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
-            position: relative;
         }
 
         .btn-quick-role:hover {
-            background: rgba(30, 41, 59, 0.75);
+            background: rgba(30, 41, 59, 0.85);
             border-color: rgba(226, 179, 87, 0.35);
-            transform: translateY(-1.5px);
-            box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-quick-role:active {
-            transform: scale(0.99);
-        }
-
-        .btn-quick-role:focus-visible {
-            outline: 2px solid #E2B357 !important;
-            outline-offset: 2px !important;
-            box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
+            transform: translateY(-1px);
         }
 
         .role-left-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .role-monogram {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-mono, monospace);
             font-weight: 800;
-            font-size: 0.78rem;
+            font-size: 0.72rem;
             flex-shrink: 0;
-            transition: transform 200ms ease;
-        }
-
-        .btn-quick-role:hover .role-monogram {
-            transform: scale(1.08);
         }
 
         .role-name-bold {
             color: #F8FAFC;
             font-weight: 700;
-            font-size: 0.82rem;
-            line-height: 1.25;
+            font-size: 0.78rem;
+            line-height: 1.2;
         }
 
         .role-desc-dim {
-            font-size: 0.71rem;
+            font-size: 0.68rem;
             color: #94A3B8;
-            margin-top: 1px;
         }
 
         .role-pill-badge {
-            font-size: 0.67rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            padding: 3px 9px;
+            padding: 2px 7px;
             border-radius: 9999px;
-            letter-spacing: 0.02em;
             white-space: nowrap;
         }
 
-        /* Footer Regulatorio de Confianza */
+        /* Footer Regulatorio */
         .login-trust-footer {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 14px;
+            margin-top: 14px;
+            padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 14px;
-            font-size: 0.68rem;
+            gap: 12px;
+            font-size: 0.65rem;
             color: #64748B;
         }
 
         .trust-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .trust-item svg {
@@ -494,31 +524,28 @@
             opacity: 0.8;
         }
 
-        /* Responsividad en Pantallas Pequeñas */
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 26px 20px;
-                border-radius: 16px;
+        /* Adaptación Responsiva */
+        @media (max-width: 860px) {
+            .login-split-shell {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                gap: 18px;
             }
-            .login-title {
-                font-size: 1.35rem;
-            }
-            .btn-quick-role {
-                padding: 9px 12px;
+            .login-showcase-column {
+                display: none; /* En pantallas móviles priorizamos el acceso inmediato */
             }
         }
     </style>
 </head>
 <body class="login-page">
 
-    <main class="login-shell">
-        <div class="login-card">
-            <div class="card-top-glow" aria-hidden="true"></div>
-
-            <!-- Encabezado Institucional -->
-            <header class="login-header-center">
-                <div class="emblem-wrapper" title="Banco Central de Reserva del Perú - CCE">
-                    <svg class="icon-svg bcrp-emblem" width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <main class="login-split-shell">
+        
+        <!-- COLUMNA 1: SHOWCASE INSTITUCIONAL BCRP -->
+        <section class="login-showcase-column" aria-label="Información Institucional BCRP">
+            <div class="showcase-brand-header">
+                <div class="emblem-wrapper-lg" title="Banco Central de Reserva del Perú - CCE">
+                    <svg class="icon-svg bcrp-emblem" width="38" height="38" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
                         <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
                         <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
@@ -531,22 +558,72 @@
                         <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
                     </svg>
                 </div>
+                <div class="showcase-brand-title">
+                    <h1>BANCO CENTRAL DE RESERVA DEL PERÚ</h1>
+                    <p>Supervisión del Switch CCE &bull; Sistema SIGIR</p>
+                </div>
+            </div>
 
-                <div class="login-auth-badge">
-                    <span class="badge-live-pulse" aria-hidden="true"></span>
-                    <span>Consola Oficial de Supervisión &bull; BCRP</span>
+            <p class="showcase-hero-desc">
+                Plataforma oficial de control operativo para la <strong>Cámara de Compensación Electrónica (CCE)</strong>. Supervisión en tiempo real de pagos digitales inmediatos, transferencias interbancarias y cumplimiento normativo.
+            </p>
+
+            <div class="showcase-pillars-list">
+                <div class="pillar-card">
+                    <div class="pillar-icon-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-content">
+                        <h4>Cumplimiento Normativo Vigente</h4>
+                        <p>Circular BCRP N° 0014-2023 con exigencia de disponibilidad del servicio SLA ≥ 99.90%.</p>
+                    </div>
                 </div>
 
-                <h1 class="login-title">SIGIR <span class="gold-dot">&bull;</span> BCRP</h1>
-                <p class="login-subtitle">
-                    Supervisión y Control de Incidentes Regulatorios<br>
-                    <span>Switch Interbancario CCE &bull; Pagos Digitales Inmediatos</span>
-                </p>
+                <div class="pillar-card">
+                    <div class="pillar-icon-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-content">
+                        <h4>Seguridad Criptográfica Nacional</h4>
+                        <p>Canal Cifrado Bancario y Sellado Digital Inalterable SHA-256 para cada evento regulatorio.</p>
+                    </div>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-content">
+                        <h4>Interoperabilidad Inmediata</h4>
+                        <p>Monitoreo de pasarelas BCP (Yape), Interbank/BBVA (Plin) y Cajas Municipales.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showcase-status-badge">
+                <span class="status-dot-pulse" aria-hidden="true"></span>
+                <span>Switch Interbancario: 100% Operativo &bull; Liquidación en Línea</span>
+            </div>
+        </section>
+
+        <!-- COLUMNA 2: TERMINAL DE ACCESO EJECUTIVO -->
+        <section class="login-auth-card" aria-label="Terminal de Acceso">
+            <div class="card-top-accent" aria-hidden="true"></div>
+
+            <header class="auth-card-header">
+                <h2>Portal de Acceso Institucional</h2>
+                <p>Ingrese sus credenciales de funcionario o seleccione un perfil para evaluación.</p>
             </header>
 
             <!-- Alerta Dinámica de Error -->
             <div id="loginAlertBox" class="login-alert-box" role="alert">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
                 <span id="loginAlertText"></span>
@@ -558,7 +635,7 @@
                 <div class="form-group-login">
                     <div class="form-label-row">
                         <label for="txtUsuario">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                             </svg>
                             <span>Correo Institucional BCRP</span>
@@ -566,7 +643,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon-left" aria-hidden="true">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>
                             </svg>
                         </span>
@@ -574,11 +651,11 @@
                     </div>
                 </div>
 
-                <!-- Contraseña Institucional (Zero Tecnicismos) -->
+                <!-- Contraseña Institucional -->
                 <div class="form-group-login">
                     <div class="form-label-row">
                         <label for="txtPassword">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                             </svg>
                             <span>Contraseña Institucional</span>
@@ -586,13 +663,13 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon-left" aria-hidden="true">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>
                             </svg>
                         </span>
                         <input type="password" id="txtPassword" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
-                        <button type="button" class="btn-input-action" id="btnTogglePassword" onclick="alternarVisibilidadPassword()" title="Mostrar/Ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
-                            <svg id="iconEye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <button type="button" class="btn-input-action" id="btnTogglePassword" onclick="alternarVisibilidadPassword()" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                            <svg id="iconEye" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
                             </svg>
                         </button>
@@ -603,13 +680,13 @@
                 <div class="form-group-login">
                     <div class="form-label-row">
                         <label for="txtOtp">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             </svg>
                             <span>Token Digital de Seguridad (MFA)</span>
                         </label>
                         <button type="button" class="btn-gen-token" onclick="generarOtpDemo()" title="Generar código temporal aleatorio de 6 dígitos">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                             </svg>
                             <span>Generar Token Demo</span>
@@ -617,7 +694,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon-left" aria-hidden="true">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/>
                             </svg>
                         </span>
@@ -628,16 +705,16 @@
                 <!-- Botón de Envío Principal -->
                 <button type="submit" id="btnSubmitLogin" class="btn-login-submit">
                     <span id="btnSubmitText" style="display:inline-flex; align-items:center; gap:8px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                         </svg>
-                        <span>Autenticar &amp; Ingresar al Sistema</span>
-                        <svg class="btn-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <span>Autenticar &amp; Ingresar a la Consola</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                         </svg>
                     </span>
                     <span id="btnSubmitSpinner" style="display:none; align-items:center; gap:8px;">
-                        <svg class="spinner-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;">
+                        <svg class="spinner-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;">
                             <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
                         </svg>
                         <span>Validando credenciales...</span>
@@ -648,7 +725,7 @@
             <!-- Sección de Acceso Rápido para Demostración -->
             <section class="quick-access-section" aria-label="Acceso Rápido para Demostración">
                 <div class="quick-access-divider">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                     <span>ACCESO RÁPIDO PARA EVALUACIÓN AL JURADO (1 CLIC)</span>
@@ -696,25 +773,26 @@
             <!-- Sellos de Confianza y Regulación -->
             <footer class="login-trust-footer">
                 <span class="trust-item">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     <span>Circular BCRP N° 0014-2023</span>
                 </span>
                 <span class="trust-item">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
-                    <span>Canal Seguro TLS 1.3</span>
+                    <span>Canal Seguro CCE</span>
                 </span>
                 <span class="trust-item">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
                     <span>Sellado SHA-256 Validado</span>
                 </span>
             </footer>
-        </div>
+        </section>
+
     </main>
 
     <script src="js/sound-fx.js"></script>

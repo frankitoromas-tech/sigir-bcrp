@@ -299,6 +299,20 @@ const AuthRBAC = {
             }
         }
 
+        // Botón Exportar CSV de Bitácora de Auditoría (Art. 12 BCRP)
+        const btnExportAudit = document.getElementById('btnExportarBitacoraCsv');
+        if (btnExportAudit) {
+            if (rol.permisos && rol.permisos.exportarAuditoria) {
+                btnExportAudit.disabled = false;
+                btnExportAudit.style.opacity = '1';
+                btnExportAudit.removeAttribute('title');
+            } else {
+                btnExportAudit.disabled = true;
+                btnExportAudit.style.opacity = '0.45';
+                btnExportAudit.setAttribute('title', `Exportación restringida para el perfil: ${rol.cargo}`);
+            }
+        }
+
         // Eliminar botón salir suelto del header si existiera (ahora integrado en el popover)
         const btnSalirViejo = document.getElementById('btnCerrarSesionHeader');
         if (btnSalirViejo) {

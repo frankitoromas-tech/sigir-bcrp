@@ -45,13 +45,13 @@
      */
     const MASTER_COMMANDS = [
         {
-            id: 'simular-falla-503',
+            id: 'simular-interrupcion-bcp',
             category: 'Operaciones Críticas NOC',
-            title: 'Simular Falla en BCP (Yape)',
-            description: 'Simula interrupción temporal en la conexión con BCP (Yape)',
+            title: 'Simular Interrupción en BCP (Yape)',
+            description: 'Simula una interrupción en la pasarela de BCP (Yape) para verificar la contingencia',
             icon: '⚡',
             shortcut: ['Alt', '2'],
-            keywords: ['simular', 'falla', 'bcp', 'yape', 'interrupcion', 'alerta', 'critico'],
+            keywords: ['simular', 'interrupcion', 'bcp', 'yape', 'alerta', 'critico', 'contingencia'],
             handler: () => ejecutarSimulacionFallaBcp()
         },
         {
@@ -145,13 +145,13 @@
             handler: () => ejecutarTogglePresetsDemo()
         },
         {
-            id: 'forzar-sondeo-inmediato',
+            id: 'verificar-conectividad-inmediata',
             category: 'Operaciones Críticas NOC',
-            title: 'Forzar Sondeo Inmediato de Telemetría',
-            description: 'Reinicia el temporizador de sondeo de 30s y refresca el estado de las 5 entidades financieras',
+            title: 'Verificar Conectividad Interbancaria Inmediata',
+            description: 'Ejecuta una comprobación inmediata de los canales de enlace de las 5 entidades financieras participantes',
             icon: '🔄',
             shortcut: ['R'],
-            keywords: ['forzar', 'sondeo', 'inmediato', 'refrescar', 'telemetria', 'latencia', 'ping'],
+            keywords: ['verificar', 'conectividad', 'enlace', 'refrescar', 'telemetria', 'tiempo de respuesta', 'canales'],
             handler: () => ejecutarForzarSondeo()
         }
     ];
@@ -183,7 +183,7 @@
                         type="text" 
                         id="sigirCmdInput" 
                         class="cmd-palette-input" 
-                        placeholder="Escribe un comando o busca por palabra clave... (ej. BCP, 503, SFT, Filtro)"
+                        placeholder="Escribe un comando o busca por palabra clave... (ej. BCP, Yape, SFT, Filtro, Alerta, Contingencia)"
                         autocomplete="off"
                         spellcheck="false"
                         aria-autocomplete="list"
@@ -750,9 +750,9 @@
     function ejecutarForzarSondeo() {
         if (typeof window.AppState !== 'undefined' && window.AppState) {
             window.AppState.segundosSondeo = 1;
-            mostrarToastNotificacion('Telemetría Forzada', 'Temporizador reseteado a 1s para sondeo inmediato', 'info');
+            mostrarToastNotificacion('Verificación de Enlace', 'Comprobación de enlace iniciada de inmediato', 'info');
         } else {
-            mostrarToastNotificacion('Telemetría', 'Sondeo en ejecución continua (30s)', 'info');
+            mostrarToastNotificacion('Monitoreo Operativo', 'Verificación continua activa cada 30 segundos', 'info');
         }
     }
 

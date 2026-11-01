@@ -315,7 +315,7 @@
                     if (label) label.textContent = 'MUTE';
                 } else {
                     btn.classList.remove('muted');
-                    btn.title = 'Audio activo (Web Audio API - Emil Kowalski)';
+                    btn.title = 'Señales Acústicas Bancarias Activas (Clic para silenciar)';
                     btn.setAttribute('aria-pressed', 'true');
                     if (iconOn) iconOn.style.display = 'inline-block';
                     if (iconOff) iconOff.style.display = 'none';

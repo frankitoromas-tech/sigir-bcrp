@@ -303,16 +303,16 @@
                         <div class="drawer-card-header">
                             <div class="drawer-card-title">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                                <span>Payload Forense &amp; Trazas de Error (JSON)</span>
+                                <span>Ficha Técnica Forense &amp; Registro Digital del Incidente (JSON)</span>
                             </div>
                             <div class="drawer-card-actions">
                                 <button type="button" class="btn-micro" id="btnCopiarHash" title="Copiar Hash SHA-256 de integridad">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                                     <span>Copiar Hash</span>
                                 </button>
-                                <button type="button" class="btn-micro" id="btnCopiarJson" title="Copiar todo el payload JSON">
+                                <button type="button" class="btn-micro" id="btnCopiarJson" title="Copiar registro digital oficial del incidente en formato JSON">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                    <span>Copiar JSON</span>
+                                    <span>Copiar Ficha Digital</span>
                                 </button>
                             </div>
                         </div>
@@ -325,8 +325,8 @@
                                     <span class="dot-yellow"></span>
                                     <span class="dot-green"></span>
                                 </div>
-                                <span class="terminal-filename" id="drawerTerminalFilename">payload_forense_INC.json</span>
-                                <span class="terminal-badge">TLS 1.3 · REST CCE</span>
+                                <span class="terminal-filename" id="drawerTerminalFilename">registro_forense_INC.json</span>
+                                <span class="terminal-badge">Canal Cifrado Seguro · Switch CCE</span>
                             </div>
                             <pre class="drawer-json-viewer" id="drawerJsonViewer"><code>{}</code></pre>
                         </div>
@@ -941,7 +941,7 @@
             {
                 id: 'DETECCION',
                 titulo: 'Momento de Detección en Switch CCE',
-                actor: inc.origen === 'AUTOMATICO' ? 'Motor de Telemetría BCRP (Sonda CCE-MQ)' : 'Operador NOC Central',
+                actor: inc.origen === 'AUTOMATICO' ? 'Sistema de Monitoreo Central BCRP (Canal CCE)' : 'Operador NOC Central',
                 detalle: inc.origen === 'AUTOMATICO'
                     ? 'Latencia del endpoint excedió el umbral crítico (HTTP 503). Disparo reactivo de alarma en consola.'
                     : 'Reporte manual verificado y validado por operador de turno.',
@@ -1072,13 +1072,13 @@
                 codigoEstadoHttp: inc.severidad === 'CRITICA' ? 503 : 504,
                 tiempoRespuestaMs: inc.severidad === 'CRITICA' ? 9845 : 4210,
                 nodoSwitchCce: 'LIM-CORE-SW01-DATACENTER-BCRP',
-                canalContingencia: 'CCE-BGP-ALT-ROUTE-02',
+                canalContingencia: 'CCE-CANAL-ALTERNO-02',
                 transaccionesEnRiesgoEstimadas: 184
             },
             diagnosticoNoc: {
                 origenDeteccion: inc.origen,
-                causaRaizIdentificada: inc.descripcion || 'Caída de endpoint interbancario por sobrecarga en conector MQ.',
-                accionRecomendada: 'Conmutación inmediata a pasarela redundante CCE y reseteo de colas activas.',
+                causaRaizIdentificada: inc.descripcion || 'Interrupción temporal de pasarela interbancaria por saturación en canal de mensajería CCE.',
+                accionRecomendada: 'Conmutación inmediata a pasarela de respaldo CCE y normalización de transferencias.',
                 responsableNoc: OPERADOR_DEFAULT,
                 rol: ROL_DEFAULT
             },
@@ -1289,8 +1289,8 @@ Impacto Usuarios / Tx  : Conmutación sin pérdida de fondos ni degradación de 
 --------------------------------------------------------------------------------
 [00:00:00] Detección en switch CCE e incorporación a matriz NOC.
 [00:00:45] Asignación inmediata al equipo de guardia NOC Lead.
-[00:03:15] Aislamiento de conector MQ y diagnóstico de sobrecarga HTTP 503.
-[00:14:20] Habilitación de canal de contingencia CCE-BGP-ALT.
+[00:03:15] Aislamiento del canal de mensajería y diagnóstico de interrupción de servicio.
+[00:14:20] Habilitación de canal alterno de contingencia CCE-CANAL-ALTERNO-02.
 [00:22:30] Verificación de estabilidad transaccional (latencia < 25ms, 0% drop).
 
 --------------------------------------------------------------------------------

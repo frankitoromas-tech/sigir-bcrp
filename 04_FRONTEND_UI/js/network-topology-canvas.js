@@ -81,13 +81,13 @@
             id: 5,
             key: 'cce',
             nombre: 'CCE Switch Central',
-            badge: 'CORE HUB CENTRAL · COD 901',
+            badge: 'NODO CENTRAL DE LIQUIDACIÓN',
             canal: 'Switch Interbancario',
             tipo: 'HUB',
             codigoIso: 'CCE-PE-SWITCH',
-            protocolo: 'ISO 20022 · MQ Series v9.3',
-            mtu: '9000 Jumbo Frame',
-            anchoBanda: '40 Gbps Fibra Redundante',
+            protocolo: 'ISO 20022 · Mensajería Cifrada Segura BCRP',
+            mtu: 'Canal de Alta Disponibilidad BCRP',
+            anchoBanda: '40 Gbps Enlace Seguro BCRP',
             colorAcento: THEME.gold,
             colorSubtle: THEME.goldSubtle,
             radius: 46,
@@ -101,8 +101,8 @@
             canal: 'Billetera Móvil & Banca Móvil',
             tipo: 'SPOKE',
             codigoIso: 'BCPL-PE-YAPE',
-            protocolo: 'ISO 20022 pacs.008 · REST TLS 1.3',
-            mtu: '1500 Ethernet',
+            protocolo: 'ISO 20022 pacs.008 · Enlace Cifrado BCRP',
+            mtu: 'Canal Bancario Homologado',
             anchoBanda: '10 Gbps Canal Privado BCRP',
             colorAcento: '#002A8F',
             colorHighlight: '#38BDF8',
@@ -118,8 +118,8 @@
             canal: 'Billetera Móvil & Pasarela Plin',
             tipo: 'SPOKE',
             codigoIso: 'BINP-PE-PLIN',
-            protocolo: 'ISO 20022 pacs.008 · AS2 / HTTPS',
-            mtu: '1500 Ethernet',
+            protocolo: 'ISO 20022 pacs.008 · Enlace Cifrado BCRP',
+            mtu: 'Canal Bancario Homologado',
             anchoBanda: '10 Gbps Canal Privado BCRP',
             colorAcento: '#0284C7',
             colorHighlight: '#38BDF8',
@@ -135,9 +135,9 @@
             canal: 'Banca Móvil & Tunki QR',
             tipo: 'SPOKE',
             codigoIso: 'CMAC-PE-CUSCO',
-            protocolo: 'ISO 20022 pacs.008 · VPN IPsec',
-            mtu: '1500 Ethernet',
-            anchoBanda: '2 Gbps Enlace MPLS Seguro',
+            protocolo: 'ISO 20022 pacs.008 · Red Bancaria Privada',
+            mtu: 'Canal Bancario Homologado',
+            anchoBanda: '2 Gbps Enlace Seguro BCRP',
             colorAcento: '#D97706',
             colorHighlight: '#F59E0B',
             radius: 34,
@@ -152,9 +152,9 @@
             canal: 'Banca Móvil Rural',
             tipo: 'SPOKE',
             codigoIso: 'CRAC-PE-ANDES',
-            protocolo: 'ISO 20022 pacs.008 · SD-WAN BCRP',
-            mtu: '1500 Ethernet',
-            anchoBanda: '1 Gbps Enlace Satelital/MPLS',
+            protocolo: 'ISO 20022 pacs.008 · Red Bancaria Privada',
+            mtu: 'Canal Bancario Homologado',
+            anchoBanda: '1 Gbps Enlace Seguro BCRP',
             colorAcento: '#059669',
             colorHighlight: '#10B981',
             radius: 34,
@@ -213,7 +213,7 @@
         }
 
         init() {
-            this.canvas = document.getElementById('networkTopologyCanvas') || document.getElementById('cceTopologyCanvas');
+            this.canvas = document.getElementById('cceTopologyCanvas') || document.getElementById('networkTopologyCanvas');
             this.viewport = document.getElementById('topologyCanvasViewport') || document.getElementById('cceTopologyCanvasViewport');
             this.tooltip = document.getElementById('topologyNodeTooltip');
 
@@ -562,7 +562,7 @@
             if (!this.tooltip) return;
 
             const isCaido = node.telemetria.estado === 'CAIDO';
-            const estadoLabel = isCaido ? 'CONTINGENCIA ACTIVA' : 'OPERATIVO';
+            const estadoLabel = isCaido ? 'CANAL DE RESPALDO ACTIVO' : 'OPERATIVO';
             const estadoColor = isCaido ? THEME.crimson : THEME.emerald;
 
             const nombreSafe = escapeHTML(node.nombre);
@@ -588,11 +588,11 @@
                         <span class="tt-metric-v">${protoSafe}</span>
                     </div>
                     <div class="tt-metric-item">
-                        <span class="tt-metric-k">Latencia Sonda</span>
+                        <span class="tt-metric-k">Tiempo de Respuesta</span>
                         <span class="tt-metric-v" style="color: ${estadoColor}">${latenciaVal} ${latenciaUnit}</span>
                     </div>
                     <div class="tt-metric-item">
-                        <span class="tt-metric-k">Enlace de Red</span>
+                        <span class="tt-metric-k">Canal de Enlace</span>
                         <span class="tt-metric-v">${bandaSafe}</span>
                     </div>
                     <div class="tt-metric-item">
@@ -600,7 +600,7 @@
                         <span class="tt-metric-v">${tpsVal} pagos/seg</span>
                     </div>
                 </div>
-                ${isCaido ? `<div class="tt-alert-box">INTERRUPCIÓN DETECTADA: Enrutamiento por canal de emergencia hacia CCE.</div>` : ''}
+                ${isCaido ? `<div class="tt-alert-box">CANAL DE RESPALDO ACTIVO: Enrutando pagos por canal de contingencia homologado BCRP.</div>` : ''}
             `;
 
             this.tooltip.style.display = 'block';
@@ -681,7 +681,7 @@
                 if (hayContingenciaGlobal) {
                     statusPill.className = 'topology-status-pill contingency';
                     statusDot.className = 'status-dot critical';
-                    statusText.textContent = 'ALERTA: ENLACE EN CONTINGENCIA DE EMERGENCIA';
+                    statusText.textContent = 'ALERTA: CANAL EN CONTINGENCIA · RESPALDO ACTIVO';
                 } else {
                     statusPill.className = 'topology-status-pill online';
                     statusDot.className = 'status-dot online';
@@ -852,12 +852,12 @@
                 this.fps = Math.round(1 / (dt || 0.016));
                 const fpsLabel = document.getElementById('hudEngineFps');
                 if (fpsLabel) {
-                    fpsLabel.textContent = `RENDER: ${this.fps} FPS · DPR ${this.dpr.toFixed(1)}`;
+                    fpsLabel.textContent = 'SUPERVISIÓN EN TIEMPO REAL · LATENCIA ÓPTIMA';
                 }
                 const packetLabel = document.getElementById('hudPacketCount');
                 if (packetLabel) {
                     const activeCount = this.showParticles ? this.particles.length + this.scatteredParticles.length : 0;
-                    packetLabel.textContent = `PAQUETES ACTIVOS: ${activeCount}`;
+                    packetLabel.textContent = `MENSAJES EN PROCESO: ${activeCount}`;
                 }
             }
 
@@ -1005,7 +1005,7 @@
 
                     // Etiqueta flotante de contingencia en el punto medio del enlace
                     const midPt = this.getPointOnLink(link, 0.5, intensity);
-                    this.renderLinkWarningBadge(ctx, midPt.x, midPt.y, 'CONTINGENCIA · ENLACE ALTERNO');
+                    this.renderLinkWarningBadge(ctx, midPt.x, midPt.y, 'CANAL DE RESPALDO ACTIVO');
 
                 } else {
                     // ==========================================================
@@ -1351,7 +1351,7 @@
             // 2. Badge Técnico Institucional (ej: BILLETERA MOVIL · COD 002)
             const badgeY = y + 13;
             ctx.font = "600 8px 'JetBrains Mono', monospace";
-            const badgeText = isCaido ? 'CONTINGENCIA · TIMEOUT' : node.badge;
+            const badgeText = isCaido ? 'CANAL DE RESPALDO ACTIVO' : node.badge;
             const textWidth = ctx.measureText(badgeText).width;
             const bw = textWidth + 12;
             const bh = 14;

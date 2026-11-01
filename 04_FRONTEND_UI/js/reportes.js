@@ -235,7 +235,7 @@ function drawChart(rows) {
   ctx.stroke();
 
   // Etiqueta flotante con micro-badge de alta legibilidad
-  const slaBadgeText = 'META SLA BCRP 99.90%';
+  const slaBadgeText = 'META BCRP 99.90%';
   ctx.font = '700 9px JetBrains Mono, monospace';
   const textMetrics = ctx.measureText(slaBadgeText);
   const pillW = textMetrics.width + 20;
@@ -433,7 +433,7 @@ async function cargar() {
     tbody.innerHTML = view.map(r => {
       const cumpleSla = r.uptimePct >= 99.90;
       const statusClass = cumpleSla ? 'badge-sla-ok' : 'badge-sla-warn';
-      const statusLabel = cumpleSla ? 'CUMPLE SLA' : 'ALERTA SLA';
+      const statusLabel = cumpleSla ? 'CUMPLE META' : 'EN ATENCIÓN';
       const pctColorHex = cumpleSla ? '#34D399' : '#FBBF24';
       const barFillGrad = cumpleSla ? 'linear-gradient(90deg, #059669, #10B981)' : 'linear-gradient(90deg, #D97706, #F59E0B)';
       const clampedPct = Math.min(100, Math.max(0, Number(r.uptimePct) || 0));
@@ -494,6 +494,17 @@ async function cargar() {
     kUpt.style.color = kpis.uptimeGlobalPct >= 99.90 ? '#38BDF8' : '#F59E0B';
   }
 
+  const kUptStatus = document.getElementById('kUptimeStatus');
+  if (kUptStatus) {
+    if (kpis.uptimeGlobalPct >= 99.90) {
+      kUptStatus.innerText = '🟢 Operación Estable';
+      kUptStatus.style.color = '#10B981';
+    } else {
+      kUptStatus.innerText = '🟡 Atención Requerida';
+      kUptStatus.style.color = '#F59E0B';
+    }
+  }
+
   drawChart(view);
 
   // Poblar select si no tiene opciones
@@ -542,7 +553,7 @@ document.getElementById('btnCSV')?.addEventListener('click', () => {
     }).join(';');
   }).join('\r\n');
 
-  const headers = 'Entidad;CodigoBCRP;IncidentesTotales;Criticos;MTTR_min;MTTD_min;MinutosIndisponibles;Uptime_Pct\r\n';
+  const headers = 'Entidad;CodigoBCRP;TotalIncidentes;CasosCriticos;TiempoSolucion_min;TiempoDeteccion_min;MinutosFueraServicio;Disponibilidad_Pct\r\n';
   // UTF-8 BOM (\uFEFF) para visualización inmediata y correcta en Microsoft Excel sin problemas de codificación
   const blob = new Blob(['\uFEFF' + headers + rows], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
@@ -677,7 +688,7 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
         <td>${nombreArchivoSafe}</td>
         <td>${totalRegSafe}</td>
         <td style="font-family:var(--font-mono);font-size:.7rem;color:#38BDF8">${hashDisplay}…</td>
-        <td><button class="btn-action-table" data-filename="${nombreArchivoSafe}" onclick="alert('Descargando archivo histórico firmado SHA-256: ' + this.getAttribute('data-filename'))">TXT</button></td>
+        <td><button class="btn-action-table" data-filename="${nombreArchivoSafe}" onclick="alert('Descargando archivo oficial firmado SHA-256: ' + this.getAttribute('data-filename'))">TXT</button></td>
       </tr>
     `}).join('');
   }

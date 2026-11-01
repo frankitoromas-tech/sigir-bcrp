@@ -123,10 +123,10 @@ async function verificarConectividadBackend() {
             if (pill) {
                 pill.classList.remove('offline');
                 pill.classList.add('online');
-                pill.title = 'Conectado a Spring Boot REST API & PostgreSQL (bcrp_incident_db)';
+                pill.title = 'Conectado al Servidor Central CCE & Base de Datos Regulatoria BCRP';
             }
             if (dot) dot.style.background = '#10B981';
-            if (text) text.innerText = 'Conectado (PostgreSQL)';
+            if (text) text.innerText = 'Enlace Central BCRP Activo';
 
             // Sincronizar catálogo e incidentes reales desde PostgreSQL
             await sincronizarConBackend();
@@ -436,7 +436,7 @@ window.avanzarEstado = async function(idIncidente, nuevoEstado) {
 
             if (!resp.ok) {
                 const errorData = await resp.json().catch(() => ({}));
-                alert(`Error en Backend Spring Boot: ${errorData.message || 'Transición inválida en máquina de estados'}`);
+                alert(`Aviso de Validación CCE: ${errorData.message || 'Transición no permitida según la normativa BCRP'}`);
                 return;
             }
         } catch (err) {
@@ -866,12 +866,12 @@ function copiarHashCripto(btn, hash) {
  * Búsqueda reactiva por texto (usuario, acción, entidad, hash) y selectores (tipo evento, entidad, estado).
  */
 function filtrarBitacoraAuditoria() {
-    const tbody = document.getElementById('tbodyAuditoria');
+    const tbody = document.getElementById('tableBodyAudit') || document.getElementById('tbodyAuditoria');
     if (!tbody) return;
 
-    const query = (document.getElementById('filtroAuditoriaBuscador')?.value || '').trim().toLowerCase();
-    const filtroTipo = document.getElementById('filtroTipoEvento')?.value || 'TODOS';
-    const filtroEntidad = document.getElementById('filtroAuditoriaEntidad')?.value || 'TODAS';
+    const query = ((document.getElementById('searchInputAudit') || document.getElementById('filtroAuditoriaBuscador'))?.value || '').trim().toLowerCase();
+    const filtroTipo = (document.getElementById('filterEventAudit') || document.getElementById('filtroTipoEvento'))?.value || 'TODOS';
+    const filtroEntidad = (document.getElementById('filterEntityAudit') || document.getElementById('filtroAuditoriaEntidad'))?.value || 'TODAS';
     const filtroEstado = document.getElementById('filtroAuditoriaEstado')?.value || 'TODOS';
 
     const filas = tbody.querySelectorAll('tr.audit-row');
@@ -927,11 +927,69 @@ function filtrarBitacoraAuditoria() {
 
 /**
  * Valida la integridad criptográfica de la bitácora conforme a la normativa BCRP Circular 0014-2023.
+ * Despliega dictamen forense ejecutivo en modal formal con sellado TSA dinámico y no repudio.
  */
-function verificarIntegridadCadena() {
+async function verificarIntegridadCadena() {
     if (window.SoundFX && typeof window.SoundFX.playSuccess === 'function') {
         window.SoundFX.playSuccess();
     }
+
+    const modal = document.getElementById('modalVerificacionCriptografica');
+    if (modal) {
+        // Sello TSA dinámico en Horario Oficial del Perú (UTC-5 PET)
+        const ahora = new Date();
+        const horaLima = ahora.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
+        const fechaLima = ahora.toLocaleDateString('es-PE', { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' });
+
+        const elTsa = document.getElementById('criptoModalTimestamp');
+        if (elTsa) elTsa.textContent = `${fechaLima} ${horaLima} PET`;
+
+        // Datos del Auditor según sesión activa en AuthRBAC
+        const rol = (window.AuthRBAC && typeof window.AuthRBAC.obtenerRolActual === 'function')
+            ? window.AuthRBAC.obtenerRolActual()
+            : null;
+        const auditorNombre = rol ? rol.nombreCompleto : 'Frank Vargas Huamán';
+        const auditorCargo = rol ? rol.cargo : 'Arquitecto de Software & NOC Lead';
+        
+        const elAuditor = document.getElementById('criptoModalAuditor');
+        if (elAuditor) elAuditor.textContent = `${auditorNombre} (${auditorCargo})`;
+
+        // Recalcular hash consolidado de los registros visibles
+        const tbody = document.getElementById('tbodyAuditoria') || document.getElementById('tableBodyAudit');
+        let dataToHash = '';
+        if (tbody) {
+            const filas = tbody.querySelectorAll('tr.audit-row');
+            filas.forEach(f => {
+                dataToHash += (f.getAttribute('data-search') || f.textContent) + '|';
+            });
+        }
+        const consolidatedHash = await calcularSha256(dataToHash || 'SIGIR_BCRP_AUDIT_LOG_2026');
+        const elHash = document.getElementById('criptoModalHash');
+        if (elHash) elHash.textContent = consolidatedHash;
+        const btnCopy = document.getElementById('btnCopiarHashConsolidado');
+        if (btnCopy) {
+            btnCopy.onclick = (e) => {
+                e.stopPropagation();
+                copiarHashCripto(btnCopy, consolidatedHash);
+            };
+        }
+
+        modal.classList.add('active');
+
+        // Confetti sutil y elegante de certificación
+        if (typeof window.confetti === 'function') {
+            try {
+                window.confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#E2B357', '#10B981', '#38BDF8']
+                });
+            } catch (e) {}
+        }
+        return;
+    }
+
     const mensaje = "🔒 AUDITORÍA BCRP EXITOSA:\n\n" +
         "Se ha recalculado la función resumen SHA-256 de los registros de la bitácora inmutable.\n\n" +
         "• Algoritmo: SHA-256 (FIPS 180-4 / RFC 6234)\n" +
@@ -941,18 +999,28 @@ function verificarIntegridadCadena() {
     alert(mensaje);
 }
 
+function cerrarModalCripto() {
+    const modal = document.getElementById('modalVerificacionCriptografica');
+    if (modal) {
+        modal.classList.remove('active');
+        if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+            window.SoundFX.playClick();
+        }
+    }
+}
+
 /**
  * Exporta los registros visibles de la bitácora en formato CSV con firma criptográfica SHA-256.
  */
 async function exportarBitacoraCsv() {
-    const tbody = document.getElementById('tbodyAuditoria');
+    const tbody = document.getElementById('tbodyAuditoria') || document.getElementById('tableBodyAudit');
     if (!tbody) return;
 
     if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
         window.SoundFX.playClick();
     }
 
-    let csvContent = "FECHA_HORA_PET,USUARIO,ROL,TIPO_EVENTO,ENTIDAD_AFECTADA,HASH_SHA256,ESTADO_VERIFICACION\n";
+    let csvContent = "FECHA_HORA_PET,USUARIO,ROL,TIPO_EVENTO,ENTIDAD_AFECTADA,DETALLE_OPERATIVO,HASH_SHA256,ESTADO_VERIFICACION\n";
     const filas = tbody.querySelectorAll('tr.audit-row');
 
     filas.forEach(f => {
@@ -962,16 +1030,17 @@ async function exportarBitacoraCsv() {
             const rol = f.querySelector('.audit-user-role')?.innerText.trim() || '';
             const tipo = f.querySelector('.audit-event-badge')?.innerText.trim() || '';
             const entidad = f.querySelector('.audit-entity-name')?.innerText.trim() || '';
+            const canalDetalle = f.querySelector('.audit-entity-channel')?.innerText.trim() || '';
             const hash = f.querySelector('.btn-copy-hash')?.getAttribute('onclick')?.match(/'([a-f0-9]{64})'/i)?.[1] || '';
-            const estado = f.querySelector('.audit-status-badge')?.innerText.trim() || 'Verificado';
+            const estado = f.querySelector('.audit-status-badge')?.innerText.trim() || 'Verificado Válido';
 
-            csvContent += `"${fecha}","${usuario}","${rol}","${tipo}","${entidad}","${hash}","${estado}"\n`;
+            csvContent += `"${fecha}","${usuario}","${rol}","${tipo}","${entidad}","${canalDetalle}","${hash}","${estado}"\n`;
         }
     });
 
     const hashSellado = await calcularSha256(csvContent);
     csvContent += `\n# SELLO CRIPTOGRÁFICO DE CIERRE BCRP SHA-256: ${hashSellado}\n`;
-    csvContent += `# NORMATIVA: Circular BCRP N° 0014-2023 Art. 12\n`;
+    csvContent += `# NORMATIVA: Circular BCRP N° 0014-2023 Art. 12 (Trazabilidad y Validez Probatoria)\n`;
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -994,14 +1063,14 @@ function configurarEventosUI() {
     document.getElementById('filtroEstado')?.addEventListener('change', renderizarMatrizIncidentes);
 
     // Filtros de Bitácora de Auditoría Forense
-    document.getElementById('filtroAuditoriaBuscador')?.addEventListener('input', filtrarBitacoraAuditoria);
-    document.getElementById('filtroTipoEvento')?.addEventListener('change', filtrarBitacoraAuditoria);
-    document.getElementById('filtroAuditoriaEntidad')?.addEventListener('change', filtrarBitacoraAuditoria);
+    (document.getElementById('searchInputAudit') || document.getElementById('filtroAuditoriaBuscador'))?.addEventListener('input', filtrarBitacoraAuditoria);
+    (document.getElementById('filterEventAudit') || document.getElementById('filtroTipoEvento'))?.addEventListener('change', filtrarBitacoraAuditoria);
+    (document.getElementById('filterEntityAudit') || document.getElementById('filtroAuditoriaEntidad'))?.addEventListener('change', filtrarBitacoraAuditoria);
     document.getElementById('filtroAuditoriaEstado')?.addEventListener('change', filtrarBitacoraAuditoria);
     document.getElementById('btnResetFiltrosAuditoria')?.addEventListener('click', () => {
-        const inputBusq = document.getElementById('filtroAuditoriaBuscador');
-        const selTipo = document.getElementById('filtroTipoEvento');
-        const selEnt = document.getElementById('filtroAuditoriaEntidad');
+        const inputBusq = document.getElementById('searchInputAudit') || document.getElementById('filtroAuditoriaBuscador');
+        const selTipo = document.getElementById('filterEventAudit') || document.getElementById('filtroTipoEvento');
+        const selEnt = document.getElementById('filterEntityAudit') || document.getElementById('filtroAuditoriaEntidad');
         const selEst = document.getElementById('filtroAuditoriaEstado');
         if (inputBusq) inputBusq.value = '';
         if (selTipo) selTipo.value = 'TODOS';
@@ -1016,6 +1085,22 @@ function configurarEventosUI() {
     // Acciones
     document.getElementById('btnSimularCaida')?.addEventListener('click', simularCaidaAutomatica);
     document.getElementById('btnGenerarSft')?.addEventListener('click', generarReporteSft);
+
+    // Modal Dictamen Criptográfico BCRP
+    document.getElementById('btnCerrarModalCripto')?.addEventListener('click', cerrarModalCripto);
+    document.getElementById('modalVerificacionCriptografica')?.addEventListener('click', (e) => {
+        if (e.target.id === 'modalVerificacionCriptografica') {
+            cerrarModalCripto();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modalCripto = document.getElementById('modalVerificacionCriptografica');
+            if (modalCripto && modalCripto.classList.contains('active')) {
+                cerrarModalCripto();
+            }
+        }
+    });
 
     // Modal Manual
     const modalManual = document.getElementById('modalManual');
@@ -1097,11 +1182,11 @@ function configurarEventosUI() {
                     document.getElementById('formRegistroManual').reset();
                     renderizarMatrizIncidentes();
                     actualizarKpis();
-                    alert(`✅ Incidente registrado y persistido en PostgreSQL con Ticket: ${nuevo.codigoTicket}`);
+                    alert(`✅ Incidente registrado y certificado en la Bitácora Oficial del BCRP con Ticket: ${nuevo.codigoTicket}`);
                     return;
                 } else {
                     const errObj = await resp.json().catch(() => ({}));
-                    alert(`Error en persistencia: ${errObj.message || 'La entidad ya posee un ticket activo.'}`);
+                    alert(`Aviso Regulatorio: ${errObj.message || 'La entidad bancaria ya posee un incidente activo en atención.'}`);
                     return;
                 }
             } catch (err) {
@@ -1259,4 +1344,5 @@ window.escapeHTML = escapeHTML;
 window.copiarHashCripto = copiarHashCripto;
 window.filtrarBitacoraAuditoria = filtrarBitacoraAuditoria;
 window.verificarIntegridadCadena = verificarIntegridadCadena;
+window.cerrarModalCripto = cerrarModalCripto;
 window.exportarBitacoraCsv = exportarBitacoraCsv;

@@ -3,12 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infraestructura & Pasarelas | SIGIR - BCRP</title>
+    <title>Infraestructura &amp; Pasarelas Interbancarias | SIGIR - BCRP</title>
+    <!-- Fuentes Google: Plus Jakarta Sans, Inter y JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+    <style>
+        /* ==========================================================================
+           ARQUITECTURA SANDWICH DE ÉLITE - INFRAESTRUCTURA Y PASARELAS (BCRP FINTECH)
+           ========================================================================== */
+        
+        /* 1. PAN SUPERIOR: Barra Unificada de Contexto y Operación */
+        .infra-header-bar {
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+        }
+
+        .infra-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .infra-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .infra-title-row h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #F8FAFC;
+        }
+
+        .infra-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #10B981;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .infra-subtitle {
+            margin: 0;
+            font-size: 0.76rem;
+            color: #94A3B8;
+        }
+
+        .infra-actions-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 2. RELLENO DEL SANDWICH: NÚCLEO CENTRAL HERO (SWITCH CCE) */
+        .infra-hero-core {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(226, 179, 87, 0.08) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 179, 87, 0.35);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+            transition: all 250ms ease;
+        }
+
+        .infra-hero-core:hover {
+            border-color: rgba(226, 179, 87, 0.55);
+            box-shadow: 0 8px 30px -4px rgba(226, 179, 87, 0.18);
+        }
+
+        .infra-hero-core::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #E2B357 0%, rgba(226, 179, 87, 0.3) 50%, #38BDF8 100%);
+        }
+
+        .infra-hero-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .infra-hero-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .infra-hero-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(226, 179, 87, 0.12);
+            border: 1px solid rgba(226, 179, 87, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #E2B357;
+            flex-shrink: 0;
+        }
+
+        .infra-hero-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .infra-badge-iso {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #94A3B8;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+
+        .infra-hero-title {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: -0.01em;
+        }
+
+        .infra-hero-sub {
+            font-size: 0.74rem;
+            color: #94A3B8;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .infra-hero-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .infra-hero-meta {
+            font-size: 0.68rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+
+        /* 4 KPIs Ejecutivos Estilizados del Núcleo Central CCE */
+        .infra-hero-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 960px) {
+            .infra-hero-kpis {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .infra-hero-kpis {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-kpi-card {
+            background: rgba(11, 15, 23, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            transition: all 200ms ease;
+        }
+
+        .hero-kpi-card:hover {
+            background: rgba(11, 15, 23, 0.85);
+            border-color: rgba(226, 179, 87, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .kpi-icon-mini {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .kpi-icon-mini.gold { background: rgba(226, 179, 87, 0.15); color: #E2B357; }
+        .kpi-icon-mini.emerald { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+        .kpi-icon-mini.sky { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+        .kpi-icon-mini.purple { background: rgba(168, 85, 247, 0.15); color: #C084FC; }
+
+        .kpi-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .kpi-label {
+            font-size: 0.65rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+
+        .kpi-val {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            font-family: var(--font-mono, monospace);
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .kpi-val.gold { color: #E2B357; }
+        .kpi-val.emerald { color: #10B981; }
+        .kpi-val.sky { color: #38BDF8; }
+
+        .kpi-note {
+            font-size: 0.65rem;
+            color: #64748B;
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
+        /* 3. RELLENO DEL SANDWICH: MATRIZ SIMÉTRICA DE PASARELAS (2x2) */
+        .infra-gateways-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 860px) {
+            .infra-gateways-matrix {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .infra-node-card {
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
+            transition: all 200ms ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .infra-node-card:hover {
+            border-color: rgba(226, 179, 87, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+        }
+
+        .infra-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .infra-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .infra-tag.gold {
+            background: rgba(226, 179, 87, 0.15);
+            color: #E2B357;
+            border: 1px solid rgba(226, 179, 87, 0.35);
+        }
+
+        .infra-tag.sky {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38BDF8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+
+        .infra-tag.amber {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+        }
+
+        .infra-card-title {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .infra-card-sub {
+            font-size: 0.72rem;
+            color: #94A3B8;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .infra-specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: rgba(11, 15, 23, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .spec-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .spec-label {
+            font-size: 0.65rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .spec-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #F8FAFC;
+            font-family: var(--font-sans);
+        }
+
+        .spec-val.mono {
+            font-family: var(--font-mono, monospace);
+        }
+
+        .spec-val.emerald { color: #10B981; }
+        .spec-val.sky { color: #38BDF8; }
+        .spec-val.gold { color: #E2B357; }
+
+        /* 4. PAN INFERIOR: Sello y Regulación Institucional */
+        .infra-footer-dock {
+            background: rgba(11, 15, 23, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: #64748B;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,7 +442,7 @@
             </div>
         </div>
 
-        <!-- Pestañas de navegación superiores limpias (Zero Emojis - SVGs Nítidos 1.75px) -->
+        <!-- Pestañas de navegación superiores limpias -->
         <nav class="header-nav" aria-label="Navegación del Sistema">
             <a href="index.html" class="nav-tab">
                 <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -59,7 +463,7 @@
         </nav>
 
         <div class="header-right">
-            <!-- Píldora Command Palette (Raycast / Linear style) -->
+            <!-- Píldora Command Palette -->
             <button class="cmd-palette-pill" id="btnHeaderCommandPalette" type="button" aria-label="Abrir Paleta de Comandos" title="Abrir Paleta de Comandos (⌘K / Ctrl+K)">
                 <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -69,8 +473,8 @@
                 <kbd class="cmd-pill-kbd">⌘K</kbd>
             </button>
 
-            <!-- Botón Toggle de Audio Háptico Discreto (34x34px sin texto) -->
-            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API - Emil Kowalski)">
+            <!-- Botón Toggle de Audio Háptico -->
+            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API)">
                 <svg class="icon-svg icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -83,13 +487,13 @@
                 </svg>
             </button>
 
-            <!-- Reloj digital en tiempo real con punto verde pulsante -->
+            <!-- Reloj digital en tiempo real -->
             <div class="header-clock-box" title="Hora Oficial de la República del Perú (UTC-5)">
                 <span class="clock-live-dot"></span>
                 <span id="relojUtc" class="header-clock">--:--:-- PET</span>
             </div>
 
-            <!-- Dropdown de Sesión de Usuario Unificado (Estilo Stripe / Mercury / Linear) -->
+            <!-- Dropdown de Sesión de Usuario Unificado -->
             <div class="header-user-dropdown" id="headerUserDropdown">
                 <button class="header-user-trigger" id="btnUserMenuTrigger" type="button" aria-haspopup="true" aria-expanded="false" title="Cuenta de usuario y sesión">
                     <div class="user-avatar-circle" id="headerUserAvatar">FV</div>
@@ -151,159 +555,274 @@
         </div>
     </header>
 
+    <!-- Contenedor Principal de Infraestructura - ARQUITECTURA SANDWICH -->
     <main class="dashboard-main main-layout">
-        <!-- Banner Explicativo Intuitivo para Usuarios No Técnicos -->
-        <div class="human-welcome-banner banner-infra">
-            <div class="welcome-banner-content">
-                <div class="welcome-banner-icon" aria-hidden="true">
-                    <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h2 class="welcome-banner-title">Mapa de Infraestructura &amp; Pasarelas Interbancarias</h2>
-                    <p class="welcome-banner-desc">
-                        Supervisión del canal de comunicación del Switch CCE con los principales bancos y cajas municipales. 
-                        <span class="legend-dot-emerald">●</span> <strong>Verde:</strong> Canal seguro y fluido. 
-                        <span class="legend-dot-crimson">●</span> <strong>Rojo:</strong> Desvío activo a ruta de contingencia.
-                    </p>
-                </div>
-            </div>
-            <div class="welcome-banner-actions">
-                <a href="index.html" class="welcome-portal-link" title="Volver a la Consola NOC de Supervisión">
-                    <span>Volver a Consola NOC</span>
-                    <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-        <!-- Grilla de Nodos de Infraestructura (Grid Elástica Fluida) -->
-        <div class="grid-infraestructura">
-            
-            <!-- CCE Switch Central -->
-            <div class="card-infra cce-core">
-                <div class="card-infra-header">
-                    <div>
-                        <span class="card-infra-badge-tag tag-gold">Núcleo Central Regulatorio</span>
-                        <h3 class="card-infra-title">CCE · Switch Central de Compensación</h3>
-                        <span class="card-infra-subtitle">Pasarela Principal de Enlace ISO 20022</span>
-                    </div>
-                    <span class="status-pill-human">
-                        <span class="micro-dot-pulse"></span>
-                        Activo 100%
+        
+        <!-- ====================================================================
+             1. PAN SUPERIOR: Barra Unificada de Contexto y Operación
+             ==================================================================== -->
+        <section class="infra-header-bar" aria-label="Control y Estado de Pasarelas">
+            <div class="infra-title-block">
+                <div class="infra-title-row">
+                    <h2>Mapa de Infraestructura &amp; Pasarelas Interbancarias</h2>
+                    <span class="infra-live-pill">
+                        <span class="status-dot online"></span>
+                        <span>5 Pasarelas Operativas</span>
                     </span>
                 </div>
-                <div class="card-infra-specs">
-                    <div class="spec-item"><span class="spec-label">Capacidad por segundo:</span><div class="spec-value">4,500 trans/seg</div></div>
-                    <div class="spec-item"><span class="spec-label">Latencia interna:</span><div class="spec-value val-emerald">12 ms</div></div>
-                    <div class="spec-item"><span class="spec-label">Protocolo de seguridad:</span><div class="spec-value">mTLS + AES-256</div></div>
-                    <div class="spec-item"><span class="spec-label">Respaldo en Nube:</span><div class="spec-value val-sky">Hot-Standby Activo</div></div>
+                <p class="infra-subtitle">Supervisión en tiempo real del Switch Central CCE con la banca privada y cajas municipales bajo estándar ISO 20022.</p>
+            </div>
+
+            <div class="infra-actions-strip">
+                <a href="index.html" class="btn btn-secondary btn-sm" title="Volver a la Consola NOC Central">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Volver a Consola NOC</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             2. RELLENO DEL SANDWICH - NÚCLEO CENTRAL: Switch CCE
+             ==================================================================== -->
+        <section class="infra-hero-core" aria-label="Núcleo Central CCE">
+            <div class="infra-hero-header">
+                <div class="infra-hero-brand">
+                    <div class="infra-hero-icon-box" title="Switch Central CCE">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="infra-hero-tag-row">
+                            <span class="infra-tag gold">Núcleo Central de Compensación</span>
+                            <span class="infra-badge-iso">Estándar ISO 20022</span>
+                        </div>
+                        <h3 class="infra-hero-title">CCE &bull; Switch Central de Compensación Electrónica</h3>
+                        <span class="infra-hero-sub">Plataforma Matriz de Enlace e Interoperabilidad Inmediata</span>
+                    </div>
+                </div>
+                <div class="infra-hero-status">
+                    <span class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        <span>Operación Normal 100%</span>
+                    </span>
+                    <span class="infra-hero-meta">Disponibilidad 99.999% &bull; SLA Cumplido</span>
                 </div>
             </div>
 
-            <!-- BCP Yape -->
-            <div class="card-infra bank-node">
-                <div class="card-infra-header">
+            <!-- 4 KPIs Ejecutivos Estilizados del Núcleo Central CCE -->
+            <div class="infra-hero-kpis">
+                <div class="hero-kpi-card">
+                    <div class="kpi-icon-mini gold">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-label">Capacidad de Procesamiento</span>
+                        <span class="kpi-val gold">4,500 pagos/seg</span>
+                        <span class="kpi-note">Carga pico garantizada en tiempo real</span>
+                    </div>
+                </div>
+
+                <div class="hero-kpi-card">
+                    <div class="kpi-icon-mini emerald">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-label">Tiempo de Liquidación</span>
+                        <span class="kpi-val emerald">12 ms (Inmediato)</span>
+                        <span class="kpi-note">Margen operacional óptimo BCRP</span>
+                    </div>
+                </div>
+
+                <div class="hero-kpi-card">
+                    <div class="kpi-icon-mini sky">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-label">Seguridad y Homologación</span>
+                        <span class="kpi-val sky">Cifrado Bancario Homologado</span>
+                        <span class="kpi-note">Validación de identidad institucional mutua</span>
+                    </div>
+                </div>
+
+                <div class="hero-kpi-card">
+                    <div class="kpi-icon-mini purple">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <div class="kpi-body">
+                        <span class="kpi-label">Continuidad Operativa</span>
+                        <span class="kpi-val">Alta Disponibilidad Activo-Activo</span>
+                        <span class="kpi-note">Conmutación de contingencia sin cortes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             3. RELLENO DEL SANDWICH - MATRIZ SIMÉTRICA 2x2: Pasarelas Homologadas
+             ==================================================================== -->
+        <section class="infra-gateways-matrix" aria-label="Nodos de Pasarela Interbancaria">
+            
+            <!-- Pasarela 1: BCP (Yape) -->
+            <div class="infra-node-card">
+                <div class="infra-card-header">
                     <div>
-                        <span class="card-infra-badge-tag tag-sky">Entidad Bancaria Privada</span>
-                        <h3 class="card-infra-title">BCP · Banco de Crédito del Perú (Yape)</h3>
-                        <span class="card-infra-subtitle">Canal Interoperable Billeteras Móviles</span>
+                        <span class="infra-tag sky">Banca Privada Interoperable</span>
+                        <h3 class="infra-card-title">BCP &bull; Banco de Crédito del Perú (Yape)</h3>
+                        <span class="infra-card-sub">Canal Interoperable de Billeteras Digitales</span>
                     </div>
                     <span id="badgeBcpInfra" class="status-pill-human">
                         <span class="micro-dot-pulse"></span>
-                        Operación Normal
+                        <span>Operación Normal</span>
                     </span>
                 </div>
-                <div class="card-infra-specs">
-                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">12.4M operaciones</div></div>
-                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div id="latenciaBcpInfra" class="spec-value val-emerald">18 ms</div></div>
-                    <div class="spec-item"><span class="spec-label">Enlace dedicado:</span><div class="spec-value">Fibra Directa Red Privada</div></div>
-                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">VPN IPsec Alternativa</div></div>
+
+                <div class="infra-specs-grid">
+                    <div class="spec-box">
+                        <span class="spec-label">Volumen Diario Promedio</span>
+                        <span class="spec-val mono">12.4M operaciones</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Tiempo de Respuesta</span>
+                        <span id="latenciaBcpInfra" class="spec-val mono emerald">18 ms</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Enlace Operativo Principal</span>
+                        <span class="spec-val">Canal Privado Dedicado BCP-CCE</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Canal Alterno de Contingencia</span>
+                        <span class="spec-val">Enlace Redundante de Respaldo Inmediato</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Interbank Plin -->
-            <div class="card-infra bank-node">
-                <div class="card-infra-header">
+            <!-- Pasarela 2: Interbank / BBVA (Plin) -->
+            <div class="infra-node-card">
+                <div class="infra-card-header">
                     <div>
-                        <span class="card-infra-badge-tag tag-sky">Entidad Bancaria Privada</span>
-                        <h3 class="card-infra-title">Interbank / BBVA (Plin)</h3>
-                        <span class="card-infra-subtitle">Canal Interoperable de Pagos Inmediatos</span>
+                        <span class="infra-tag sky">Banca Privada Interoperable</span>
+                        <h3 class="infra-card-title">Interbank / BBVA (Plin)</h3>
+                        <span class="infra-card-sub">Canal Interoperable de Pagos Inmediatos</span>
                     </div>
                     <span class="status-pill-human">
                         <span class="micro-dot-pulse"></span>
-                        Operación Normal
+                        <span>Operación Normal</span>
                     </span>
                 </div>
-                <div class="card-infra-specs">
-                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">6.8M operaciones</div></div>
-                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">24 ms</div></div>
-                    <div class="spec-item"><span class="spec-label">Enlace dedicado:</span><div class="spec-value">Conexión Segura CCE</div></div>
-                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Colas MQ Replicadas</div></div>
+
+                <div class="infra-specs-grid">
+                    <div class="spec-box">
+                        <span class="spec-label">Volumen Diario Promedio</span>
+                        <span class="spec-val mono">6.8M operaciones</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Tiempo de Respuesta</span>
+                        <span class="spec-val mono emerald">24 ms</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Enlace Operativo Principal</span>
+                        <span class="spec-val">Canal Interbancario Homologado CCE</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Canal Alterno de Contingencia</span>
+                        <span class="spec-val">Entrega Garantizada con Conciliación Posterior</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Caja Cusco Tunki -->
-            <div class="card-infra box-node">
-                <div class="card-infra-header">
+            <!-- Pasarela 3: Caja Cusco (Tunki) -->
+            <div class="infra-node-card">
+                <div class="infra-card-header">
                     <div>
-                        <span class="card-infra-badge-tag tag-amber">Caja Municipal / Microfinanzas</span>
-                        <h3 class="card-infra-title">Caja Cusco (Tunki)</h3>
-                        <span class="card-infra-subtitle">Inclusión Financiera Sur del Perú</span>
+                        <span class="infra-tag amber">Microfinanzas e Inclusión</span>
+                        <h3 class="infra-card-title">Caja Cusco (Tunki)</h3>
+                        <span class="infra-card-sub">Microfinanzas e Inclusión Financiera</span>
                     </div>
                     <span class="status-pill-human">
                         <span class="micro-dot-pulse"></span>
-                        Operación Normal
+                        <span>Operación Normal</span>
                     </span>
                 </div>
-                <div class="card-infra-specs">
-                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">850K operaciones</div></div>
-                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">32 ms</div></div>
-                    <div class="spec-item"><span class="spec-label">Enlace regional:</span><div class="spec-value">Nodo Primario Cusco</div></div>
-                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Gateway CCE Lima</div></div>
+
+                <div class="infra-specs-grid">
+                    <div class="spec-box">
+                        <span class="spec-label">Volumen Diario Promedio</span>
+                        <span class="spec-val mono">850K operaciones</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Tiempo de Respuesta</span>
+                        <span class="spec-val mono emerald">32 ms</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Enlace Operativo Principal</span>
+                        <span class="spec-val">Canal Regional Macro Sur - Lima</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Canal Alterno de Contingencia</span>
+                        <span class="spec-val">Ruta Alternativa Interconectada BCRP</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Caja de los Andes -->
-            <div class="card-infra box-node">
-                <div class="card-infra-header">
+            <!-- Pasarela 4: Caja de los Andes -->
+            <div class="infra-node-card">
+                <div class="infra-card-header">
                     <div>
-                        <span class="card-infra-badge-tag tag-amber">Caja Rural de Ahorro y Crédito</span>
-                        <h3 class="card-infra-title">Caja de los Andes</h3>
-                        <span class="card-infra-subtitle">Microfinanzas y Crédito Rural</span>
+                        <span class="infra-tag amber">Microfinanzas y Banca Rural</span>
+                        <h3 class="infra-card-title">Caja de los Andes</h3>
+                        <span class="infra-card-sub">Microfinanzas y Banca Rural</span>
                     </div>
                     <span class="status-pill-human">
                         <span class="micro-dot-pulse"></span>
-                        Operación Normal
+                        <span>Operación Normal</span>
                     </span>
                 </div>
-                <div class="card-infra-specs">
-                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">420K operaciones</div></div>
-                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">45 ms</div></div>
-                    <div class="spec-item"><span class="spec-label">Enlace regional:</span><div class="spec-value">Nodo Puno / Arequipa</div></div>
-                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Gateway Alternativo</div></div>
+
+                <div class="infra-specs-grid">
+                    <div class="spec-box">
+                        <span class="spec-label">Volumen Diario Promedio</span>
+                        <span class="spec-val mono">420K operaciones</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Tiempo de Respuesta</span>
+                        <span class="spec-val mono emerald">45 ms</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Enlace Operativo Principal</span>
+                        <span class="spec-val">Canal Regional Altiplano - CCE</span>
+                    </div>
+                    <div class="spec-box">
+                        <span class="spec-label">Canal Alterno de Contingencia</span>
+                        <span class="spec-val">Respaldo Satelital y Enlace de Contingencia</span>
+                    </div>
                 </div>
             </div>
 
-        </div>
+        </section>
+
+        <!-- ====================================================================
+             4. PAN INFERIOR: Sello y Regulación Institucional
+             ==================================================================== -->
+        <footer class="infra-footer-dock">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="status-dot online"></span>
+                <span>Supervisión Continua de Pasarelas &bull; Subgerencia de Operaciones de Pago BCRP</span>
+            </div>
+            <div>
+                <span>Circular BCRP N° 0014-2023 &bull; Liquidación Bruta en Tiempo Real (LBTR)</span>
+            </div>
+        </footer>
+
     </main>
 
-    <footer class="app-footer">
-        <div>
-            <strong>SIGIR - BCRP</strong> &bull; Sistema de Supervisión y Gestión de Incidentes Regulatorios
-        </div>
-        <div>
-            Desarrollado por <strong>Frank Vargas Huamán</strong>, Fernando Romero Requejo y Joel Olaya Vivas &bull; UTP 2026
-        </div>
-    </footer>
-
     <!-- Scripts Esenciales Registrados -->
-    <!-- Librerías de Vanguardia para Seguridad y Animación -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -311,7 +830,6 @@
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>
     <script>
-        // Actualizar reloj oficial
         function actualizarReloj() {
             const reloj = document.getElementById('relojUtc');
             if (reloj) {
@@ -325,4 +843,3 @@
     </script>
 </body>
 </html>
-
