@@ -173,23 +173,23 @@
         const styleEl = document.createElement('style');
         styleEl.id = 'noc-demo-styles';
         styleEl.textContent = `
-            /* Contenedor Flotante Inferior de Presets Jurado (Estilo macOS Dock / Vercel HUD) */
+            /* Contenedor Flotante Inferior de Presets Jurado - Estilo Institucional BCRP */
             .noc-demo-dock {
                 position: fixed;
-                bottom: 18px;
+                bottom: 16px;
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 99999;
-                background: rgba(11, 15, 23, 0.94);
+                background: rgba(10, 21, 40, 0.96);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(56, 189, 248, 0.35);
-                border-radius: 16px;
-                box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(226, 179, 87, 0.45);
+                border-radius: 14px;
+                box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.85), 0 0 24px rgba(226, 179, 87, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
                 font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
                 max-width: calc(100vw - 32px);
                 width: auto;
-                padding: 6px 14px;
+                padding: 5px 12px;
                 transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
             }
 
@@ -209,7 +209,7 @@
                 gap: 12px;
             }
 
-            /* Badge y Metadatos Institucionales */
+            /* Badge y Metadatos Institucionales BCRP */
             .noc-demo-brand {
                 display: flex;
                 align-items: center;
@@ -218,8 +218,8 @@
             }
 
             .noc-demo-pill {
-                background: linear-gradient(135deg, rgba(200, 16, 46, 0.22), rgba(217, 119, 6, 0.18));
-                border: 1px solid rgba(217, 119, 6, 0.45);
+                background: linear-gradient(135deg, rgba(200, 16, 46, 0.28), rgba(226, 179, 87, 0.22));
+                border: 1px solid rgba(226, 179, 87, 0.55);
                 padding: 4px 9px;
                 border-radius: 6px;
                 display: flex;
@@ -228,7 +228,7 @@
             }
 
             .noc-demo-pill .icon {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
 
             .noc-demo-pill .title {
@@ -249,7 +249,7 @@
             .noc-demo-evaluator {
                 font-size: 0.74rem;
                 font-weight: 700;
-                color: #38BDF8;
+                color: #E2B357;
                 letter-spacing: -0.01em;
             }
 
@@ -386,23 +386,23 @@
                 border-color: rgba(255, 255, 255, 0.25);
             }
 
-            /* Botón Flotante para Reabrir Panel cuando esté minimizado */
+            /* Botón Flotante para Reabrir Panel cuando esté minimizado - Estilo Institucional BCRP */
             .noc-demo-fab-trigger {
                 position: fixed;
-                bottom: 20px;
-                right: 24px;
+                bottom: 16px;
+                right: 20px;
                 z-index: 99998;
-                background: #0B0F17;
-                border: 1px solid rgba(56, 189, 248, 0.4);
-                color: #38BDF8;
-                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65), 0 0 10px rgba(56, 189, 248, 0.25);
-                padding: 6px 13px;
+                background: #0A1528;
+                border: 1px solid rgba(226, 179, 87, 0.55);
+                color: #E2B357;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 14px rgba(226, 179, 87, 0.25);
+                padding: 6px 14px;
                 border-radius: 9999px;
                 font-size: 0.74rem;
                 font-weight: 700;
                 display: none;
                 align-items: center;
-                gap: 7px;
+                gap: 8px;
                 cursor: pointer;
                 transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                 font-family: 'JetBrains Mono', monospace;
@@ -411,8 +411,8 @@
             .noc-demo-fab-trigger:hover {
                 background: #0F172A;
                 transform: scale(1.04);
-                border-color: #38BDF8;
-                box-shadow: 0 6px 22px rgba(56, 189, 248, 0.4);
+                border-color: #E2B357;
+                box-shadow: 0 6px 24px rgba(226, 179, 87, 0.45);
             }
 
             .noc-demo-fab-trigger.visible {
@@ -421,7 +421,7 @@
 
             /* Compensación inferior cuando el dock flotante está visible */
             body.has-noc-dock {
-                padding-bottom: 74px !important;
+                padding-bottom: 70px !important;
             }
 
             /* ==========================================================
@@ -607,7 +607,7 @@
                 <div class="noc-demo-brand">
                     <div class="noc-demo-pill">
                         <span class="icon">⚖️</span>
-                        <span class="title">JURADO APF1</span>
+                        <span class="title">JURADO BCRP</span>
                     </div>
                     <div class="noc-demo-meta">
                         <span class="noc-demo-evaluator">Prof. Zamata · Sección 57524</span>
@@ -615,31 +615,31 @@
                     </div>
                 </div>
 
-                <!-- Botonera de 4 Escenarios Clave -->
+                <!-- Botonera de 4 Escenarios Clave con Lenguaje Bancario -->
                 <div class="noc-demo-presets-row">
-                    <button type="button" class="noc-btn-preset escenario-1" id="btnNocEscenario1" title="Restablecer todos los bancos a estado óptimo y disponibilidad 99.94% (Alt+1)">
-                        <span>🟢 1. Operación Normal</span>
+                    <button type="button" class="noc-btn-preset escenario-1" id="btnNocEscenario1" title="Monitoreo activo de 5 pasarelas, flujo continuo de 1,531 pagos/segundo y 99.98% de disponibilidad (Alt+1)">
+                        <span>🟢 1. Operación Nominal (99.98%)</span>
                         <span class="noc-key-badge">Alt+1</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-2" id="btnNocEscenario2" title="Simular falla en BCP (Yape) con auto-ticket INC-20261031-10001 (Alt+2)">
-                        <span>🚨 2. Simular Falla en BCP (Yape)</span>
+                    <button type="button" class="noc-btn-preset escenario-2" id="btnNocEscenario2" title="Inyección de interrupción en BCP (Yape), detección < 30s, ticket regulatorio y canal alterno (Alt+2)">
+                        <span>🚨 2. Interrupción BCP (Yape)</span>
                         <span class="noc-key-badge">Alt+2</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-3" id="btnNocEscenario3" title="Recuperar canal y mitigar con recálculo de disponibilidad de pagos (Alt+3)">
-                        <span>🛡️ 3. Recuperar Canal y Mitigar</span>
+                    <button type="button" class="noc-btn-preset escenario-3" id="btnNocEscenario3" title="Gestión en Drawer Forense: Ficha técnica digital, trazabilidad cronológica y conmutación a En Mitigación (Alt+3)">
+                        <span>🛡️ 3. Drawer Forense &amp; Mitigación</span>
                         <span class="noc-key-badge">Alt+3</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-4" id="btnNocEscenario4" title="Emitir reporte oficial normativo SFT con firma digital SHA-256 (Alt+4)">
-                        <span>📜 4. Emitir Reporte con Firma Digital</span>
+                    <button type="button" class="noc-btn-preset escenario-4" id="btnNocEscenario4" title="Compilación y sellado del archivo normativo SFT para el BCRP con firma digital SHA-256 (Alt+4)">
+                        <span>📜 4. Compilación y Sellado SFT</span>
                         <span class="noc-key-badge">Alt+4</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset" id="btnNocGuiaDemo" style="border-color: rgba(226, 179, 87, 0.45); background: rgba(226, 179, 87, 0.1); color: #F8FAFC;" title="Abrir Guía de Demostración (Alt+G)">
-                        <span>📋 Guía de Demostración</span>
-                        <span class="noc-key-badge">Alt+G</span>
+                    <button type="button" class="noc-btn-preset" id="btnNocGuiaDemo" style="border-color: rgba(226, 179, 87, 0.5); background: rgba(226, 179, 87, 0.14); color: #F8FAFC;" title="Guía Interactiva de Sustentación para Jurado BCRP y Prof. Zamata (Alt+G)">
+                        <span>📋 Guía Jurado (Alt+G)</span>
+                        <span class="noc-key-badge" style="border-color:rgba(226,179,87,0.4); color:#E2B357;">Alt+G</span>
                     </button>
                 </div>
 
@@ -649,7 +649,7 @@
                         <span id="lblNocAudioIcon">🔇</span>
                     </button>
                     <button type="button" class="noc-btn-icon" id="btnNocMinimize" title="Minimizar dock inferior de presets (Alt+P)">
-                        <span>▼ Ocultar</span>
+                        <span>▼ Minimizar</span>
                         <span class="noc-key-badge">Alt+P</span>
                     </button>
                 </div>
@@ -663,8 +663,8 @@
         fab.className = 'noc-demo-fab-trigger';
         fab.title = 'Abrir Presets de Demostración para Jurado (Alt+P)';
         fab.innerHTML = `
-            <span>⚖️ Presets Jurado</span>
-            <span class="noc-key-badge">Alt+P</span>
+            <span>⚖️ Presets Jurado BCRP</span>
+            <span class="noc-key-badge" style="border-color:rgba(226,179,87,0.4); color:#E2B357;">Alt+P</span>
         `;
 
         document.body.appendChild(dock);
@@ -749,11 +749,12 @@
 
     /**
      * ======================================================================
-     * ESCENARIO 1: TRÁFICO NORMAL INTERBANCARIO
-     * - Todos los bancos en Verde (SALUDABLE)
+     * ESCENARIO 1: OPERACIÓN NOMINAL EN TIEMPO REAL
+     * - Supervisión continua de 5 pasarelas interoperables (SALUDABLE)
+     * - Flujo continuo y estable de 1,531 pagos/segundo
      * - Latencias estándar óptimas (16-24ms)
      * - 0 caídas críticas activas
-     * - SLA consolidado exactamente en 99.94%
+     * - Disponibilidad consolidada en 99.98% (SLA BCRP >= 99.90%)
      * ======================================================================
      */
     function ejecutarEscenario1() {
@@ -762,7 +763,7 @@
 
         limpiarEfectoParpadeoBcp();
 
-        // 1. Normalizar todas las entidades participantes
+        // 1. Normalizar todas las 5 entidades participantes
         const latenciasBase = {
             1: 18, // BCP (Yape)
             2: 22, // Interbank (Plim)
@@ -789,10 +790,10 @@
         if (typeof window.renderizarMatrizIncidentes === 'function') window.renderizarMatrizIncidentes();
         if (typeof window.actualizarKpis === 'function') window.actualizarKpis();
 
-        // 4. Asegurar indicadores precisos del Escenario 1
+        // 4. Asegurar indicadores precisos del Escenario 1 (99.98% y flujo 1,531 pagos/seg)
         const elUptime = document.getElementById('kpiUptime');
         if (elUptime) {
-            elUptime.innerText = '99.94%';
+            elUptime.innerText = '99.98%';
             elUptime.style.color = '#38BDF8';
         }
 
@@ -801,11 +802,16 @@
             elCriticos.innerText = '0';
         }
 
+        const elTps = document.getElementById('topologiaTpsVal');
+        if (elTps) {
+            elTps.textContent = '1,531 pagos/seg';
+        }
+
         reproducirTono('exito');
 
         mostrarToast(
-            '1. Operación Normal',
-            '5/5 entidades saludables (BCP, Interbank, Cusco, Andes, CCE) · Tiempos de respuesta óptimos (16–24ms) · 0 fallas activas · Disponibilidad de pagos: 99.94%',
+            '1. Operación Nominal en Tiempo Real',
+            'Supervisión activa de 5 pasarelas interoperables · Flujo estable de 1,531 pagos/segundo · Disponibilidad normativa: 99.98% (SLA BCRP ≥ 99.90%) · 0 fallas activas',
             'success',
             5000
         );
@@ -882,8 +888,8 @@
         reproducirTono('alerta');
 
         mostrarToast(
-            '2. Simular Falla en BCP (Yape)',
-            `Interrupción temporal en la conexión con BCP (Yape) · Se genera ticket normativo: ${DEMO_CONFIG.ticketObjetivo} (Severidad CRÍTICA) · Canal alterno activado exitosamente.`,
+            '2. Inyección y Simulación de Interrupción en BCP (Yape)',
+            `Interrupción de pasarela en BCP (Yape) · Detección inmediata en < 30 seg · Ticket regulatorio generado: ${DEMO_CONFIG.ticketObjetivo} (Severidad CRÍTICA) · Conmutación automática al canal de contingencia sin pérdida de transferencias.`,
             'critical',
             6500
         );
@@ -910,28 +916,31 @@
         }
 
         if (!inc) {
-            mostrarToast(
-                'Mitigación no requerida',
-                'No hay tickets abiertos para BCP. Ejecute primero el "Escenario 2: Caída Crítica".',
-                'warning',
-                3500
-            );
-            return;
+            // Asegurar el incidente previo en BCP para la demostración
+            ejecutarEscenario2();
+            inc = state.incidentes.find(i => i.ticket === DEMO_CONFIG.ticketObjetivo);
+            await new Promise(r => setTimeout(r, 600));
+        }
+
+        // 1. Abrir el Drawer Forense para exhibir la ficha técnica digital inalterable
+        if (window.IncidentDrawer && typeof window.IncidentDrawer.open === 'function') {
+            window.IncidentDrawer.open(inc.id || inc.ticket);
         }
 
         // --- PASO 1: EN_MITIGACION ---
         inc.estado = 'EN_MITIGACION';
         if (typeof window.renderizarMatrizIncidentes === 'function') window.renderizarMatrizIncidentes();
+        if (window.IncidentDrawer && typeof window.IncidentDrawer.refresh === 'function') window.IncidentDrawer.refresh();
 
         mostrarToast(
-            'Paso 1: Transición hacia EN_MITIGACION',
-            `Ticket ${inc.ticket}: Canal alterno activado exitosamente. Enrutamiento preventivo en curso hacia Switch Secundario CCE.`,
+            '3. Gestión y Mitigación en el Drawer Forense',
+            `Ficha técnica digital abierta: Ticket ${inc.ticket} · Transición auditada a EN MITIGACIÓN · Canal alterno de contingencia activo en Switch Secundario CCE.`,
             'warning',
-            2800
+            3500
         );
 
         // Espera secuencial para demostración visual ante el jurado
-        await new Promise(r => setTimeout(r, 1100));
+        await new Promise(r => setTimeout(r, 1200));
 
         // --- PASO 2: RESUELTO & RESTABLECIMIENTO DE BCP ---
         inc.estado = 'RESUELTO';
@@ -947,22 +956,24 @@
 
         if (typeof window.renderizarTelemetria === 'function') window.renderizarTelemetria();
         if (typeof window.renderizarMatrizIncidentes === 'function') window.renderizarMatrizIncidentes();
+        if (window.IncidentDrawer && typeof window.IncidentDrawer.refresh === 'function') window.IncidentDrawer.refresh();
 
         reproducirTono('exito');
 
         mostrarToast(
-            'Paso 2: Transición hacia RESUELTO',
-            `Ticket ${inc.ticket}: Transferencias interbancarias restablecidas al 100% (Tiempo de respuesta normalizado a 18ms).`,
+            'Restablecimiento de Canal BCP',
+            `Ticket ${inc.ticket}: Transferencias interbancarias restablecidas al 100% · Tiempo de respuesta normalizado a 18ms.`,
             'success',
             2800
         );
 
         // --- PASO 3: CIERRE INMUTABLE Y CÁLCULO SLA EN TIEMPO REAL ---
-        await new Promise(r => setTimeout(r, 900));
+        await new Promise(r => setTimeout(r, 1000));
 
         inc.estado = 'CERRADO';
         if (typeof window.renderizarMatrizIncidentes === 'function') window.renderizarMatrizIncidentes();
         if (typeof window.actualizarKpis === 'function') window.actualizarKpis();
+        if (window.IncidentDrawer && typeof window.IncidentDrawer.refresh === 'function') window.IncidentDrawer.refresh();
 
         if (typeof window.confetti === 'function') {
             try {
@@ -975,10 +986,10 @@
             } catch (e) {}
         }
 
-        // Animación progresiva de recuperación del SLA (de 98.74% a 99.94%)
+        // Animación progresiva de recuperación del SLA (hacia 99.98%)
         const elUptime = document.getElementById('kpiUptime');
         if (elUptime) {
-            const pasos = ['98.74%', '99.10%', '99.55%', '99.88%', '99.94%'];
+            const pasos = ['98.74%', '99.10%', '99.55%', '99.90%', '99.98%'];
             for (let i = 0; i < pasos.length; i++) {
                 elUptime.innerText = pasos[i];
                 await new Promise(r => setTimeout(r, 80));
@@ -986,9 +997,14 @@
             elUptime.style.color = '#38BDF8';
         }
 
+        const elTps = document.getElementById('topologiaTpsVal');
+        if (elTps) {
+            elTps.textContent = '1,531 pagos/seg';
+        }
+
         mostrarToast(
-            'Paso 3: Cierre y Disponibilidad Consolidada',
-            `Ticket ${inc.ticket} CERRADO · Disponibilidad de Pagos BCRP: [(43200m - 12m) / 43200m] × 100 = 99.94% (Cumple Circular BCRP 0014-2023).`,
+            'Mitigación y Cierre Exitoso',
+            `Ticket ${inc.ticket} CERRADO · Disponibilidad de Pagos BCRP: [(43200m - 8m) / 43200m] × 100 = 99.98% (Cumplimiento de Circular BCRP 0014-2023).`,
             'info',
             5500
         );
@@ -1096,8 +1112,8 @@
         reproducirTono('exito');
 
         mostrarToast(
-            '4. Emitir Reporte con Firma Digital',
-            `Reporte oficial normativo SFT emitido con ${cerrados.length} registros oficiales. Firma digital SHA-256 generada y validada.`,
+            '4. Compilación y Sellado del Archivo Normativo SFT',
+            `Reporte oficial normativo SFT para el BCRP generado con ${cerrados.length} registros oficiales · Sellado digital SHA-256 e inmutabilidad garantizada.`,
             'crypto',
             6000
         );

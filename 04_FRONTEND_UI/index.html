@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cabeceras Meta de Seguridad HTTP / Navegador (AppSec BCRP Standard) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>SIGIR - BCRP | Centro de Control &amp; Supervisión de Pagos Interbancarios</title>
     <!-- Fuentes Google: Plus Jakarta Sans, Inter y JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,43 +19,53 @@
         /* ==========================================================================
            ESTÁNDAR COCKPIT SANDWICH - CONSOLA NOC BCRP (ÉLITE FINTECH)
            ========================================================================== */
+        html, body {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+        }
 
-        /* 1. PAN SUPERIOR: Cinta Ejecutiva de Comando y KPIs en Tiempo Real */
+        /* 1. BREAD TOP: Barra de Control NOC Unificada (max 54px alto) */
         .noc-command-ribbon {
-            background: rgba(15, 23, 42, 0.78);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 9px 16px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 6px 14px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 10px;
-            box-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.4);
+            min-height: 48px;
+            max-height: 54px;
+            box-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.45);
+            box-sizing: border-box;
         }
 
-        .noc-context-block {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .noc-context-title-row {
+        .noc-brand-block {
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-wrap: wrap;
+            flex-shrink: 0;
         }
 
-        .noc-context-title-row h2 {
+        .noc-brand-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .noc-brand-title-wrap h2 {
             margin: 0;
-            font-size: 0.98rem;
+            font-size: 0.88rem;
             font-weight: 800;
             color: #F8FAFC;
             letter-spacing: -0.01em;
+            white-space: nowrap;
         }
 
         .noc-live-badge {
@@ -63,102 +77,83 @@
             color: #10B981;
             padding: 2px 7px;
             border-radius: 9999px;
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.03em;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
-        .noc-context-desc {
-            margin: 0;
-            font-size: 0.71rem;
-            color: #94A3B8;
-        }
-
-        /* Cluster Central de 4 KPIs Compactos */
-        .noc-kpi-cluster {
+        /* Selector de Entidad Financiera */
+        .noc-filter-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(11, 15, 23, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 9px;
-            padding: 4px 10px;
-            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
-        .noc-kpi-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 8px;
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .noc-kpi-item:last-child {
-            border-right: none;
-            padding-right: 0;
-        }
-
-        .noc-kpi-item:first-child {
-            padding-left: 0;
-        }
-
-        .noc-kpi-val {
-            font-size: 1.15rem;
-            font-weight: 800;
-            font-family: var(--font-mono, monospace);
-            line-height: 1.1;
-        }
-
-        .noc-kpi-label {
-            font-size: 0.59rem;
+        .noc-select-label {
+            font-size: 0.66rem;
+            font-weight: 700;
             color: #94A3B8;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
-            margin-top: 1px;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
         }
 
-        /* Acciones Rápidas del Pan Superior */
-        .noc-quick-actions {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
+        .noc-entity-select {
+            background: rgba(11, 15, 23, 0.85);
+            color: #F8FAFC;
+            border: 1px solid rgba(226, 179, 87, 0.35);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.70rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: all 160ms ease;
+            white-space: nowrap;
         }
 
-        /* 2. RELLENO DEL SANDWICH: Selector Segmentado de Enfoque Operativo */
-        .cockpit-segmented-nav {
+        .noc-entity-select:focus,
+        .noc-entity-select:hover {
+            border-color: #E2B357;
+            box-shadow: 0 0 0 2px rgba(226, 179, 87, 0.25);
+        }
+
+        /* Switch de Visualización: Topología vs Matriz */
+        .noc-view-switch-group {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .cockpit-tabs-group {
             background: rgba(11, 15, 23, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 9px;
-            padding: 3px;
+            border-radius: 7px;
+            padding: 2px;
             display: inline-flex;
-            gap: 4px;
+            gap: 3px;
+            flex-shrink: 0;
         }
 
         .cockpit-tab {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: transparent;
             border: none;
             color: #94A3B8;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            padding: 4px 9px;
+            border-radius: 5px;
+            font-size: 0.68rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
         }
 
         .cockpit-tab:hover {
@@ -170,13 +165,13 @@
             background: #1E293B;
             color: #F8FAFC;
             border: 1px solid rgba(226, 179, 87, 0.35);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
         }
 
         .cockpit-badge {
-            font-size: 0.62rem;
+            font-size: 0.58rem;
             font-weight: 700;
-            padding: 1px 5px;
+            padding: 1px 4px;
             border-radius: 9999px;
             background: rgba(255, 255, 255, 0.08);
             color: #CBD5E1;
@@ -191,22 +186,86 @@
         .btn-cockpit-layout {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: #94A3B8;
-            padding: 5px 11px;
-            border-radius: 7px;
-            font-size: 0.72rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.68rem;
             font-weight: 600;
             cursor: pointer;
+            white-space: nowrap;
             transition: all 160ms ease;
+            flex-shrink: 0;
         }
 
         .btn-cockpit-layout:hover {
             background: rgba(30, 41, 59, 0.8);
             color: #E2B357;
             border-color: rgba(226, 179, 87, 0.3);
+        }
+
+        /* Cluster Central de 4 KPIs Compactos */
+        .noc-kpi-cluster {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(11, 15, 23, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 7px;
+            padding: 3px 8px;
+            flex-shrink: 0;
+        }
+
+        .noc-kpi-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 6px;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .noc-kpi-item:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .noc-kpi-item:first-child {
+            padding-left: 0;
+        }
+
+        .noc-kpi-val {
+            font-size: 0.95rem;
+            font-weight: 800;
+            font-family: var(--font-mono, monospace);
+            line-height: 1.05;
+        }
+
+        .noc-kpi-label {
+            font-size: 0.54rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 1px;
+        }
+
+        /* Acciones Rápidas del Pan Superior */
+        .noc-quick-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .noc-action-btn {
+            padding: 4px 9px !important;
+            font-size: 0.70rem !important;
+            min-height: 28px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            white-space: nowrap !important;
         }
 
         /* 3. PANELES DEL COCKPIT SANDWICH */
@@ -226,27 +285,27 @@
         /* Modo Desplegado Completo */
         .cockpit-panes-wrapper.all-expanded .cockpit-pane {
             display: block !important;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         @keyframes fadeInCockpit {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Ajustes Compactos del Canvas y Grid para Pantallas Laptop (1366x768) */
         .main-layout {
-            margin: 12px auto 28px !important;
-            gap: 10px !important;
-            padding: 0 20px !important;
+            margin: 8px auto 16px !important;
+            gap: 8px !important;
+            padding: 0 16px !important;
+            max-width: 1680px;
         }
 
         .topology-panel-section {
-            margin-bottom: 10px !important;
+            margin-bottom: 8px !important;
         }
 
         .topology-header {
-            padding: 8px 16px !important;
+            padding: 6px 14px !important;
             gap: 8px !important;
         }
 
@@ -254,12 +313,18 @@
         #topologyCanvasViewport,
         #cceTopologyCanvasViewport {
             height: 380px !important;
-            max-height: 380px;
+            max-height: 380px !important;
         }
 
+        /* Deck de Micro-Telemetría Bancaria de 5 Entidades */
         .telemetry-integrated-deck {
-            margin-top: 10px !important;
-            padding: 10px 16px !important;
+            margin-top: 8px !important;
+            padding: 8px 14px !important;
+            background: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(14px) !important;
+            -webkit-backdrop-filter: blur(14px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 9px !important;
         }
 
         .telemetry-deck-header {
@@ -270,7 +335,7 @@
         }
 
         .telemetry-deck-title {
-            font-size: 0.71rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #94A3B8;
@@ -280,63 +345,339 @@
             gap: 6px;
         }
 
-        .telemetry-integrated-deck .telemetry-grid {
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px !important;
             margin-bottom: 0 !important;
-            gap: 10px !important;
         }
 
-        .telemetry-integrated-deck .telemetry-node {
-            padding: 8px 12px !important;
-            min-height: 82px !important;
+        .telemetry-node {
+            background: rgba(11, 15, 23, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 8px !important;
+            padding: 6px 9px !important;
+            min-height: 74px !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .telemetry-node .node-header {
-            margin-bottom: 6px !important;
+        .telemetry-node:hover {
+            border-color: rgba(226, 179, 87, 0.35) !important;
+            background: rgba(30, 41, 59, 0.65) !important;
+            transform: translateY(-1px);
         }
 
-        @media (max-width: 1200px) {
-            .noc-command-ribbon {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .noc-kpi-cluster {
-                width: 100%;
-                justify-content: space-around;
-            }
+        .telemetry-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 4px;
         }
 
+        .telemetry-node .node-name {
+            font-size: 0.76rem !important;
+            font-weight: 700 !important;
+            color: #F8FAFC !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+
+        .telemetry-node .node-code {
+            font-size: 0.59rem !important;
+            color: #94A3B8 !important;
+            line-height: 1.1 !important;
+            display: block;
+            margin-top: 1px;
+            white-space: nowrap;
+        }
+
+        .telemetry-node .node-status-pill {
+            font-size: 0.56rem !important;
+            font-weight: 700 !important;
+            padding: 1px 5px !important;
+            border-radius: 9999px !important;
+            white-space: nowrap;
+        }
+
+        .telemetry-metrics-deck {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .telemetry-metric-cell {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .t-cell-k {
+            font-size: 0.52rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .t-cell-v {
+            font-size: 0.70rem;
+            font-weight: 700;
+            font-family: var(--font-mono, monospace);
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+
+        /* 3. BREAD BOTTOM: Franja Inferior Regulatoria BCRP Anclada */
+        .noc-footer-dock {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
+            padding: 5px 14px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.68rem;
+            color: #94A3B8;
+            box-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.45);
+        }
+
+        .dock-col {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dock-norma {
+            color: #CBD5E1;
+        }
+
+        .dock-norma strong {
+            color: #E2B357;
+            font-weight: 700;
+        }
+
+        .dock-hash-label {
+            font-size: 0.60rem;
+            color: #94A3B8;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .dock-hash {
+            font-family: var(--font-mono, monospace);
+            font-size: 0.66rem;
+            color: #38BDF8;
+            background: rgba(56, 189, 248, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            max-width: 270px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-copy-dock-hash {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #94A3B8;
+            padding: 2px 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 140ms ease;
+        }
+
+        .btn-copy-dock-hash:hover {
+            color: #E2B357;
+            border-color: #E2B357;
+            background: rgba(226, 179, 87, 0.1);
+        }
+
+        .dock-clock-val {
+            font-family: var(--font-mono, monospace);
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        /* Pantallas Laptops (1366x768): Cero Scroll Vertical y 0px Overflow Horizontal */
         @media (max-height: 820px), (max-width: 1366px) {
+            .main-layout {
+                padding: 0 10px !important;
+                overflow-x: hidden !important;
+            }
             .app-header {
-                padding: 6px 18px !important;
+                padding: 5px 14px !important;
             }
             .noc-command-ribbon {
-                padding: 7px 12px !important;
-                margin-bottom: 8px !important;
+                padding: 4px 8px !important;
+                margin-bottom: 6px !important;
+                max-height: 50px !important;
+                min-height: 44px !important;
+                gap: 5px !important;
+                overflow: hidden !important;
             }
-            .noc-context-title-row h2 {
-                font-size: 0.94rem !important;
+            .noc-brand-title-wrap h2 {
+                font-size: 0.82rem !important;
             }
-            .noc-context-desc {
-                font-size: 0.68rem !important;
+            .noc-live-badge {
+                font-size: 0.58rem !important;
+                padding: 1px 5px !important;
+            }
+            .noc-entity-select {
+                padding: 3px 6px !important;
+                font-size: 0.66rem !important;
+            }
+            .cockpit-tab {
+                padding: 3px 7px !important;
+                font-size: 0.64rem !important;
+            }
+            .btn-cockpit-layout {
+                padding: 3px 6px !important;
+                font-size: 0.64rem !important;
             }
             .noc-kpi-cluster {
-                padding: 3px 8px !important;
-                gap: 6px !important;
+                padding: 2px 6px !important;
+                gap: 4px !important;
             }
             .noc-kpi-val {
-                font-size: 1.05rem !important;
+                font-size: 0.88rem !important;
             }
-            .cockpit-segmented-nav {
-                margin-bottom: 8px !important;
+            .noc-kpi-label {
+                font-size: 0.50rem !important;
+            }
+            .noc-action-btn {
+                padding: 3px 7px !important;
+                font-size: 0.66rem !important;
+                min-height: 26px !important;
             }
             .topology-canvas-viewport,
             #topologyCanvasViewport,
             #cceTopologyCanvasViewport {
                 height: 380px !important;
+                max-height: 380px !important;
             }
-            .telemetry-integrated-deck .telemetry-node {
-                padding: 7px 10px !important;
-                min-height: 76px !important;
+            .telemetry-integrated-deck {
+                margin-top: 6px !important;
+                padding: 6px 10px !important;
+            }
+            .telemetry-node {
+                padding: 5px 7px !important;
+                min-height: 70px !important;
+            }
+            .noc-footer-dock {
+                margin-top: 6px !important;
+                padding: 4px 10px !important;
+                font-size: 0.64rem !important;
+            }
+        }
+
+        /* Adaptación Responsiva y Columna Limpia en Móviles (Antislop Mobile Standard) */
+        @media (max-width: 768px) {
+            .noc-command-ribbon {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+                padding: 12px 14px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .noc-context-block {
+                width: 100% !important;
+            }
+            .noc-kpi-cluster {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                width: 100% !important;
+                gap: 8px !important;
+                padding: 10px 8px !important;
+                box-sizing: border-box !important;
+                justify-content: stretch !important;
+            }
+            .noc-kpi-item {
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding: 6px 4px !important;
+                align-items: center !important;
+            }
+            .noc-kpi-item:nth-child(3),
+            .noc-kpi-item:nth-child(4) {
+                border-bottom: none !important;
+            }
+            .noc-quick-actions {
+                width: 100% !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            .noc-quick-actions .btn {
+                flex: 1 1 calc(50% - 4px) !important;
+                min-height: 44px !important;
+                justify-content: center !important;
+            }
+
+            /* Pestañas Segmentadas en una sola columna limpia */
+            .cockpit-segmented-nav {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+            .cockpit-tabs-group {
+                width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px !important;
+                padding: 4px !important;
+                box-sizing: border-box !important;
+            }
+            .cockpit-tab {
+                width: 100% !important;
+                min-height: 46px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 10px 14px !important;
+                font-size: 0.82rem !important;
+                box-sizing: border-box !important;
+                touch-action: manipulation !important;
+            }
+            .btn-cockpit-layout {
+                width: 100% !important;
+                min-height: 44px !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .noc-kpi-cluster {
+                grid-template-columns: 1fr 1fr !important;
+                padding: 8px 6px !important;
+            }
+            .noc-quick-actions .btn {
+                flex: 1 1 100% !important;
+                width: 100% !important;
             }
         }
     </style>
@@ -486,92 +827,99 @@
     <main class="main-layout">
 
         <!-- ====================================================================
-             1. PAN SUPERIOR: Cinta Ejecutiva de Comando y KPIs en Tiempo Real
+             1. PAN SUPERIOR: Cinta Ejecutiva de Comando Unificada (BREAD TOP)
+             Unifica Controles, Filtro de Entidad, Pestañas, KPIs y Acciones (< 54px)
              ==================================================================== -->
         <section class="noc-command-ribbon" aria-label="Cinta Ejecutiva de Comando y Estado">
-            <div class="noc-context-block">
-                <div class="noc-context-title-row">
-                    <h2>Centro de Control &amp; Supervisión de Pagos Interbancarios</h2>
-                    <span class="noc-live-badge">
-                        <span class="status-dot online"></span>
-                        <span>Canal BCRP Activo</span>
-                    </span>
+            <!-- Marca y Estado Central BCRP -->
+            <div class="noc-brand-block">
+                <h2>NOC BCRP</h2>
+                <span class="noc-live-badge">
+                    <span class="status-dot online"></span>
+                    <span>Canal CCE Activo</span>
+                </span>
+            </div>
+
+            <!-- Selector Rápido de Entidad Financiera -->
+            <div class="noc-filter-item">
+                <label for="selectorEntidadNoc">Entidad:</label>
+                <select id="selectorEntidadNoc" class="noc-entity-select" aria-label="Filtrar por entidad financiera">
+                    <option value="TODAS" selected>Todas las Entidades</option>
+                    <option value="BCP">BCP (Yape)</option>
+                    <option value="INTERBANK_BBVA">Interbank / BBVA (Plin)</option>
+                    <option value="CAJAS">Cajas Municipales</option>
+                </select>
+            </div>
+
+            <!-- Selector Segmentado de Enfoque Operativo y Modo Desplegado -->
+            <div class="noc-view-switch-group">
+                <div class="cockpit-tabs-group" role="tablist">
+                    <button type="button" class="cockpit-tab active" data-pane="pane-topologia" role="tab" aria-selected="true" title="Ver red de topología en tiempo real">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/>
+                        </svg>
+                        <span>Topología</span>
+                        <span class="cockpit-badge">5 Bancos</span>
+                    </button>
+
+                    <button type="button" class="cockpit-tab" data-pane="pane-incidentes" role="tab" aria-selected="false" title="Ver matriz regulatoria de incidentes">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>Matriz</span>
+                        <span class="cockpit-badge" id="badgeIncidentesCount">Activa</span>
+                    </button>
                 </div>
-                <p class="noc-context-desc">Supervisión en tiempo real de transferencias inmediatas: Switch CCE, Yape, Plin y Cajas Municipales (ISO 20022).</p>
+
+                <button type="button" class="btn-cockpit-layout" id="btnToggleCockpitLayout" title="Alternar entre pestañas y vista desplegada continua">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
+                    </svg>
+                    <span id="textCockpitLayout">Desplegar</span>
+                </button>
             </div>
 
             <!-- Cluster Central de 4 KPIs Críticos (IDs 100% Preservados) -->
             <div class="noc-kpi-cluster" id="kpiRibbonCluster">
                 <div class="noc-kpi-item" id="kpiCardUptime">
                     <span class="noc-kpi-val" id="kpiUptime" style="color:#10B981;">99.82%</span>
-                    <span class="noc-kpi-label">Disponibilidad de Pagos</span>
+                    <span class="noc-kpi-label">SLA Pagos</span>
                 </div>
                 <div class="noc-kpi-item" id="kpiCardMttd">
                     <span class="noc-kpi-val" id="kpiMttd" style="color:#E2B357;">&lt; 30s</span>
-                    <span class="noc-kpi-label">Tiempo Detección</span>
+                    <span class="noc-kpi-label">Detección</span>
                 </div>
                 <div class="noc-kpi-item" id="kpiCardActivos">
                     <span class="noc-kpi-val" id="kpiActivos" style="color:#EF4444;">0</span>
-                    <span class="noc-kpi-label">Fallas en Atención</span>
+                    <span class="noc-kpi-label">En Atención</span>
                 </div>
                 <div class="noc-kpi-item" id="kpiCardResueltos">
                     <span class="noc-kpi-val" id="kpiResueltos" style="color:#38BDF8;">0</span>
-                    <span class="noc-kpi-label">Fallas Solucionadas</span>
+                    <span class="noc-kpi-label">Resueltos</span>
                 </div>
             </div>
 
             <!-- Acciones Rápidas del Pan Superior (IDs 100% Preservados) -->
             <div class="noc-quick-actions">
-                <button class="btn btn-warning btn-sm" id="btnSimularCaida" title="Simular caída en canal de pagos para evaluar auto-recuperación (Alt+2)">
-                    <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <button class="noc-action-btn btn-warning" id="btnSimularCaida" title="Simular contingencia en canal interbancario (Alt+2)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                     <span>Simular Falla</span>
                 </button>
-                <button class="btn btn-primary btn-sm" id="btnNuevoManual" title="Abrir registro asistido de incidencia">
-                    <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <button class="noc-action-btn btn-primary" id="btnNuevoManual" title="Abrir registro asistido de incidencia">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     <span>Nuevo Incidente</span>
                 </button>
-                <button class="btn btn-secondary btn-sm" id="btnAbrirGuiaModal" style="border-color:#E2B357; color:#E2B357; background:rgba(226,179,87,0.08);" title="Abrir Guía Rápida de Demostración para Jurado (Alt+G)">
-                    <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    <span>Guía Jurado (Alt+G)</span>
+                <button class="noc-action-btn btn-jurado" id="btnAbrirGuiaModal" title="Guía Rápida de Demostración para Jurado (Alt+G)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    <span>Guía (Alt+G)</span>
                 </button>
-                <button class="btn btn-bcrp btn-sm" id="btnGenerarSft" title="Generar archivo normativo SFT con firma SHA-256">
-                    <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <button class="noc-action-btn btn-bcrp" id="btnGenerarSft" title="Generar archivo normativo SFT con firma SHA-256 (Alt+4)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     <span>Exportar SFT</span>
                 </button>
             </div>
         </section>
-
-        <!-- ====================================================================
-             2. RELLENO DEL SANDWICH: Selector Segmentado de Enfoque Operativo
-             ==================================================================== -->
-        <nav class="cockpit-segmented-nav" aria-label="Modo de Operación del Cockpit">
-            <div class="cockpit-tabs-group" role="tablist">
-                <button type="button" class="cockpit-tab active" data-pane="pane-topologia" role="tab" aria-selected="true">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/>
-                    </svg>
-                    <span>Topología &amp; Pasarelas en Tiempo Real</span>
-                    <span class="cockpit-badge">5 Bancos</span>
-                </button>
-
-                <button type="button" class="cockpit-tab" data-pane="pane-incidentes" role="tab" aria-selected="false">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-                    </svg>
-                    <span>Matriz de Incidentes Regulatorios</span>
-                    <span class="cockpit-badge" id="badgeIncidentesCount">Matriz Activa</span>
-                </button>
-            </div>
-
-            <!-- Botón de Alternancia: Modo Pestañas vs Vista Desplegada Completa -->
-            <button type="button" class="btn-cockpit-layout" id="btnToggleCockpitLayout" title="Alternar entre pestañas y vista desplegada continua">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
-                </svg>
-                <span id="textCockpitLayout">Ver Todo Desplegado</span>
-            </button>
-        </nav>
 
         <!-- ====================================================================
              3. PANELES DEL COCKPIT SANDWICH (Progressive Disclosure)
@@ -731,6 +1079,29 @@
             </section>
         </div>
 
+        <!-- ====================================================================
+             ARQUITECTURA SANDWICH NOC - BARRA REGULATORIA ANCLADA (BREAD BOTTOM)
+             Normativa BCRP Circular 0014-2023, Hash SHA-256 inmutable & Hora Oficial PET
+             ==================================================================== -->
+        <footer class="noc-footer-dock" id="nocFooterDock" role="contentinfo">
+            <div class="dock-col dock-col-left">
+                <span class="status-dot online"></span>
+                <span class="dock-norma"><strong>Estándar BCRP Circular N° 0014-2023</strong> &bull; Sistema de Compensación y Liquidación CCE</span>
+            </div>
+            <div class="dock-col dock-col-center">
+                <span class="dock-hash-label">HASH ESTADO OPERATIVO (SHA-256):</span>
+                <code class="dock-hash" id="dockHashSha256" title="Hash criptográfico inmutable del estado del switch">b4f7a29e81c0d5e6a392f48107cd8934a5e1289dfb607831d041c2a8f9024bc1</code>
+                <button type="button" class="btn-copy-dock-hash" id="btnCopiarDockHash" title="Copiar hash SHA-256 del estado operativo">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+            </div>
+            <div class="dock-col dock-col-right">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="dock-clock-label">Hora Oficial BCRP:</span>
+                <span id="relojPetFooter" class="dock-clock-val">--:--:-- PET (UTC-5)</span>
+            </div>
+        </footer>
+
     </main>
 
     <!-- Modal: Registro Manual Asistido -->
@@ -830,252 +1201,259 @@
         </div>
     </div>
 
-    <!-- Modal: Widget de Guía Rápida de Demostración para Frank (Sustentación Jurado) -->
+    <!-- Modal: Widget de Guía Rápida de Demostración para Jurado (Sustentación BCRP) -->
     <div class="modal-overlay" id="modalGuiaDemo">
-        <div class="modal-card modal-demo-guide">
-            <div class="modal-header">
+        <div class="modal-card modal-demo-guide" style="border: 1px solid rgba(226, 179, 87, 0.45); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(226, 179, 87, 0.18);">
+            <!-- Cabecera Institucional BCRP -->
+            <div class="modal-header" style="background: linear-gradient(180deg, rgba(10, 25, 47, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%); border-bottom: 1px solid rgba(226, 179, 87, 0.35);">
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <span class="modal-demo-header-badge">⚖️ JURADO APF1 · SECCIÓN 57524</span>
-                    <h3 style="margin:0;">Guía Interactiva de Demostración Ejecutiva — BCRP</h3>
+                    <span class="modal-demo-header-badge" style="background: rgba(226, 179, 87, 0.15); border: 1px solid rgba(226, 179, 87, 0.5); color: #E2B357;">
+                        ⚖️ JURADO APF1 · SECCIÓN 57524
+                    </span>
+                    <div>
+                        <h3 style="margin:0; font-size:1.05rem; color:#F8FAFC; letter-spacing:-0.01em;">
+                            Guía Interactiva de Sustentación Ejecutiva — BCRP
+                        </h3>
+                        <div style="font-size:0.72rem; color:#94A3B8; font-family:'JetBrains Mono',monospace;">
+                            Evaluador: Prof. Zamata · Sustentante: Frank Vargas Huamán (NOC Lead)
+                        </div>
+                    </div>
                 </div>
-                <button class="modal-close" id="btnCerrarModalGuiaDemo" aria-label="Cerrar guía">
+                <button class="modal-close" id="btnCerrarModalGuiaDemo" aria-label="Cerrar guía" style="color:#94A3B8;">
                     <svg class="icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
 
+            <!-- Cuerpo Desplazable de la Guía -->
             <div class="demo-guide-scroll">
-                <!-- Banner de Metadatos & Atajos -->
-                <div class="demo-guide-intro">
+                
+                <!-- Banner de Metadatos & Atajos de Navegación -->
+                <div class="demo-guide-intro" style="background: rgba(226, 179, 87, 0.08); border: 1px solid rgba(226, 179, 87, 0.3); border-left: 4px solid #E2B357;">
                     <div>
-                        <strong style="color:#F8FAFC;">Ruta de Sustentación para Frank Vargas Huamán:</strong> Tiempo total de <strong>8 a 10 minutos</strong>. Usa los botones directos de cada paso para disparar la acción visual en vivo sin salir del flujo.
+                        <strong style="color:#F8FAFC;">Ruta de Sustentación Oficial para Frank Vargas Huamán:</strong> Tiempo total de <strong>8 a 10 minutos</strong>. Cuatro etapas operativas secuenciales diseñadas para el jurado calificador del BCRP. Use los botones directos de 1 clic para ejecutar la simulación en pantalla.
                     </div>
-                    <span class="kpi-tag" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid rgba(226,179,87,0.3); font-weight:700; white-space:nowrap;">
+                    <span class="kpi-tag" style="background:rgba(226,179,87,0.18); color:#E2B357; border:1px solid rgba(226,179,87,0.4); font-weight:700; white-space:nowrap; font-family:'JetBrains Mono',monospace;">
                         Atajo: Alt + G
                     </span>
                 </div>
 
-                <!-- Lista de los 6 Pasos -->
+                <!-- Grid de las 4 Etapas Operativas -->
                 <div class="demo-stepper-grid">
                     
-                    <!-- PASO 1 -->
-                    <div class="demo-step-card" id="stepCard1">
+                    <!-- ETAPA 1 -->
+                    <div class="demo-step-card" id="stepCard1" style="border-left: 4px solid #10B981;">
                         <div class="demo-step-header">
                             <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 1</span>
-                                <span class="demo-step-title">Apertura de la Consola NOC &amp; Reloj PET en Vivo</span>
+                                <span class="demo-step-num-badge" style="background:rgba(16,185,129,0.18); color:#34D399; border-color:rgba(16,185,129,0.4);">ETAPA 1</span>
+                                <span class="demo-step-title">Operación Nominal en Tiempo Real: Supervisión de 5 Pasarelas y Flujo de 1,531 Pagos/seg</span>
                             </div>
-                            <span class="demo-step-time">00:00 - 01:15 (75s)</span>
+                            <span class="demo-step-time">00:00 - 02:00 (120s) · SLA 99.98%</span>
                         </div>
                         <div class="demo-step-points">
                             <div class="demo-point-row">
                                 <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Muestra la cabecera institucional BCRP, el reloj sincronizado en tiempo real con la Hora Oficial del Perú (<code>PET / UTC-5</code>) y el estado saludable (latencias &lt; 25ms) de las 5 entidades conectadas (BCP, Interbank, Caja Cusco, Caja de los Andes y CCE).</div>
+                                <div>
+                                    <strong>En Consola de Supervisión:</strong> Monitoreo activo y continuo de 5 pasarelas interoperables de pagos minoristas: <strong>BCP (Yape)</strong>, <strong>Interbank (Plim)</strong>, <strong>Caja Cusco (Tunki)</strong>, <strong>Caja de los Andes</strong> y <strong>Switch Central CCE</strong>. Flujo transaccional continuo de <strong>1,531 pagos/segundo</strong>, disponibilidad consolidada del <strong>99.98%</strong> (exigencia BCRP &ge; 99.90%) y latencias sub-25 milisegundos con reloj sincronizado a la Hora Oficial del Perú (<code>PET / UTC-5</code>).
+                                </div>
                             </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "Buenos días, profesor Zamata. Presento la Consola Web del SIGIR, desarrollada para el Switch Interbancario CCE bajo directivas del BCRP. Como puede apreciar, el panel opera en tiempo real con la hora oficial del Perú (PET) y ejecuta un sondeo no bloqueante cada 30 segundos sobre las 5 pasarelas interoperables, manteniendo latencias de enlace sub-25 milisegundos."
-                            </div>
-                        </div>
-                        <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
-                            <button type="button" class="demo-trigger-btn" id="btnGuiaPaso1TráficoNormal">
-                                <span>🟢 Restablecer Operación Normal (Alt+1)</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 2 -->
-                    <div class="demo-step-card" id="stepCard2">
-                        <div class="demo-step-header">
-                            <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 2</span>
-                                <span class="demo-step-title">Explicación de Indicadores Clave de Pagos (Disponibilidad 99.82%, Detección Inmediata)</span>
-                            </div>
-                            <span class="demo-step-time">01:15 - 02:45 (90s)</span>
-                        </div>
-                        <div class="demo-step-points">
-                            <div class="demo-point-row">
-                                <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Recorre las 4 tarjetas de indicadores: Disponibilidad de Pagos (99.82% vs umbral normativo &ge; 99.90%), Tiempo de Detección de Fallas (&lt; 30 seg por monitoreo automático), Fallas en Atención (0) y Fallas Resueltas.</div>
-                            </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "En infraestructuras de pagos interbancarios, el factor determinante es el tiempo de detección de fallas. La normativa BCRP exige que cualquier degradación en el servicio se detecte en menos de 30 segundos. Nuestra consola supervisa la disponibilidad de pagos en tiempo real, emitiendo alertas inmediatas si se aproxima al umbral del 99.90%."
+                            <div class="demo-speech-box" style="border-left-color: #10B981;">
+                                <strong>🎙️ Guion Verbal para Frank Vargas Huamán:</strong>
+                                "Buenos días, profesor Zamata y señores miembros del jurado calificador del BCRP. Doy inicio a la sustentación del Sistema Integral de Supervisión y Continuidad de Pagos Interbancarios (SIGIR). En esta primera etapa apreciamos la operación nominal de la infraestructura nacional: supervisamos en tiempo real las 5 pasarelas del ecosistema, procesando un flujo estable de 1,531 pagos por segundo con una disponibilidad del 99.98%, superando holgadamente el estándar regulatorio de la Circular BCRP 0014-2023 con latencias de enlace inferiores a 25 milisegundos."
                             </div>
                         </div>
                         <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
-                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso2ResaltarKpis">
-                                <span>🔍 Resaltar Tarjetas de KPI</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 3 -->
-                    <div class="demo-step-card" id="stepCard3">
-                        <div class="demo-step-header">
-                            <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 3</span>
-                                <span class="demo-step-title">Simular Falla en BCP (Yape) (Interrupción de Conexión)</span>
-                            </div>
-                            <span class="demo-step-time">02:45 - 04:15 (90s)</span>
-                        </div>
-                        <div class="demo-step-points">
-                            <div class="demo-point-row">
-                                <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Clic en 'Simular Falla en BCP (Yape)' (o Alt+2). El nodo BCP entra en parpadeo de alerta, el tiempo de respuesta indica interrupción, la disponibilidad de pagos baja a 98.74%, las fallas en atención suben a 1 y se registra automáticamente el ticket <code>INC-20261031-10001</code>.</div>
-                            </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "Voy a simular una falla en la conexión con BCP (Yape). Observe cómo la consola alerta de inmediato la interrupción, se genera el ticket normativo INC-20261031-10001 con severidad CRÍTICA y se activan los protocolos de contingencia y canal alterno para resguardar las transferencias de los usuarios."
-                            </div>
-                        </div>
-                        <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
-                            <button type="button" class="demo-trigger-btn btn-warning-demo" id="btnGuiaPaso3DispararFalla">
-                                <span>🚨 Simular Falla en BCP (Yape) (Alt+2)</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 4 -->
-                    <div class="demo-step-card" id="stepCard4">
-                        <div class="demo-step-header">
-                            <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 4</span>
-                                <span class="demo-step-title">Registro Asistido &amp; Ciclo de Vida del Incidente (Mitigación y Cierre)</span>
-                            </div>
-                            <span class="demo-step-time">04:15 - 05:45 (90s)</span>
-                        </div>
-                        <div class="demo-step-points">
-                            <div class="demo-point-row">
-                                <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Abre el modal de Registro Asistido (con validación de categorías normativas: Fraude, Brecha, Disponibilidad y Severidad). Luego ejecuta la mitigación: <code>REGISTRADO &rarr; EN_MITIGACION &rarr; RESUELTO &rarr; CERRADO</code>, recuperando la salud del canal.</div>
-                            </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "El sistema permite también el registro asistido con tipificación de la Circular BCRP. Al pasar a la contingencia, aplicamos el flujo inmutable: pasa a EN MITIGACIÓN activando el canal alterno, luego a RESUELTO al normalizarse la conexión con BCP a 18ms, y finalmente a CERRADO para auditoría oficial."
-                            </div>
-                        </div>
-                        <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción interactiva de 1 clic:</span>
                             <div style="display:flex; gap:8px;">
-                                <button type="button" class="demo-trigger-btn" id="btnGuiaPaso4AbrirModalManual">
-                                    <span>📝 Abrir Formulario Manual</span>
+                                <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso1TráficoNormal" title="Restablecer todos los bancos a estado óptimo y disponibilidad 99.98% (Alt+1)">
+                                    <span>⚡ Ejecutar este paso en vivo: Restablecer Operación Nominal (Alt+1)</span>
                                 </button>
-                                <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso4AvanzarMitigacion">
-                                    <span>🛡️ Recuperar Canal y Mitigar (Alt+3)</span>
+                                <button type="button" class="demo-trigger-btn" id="btnGuiaPaso2ResaltarKpis" title="Resaltar tarjetas de disponibilidad y latencias en pantalla">
+                                    <span>🔍 Resaltar Tarjetas KPI</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PASO 5 -->
-                    <div class="demo-step-card" id="stepCard5">
+                    <!-- ETAPA 2 -->
+                    <div class="demo-step-card" id="stepCard2" style="border-left: 4px solid #EF4444;">
                         <div class="demo-step-header">
                             <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 5</span>
-                                <span class="demo-step-title">Módulo de Reportes (reportes.html) &amp; Análisis Pareto / Tendencia</span>
+                                <span class="demo-step-num-badge" style="background:rgba(239,68,68,0.18); color:#F87171; border-color:rgba(239,68,68,0.4);">ETAPA 2</span>
+                                <span class="demo-step-title">Inyección y Simulación de Interrupción en BCP (Yape): Detección Inmediata &lt; 30s</span>
                             </div>
-                            <span class="demo-step-time">05:45 - 07:15 (90s)</span>
+                            <span class="demo-step-time">02:00 - 04:00 (120s) · Contingencia Activa</span>
                         </div>
                         <div class="demo-step-points">
                             <div class="demo-point-row">
-                                <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Navega a <code>reportes.html</code>. Muestra el gráfico canvas con la curva de Uptime frente a la línea roja discontinua del SLA 99.90% BCRP. En la tabla de indisponibilidad, demuestra el Principio de Pareto (80% del downtime concentrado en BCP y CCE).</div>
+                                <span class="demo-point-icon">🚨</span>
+                                <div>
+                                    <strong>En Consola de Supervisión:</strong> Inyección de interrupción en la pasarela de mayor impacto: BCP (Yape). La plataforma activa la alerta temprana en <strong>menos de 30 segundos</strong> conforme al SLA BCRP, genera de forma desatendida el ticket regulatorio <code>INC-20261031-10001</code> con <strong>Severidad CRÍTICA</strong> y conmuta de inmediato el flujo transaccional hacia el canal alterno de contingencia para impedir el rechazo de órdenes de transferencias. El nodo entra en parpadeo de alerta estroboscópico y la disponibilidad temporal se ajusta a 98.74%.
+                                </div>
                             </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "En el Módulo de Reportes Normativos evaluamos la confiabilidad histórica. Trazamos en el gráfico el umbral regulatorio del 99.90%. El análisis de Pareto confirma que más del 80% de los minutos de indisponibilidad recaen en BCP (191 min) y CCE (120 min), orientando las auditorías técnicas focalizadas del regulador."
+                            <div class="demo-speech-box" style="border-left-color: #EF4444; background: rgba(239, 68, 68, 0.06);">
+                                <strong style="color:#EF4444;">🎙️ Guion Verbal para Frank Vargas Huamán:</strong>
+                                "Procedo ahora a la inyección y simulación de una contingencia sobre la pasarela de mayor volumen: BCP (Yape). Como observa en la consola, el sistema detecta la anomalía de manera inmediata en menos de 30 segundos, emite el ticket regulatorio oficial INC-20261031-10001 catalogado con severidad crítica y ejecuta la conmutación al canal alterno de contingencia. Esta maniobra técnica resguarda el flujo monetario de los usuarios, evitando cancelaciones masivas de transferencias mientras se notifica la incidencia a la mesa de compensación."
                             </div>
                         </div>
                         <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
-                            <a href="reportes.html" class="demo-trigger-btn">
-                                <span>📊 Abrir Módulo de Reportes (reportes.html)</span>
-                            </a>
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción interactiva de 1 clic:</span>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="demo-trigger-btn btn-warning-demo" id="btnGuiaPaso3DispararFalla" title="Simular caída en BCP (Yape), auto-ticket INC-20261031-10001 y canal alterno (Alt+2)">
+                                    <span>⚡ Ejecutar este paso en vivo: Simular Interrupción en BCP (Yape) (Alt+2)</span>
+                                </button>
+                                <button type="button" class="demo-trigger-btn" id="btnGuiaPaso4AbrirModalManual" title="Abrir formulario asistido de registro normativo de contingencias">
+                                    <span>📝 Formulario de Contingencia</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- PASO 6 -->
-                    <div class="demo-step-card" id="stepCard6">
+                    <!-- ETAPA 3 -->
+                    <div class="demo-step-card" id="stepCard3" style="border-left: 4px solid #38BDF8;">
                         <div class="demo-step-header">
                             <div class="demo-step-title-group">
-                                <span class="demo-step-num-badge">PASO 6</span>
-                                <span class="demo-step-title">Compilación y Exportación del Paquete SFT con Firma SHA-256</span>
+                                <span class="demo-step-num-badge" style="background:rgba(56,189,248,0.18); color:#38BDF8; border-color:rgba(56,189,248,0.4);">ETAPA 3</span>
+                                <span class="demo-step-title">Gestión y Mitigación en el Drawer Forense: Ficha Técnica Digital y Estado 'En Mitigación'</span>
                             </div>
-                            <span class="demo-step-time">07:15 - 08:30 (75s)</span>
+                            <span class="demo-step-time">04:00 - 06:30 (150s) · Remediación BCRP</span>
                         </div>
                         <div class="demo-step-points">
                             <div class="demo-point-row">
-                                <span class="demo-point-icon">🖥️</span>
-                                <div><strong>En pantalla:</strong> Clic en 'Exportar SFT' (o Alt+4). Muestra la estructura de texto plano oficial (HEADER | DETALLE | FOOTER) y la caja criptográfica con el Hash SHA-256 de 64 caracteres calculado con Web Crypto API. Descarga el archivo <code>.txt</code>.</div>
+                                <span class="demo-point-icon">🛡️</span>
+                                <div>
+                                    <strong>En Consola de Supervisión:</strong> Despliegue del Inspector Forense Lateral (Drawer Forense) con la ficha técnica digital inalterable del incidente <code>INC-20261031-10001</code>. Verificación de la línea de tiempo auditada con sellos de tiempo oficiales (PET / UTC-5) y hash criptográfico SHA-256. Ejecución de la acción de remediación: transición formal a estado <strong>'En Mitigación'</strong>, balanceo por el switch secundario de la CCE y restablecimiento progresivo de la latencia del enlace a 18 milisegundos con recuperación de la disponibilidad hacia el 99.98%.
+                                </div>
                             </div>
-                            <div class="demo-speech-box">
-                                <strong>🎙️ Guion Verbal de Frank:</strong>
-                                "Culminamos con el requerimiento RF-08: la exportación del archivo plano normativo SFT del BCRP. El archivo sigue la estructura estricta delimitada por tuberías: cabecera con identificador de envío, detalle con incidentes cerrados y pie de control. Computamos el Hash criptográfico SHA-256 del contenido completo para garantizar integridad inalterable y no repudio. Quedo a su disposición para sus preguntas, profesor Zamata."
+                            <div class="demo-speech-box" style="border-left-color: #38BDF8; background: rgba(56, 189, 248, 0.06);">
+                                <strong style="color:#38BDF8;">🎙️ Guion Verbal para Frank Vargas Huamán:</strong>
+                                "En esta tercera etapa abrimos el Drawer Forense del incidente. Aquí el oficial de supervisión dispone de la ficha técnica digital inalterable con sellado cronológico y hash criptográfico SHA-256. Al accionar la mitigación, el incidente transiciona de manera trazable al estado EN MITIGACIÓN, enrutando las operaciones por la infraestructura de respaldo y restituyendo la conexión de BCP a 18 milisegundos, normalizando la latencia y recuperando la disponibilidad global de pagos al 99.98%."
                             </div>
                         </div>
                         <div class="demo-step-action-bar">
-                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción rápida:</span>
-                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso6AbrirSft">
-                                <span>📜 Emitir Reporte con Firma Digital (Alt+4)</span>
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción interactiva de 1 clic:</span>
+                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso4AvanzarMitigacion" title="Abrir Drawer Forense, revisar ficha técnica y avanzar a En Mitigación (Alt+3)">
+                                <span>⚡ Ejecutar este paso en vivo: Abrir Drawer Forense &amp; Mitigar (Alt+3)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ETAPA 4 -->
+                    <div class="demo-step-card" id="stepCard4" style="border-left: 4px solid #E2B357;">
+                        <div class="demo-step-header">
+                            <div class="demo-step-title-group">
+                                <span class="demo-step-num-badge" style="background:rgba(226,179,87,0.18); color:#E2B357; border-color:rgba(226,179,87,0.4);">ETAPA 4</span>
+                                <span class="demo-step-title">Compilación y Sellado del Archivo Normativo SFT: Estructura Oficial BCRP &amp; Firma SHA-256</span>
+                            </div>
+                            <span class="demo-step-time">06:30 - 08:30 (120s) · No Repudio Legal</span>
+                        </div>
+                        <div class="demo-step-points">
+                            <div class="demo-point-row">
+                                <span class="demo-point-icon">📜</span>
+                                <div>
+                                    <strong>En Consola de Supervisión:</strong> Compilación del archivo de texto plano para el Sistema de Facturación y Transferencia de Información del Banco Central (SFT), delimitado por tuberías en lotes estrictos: <code>HEADER</code> (identificador de remisión y timestamp), <code>DETALLE</code> (código de entidad, tipificación de interrupción y minutos de indisponibilidad) y <code>FOOTER</code> con el resumen de control. Sellado digital criptográfico mediante función hash <strong>SHA-256 de 64 caracteres hexadecimales</strong> para garantizar inmutabilidad, no repudio y validez legal ante auditorías de la SBS y el BCRP.
+                                </div>
+                            </div>
+                            <div class="demo-speech-box" style="border-left-color: #E2B357; background: rgba(226, 179, 87, 0.06);">
+                                <strong style="color:#E2B357;">🎙️ Guion Verbal para Frank Vargas Huamán:</strong>
+                                "Culminamos la demostración con la compilación y sellado del archivo normativo SFT para el BCRP. El sistema genera la estructura oficial delimitada por tuberías con cabecera de lote, detalles de incidencias resueltas y pie de control, sellando el reporte con un hash criptográfico SHA-256 inmutable de 64 caracteres. Este procedimiento asegura el no repudio y certifica ante el regulador la total transparencia de la operación. Quedo a su disposición para sus preguntas, profesor Zamata."
+                            </div>
+                        </div>
+                        <div class="demo-step-action-bar">
+                            <span style="font-size:0.7rem; color:var(--text-tertiary);">Acción interactiva de 1 clic:</span>
+                            <button type="button" class="demo-trigger-btn btn-gold-demo" id="btnGuiaPaso6AbrirSft" title="Compilar paquete normativo SFT y calcular firma digital SHA-256 (Alt+4)">
+                                <span>⚡ Ejecutar este paso en vivo: Compilar y Sellar Archivo SFT (Alt+4)</span>
                             </button>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Sección: Respuestas Maestras a Preguntas Trampa del Jurado -->
-                <div class="demo-faq-card">
-                    <h4>
-                        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span>🛡️ Respuestas Rápidas para Frank ante Preguntas Críticas del Prof. Zamata</span>
+                <!-- Sección: Argumentación Operativa y Normativa ante Preguntas del Jurado -->
+                <div class="demo-faq-card" style="background: rgba(10, 21, 40, 0.85); border: 1px solid rgba(226, 179, 87, 0.35);">
+                    <h4 style="display:flex; align-items:center; gap:8px; margin-top:0; color:#E2B357;">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>🛡️ Respuestas Maestras de Continuidad Operativa ante Preguntas del Jurado Calificador</span>
                     </h4>
-                    <div class="demo-faq-list">
-                        <div class="demo-faq-item">
-                            <strong>1. ¿Saturación de red por sondeo cada 30s?</strong> &rarr; "No hay saturación: usamos peticiones HEAD ultralivianas de Spring Boot Actuator (/actuator/health) de pocos bytes en hilos asíncronos desacoplados del tráfico principal."
+                    <div class="demo-faq-list" style="display:flex; flex-direction:column; gap:10px; font-size:0.74rem;">
+                        <div class="demo-faq-item" style="padding:6px 10px; background:rgba(255,255,255,0.02); border-radius:4px; border-left:3px solid #10B981;">
+                            <strong style="color:#34D399;">1. ¿Cómo se previene la duplicidad o pérdida de transferencias durante la conmutación a contingencia?</strong><br>
+                            <span style="color:#CBD5E1;">&rarr; "Mediante protocolos de idempotencia transaccional y conmutación transparente en la capa de compensación de la CCE, respaldados por bitácoras sincronizadas con la Hora Oficial del Perú (PET / UTC-5) que aseguran la conciliación precisa de órdenes en vuelo."</span>
                         </div>
-                        <div class="demo-faq-item">
-                            <strong>2. ¿Por qué SHA-256 y no MD5 o CRC32?</strong> &rarr; "MD5 tiene colisiones conocidas y CRC32 no es criptográfico. SBS y BCRP exigen SHA-2 de 256 bits para validez legal, resistencia a preimagen y no repudio."
+                        <div class="demo-faq-item" style="padding:6px 10px; background:rgba(255,255,255,0.02); border-radius:4px; border-left:3px solid #EF4444;">
+                            <strong style="color:#F87171;">2. ¿Por qué la normativa del BCRP fija la detección de caídas en menos de 30 segundos?</strong><br>
+                            <span style="color:#CBD5E1;">&rarr; "En infraestructuras de pagos sistémicamente importantes, una interrupción no detectada en 30 segundos represa miles de transacciones y genera riesgo de liquidez en cascada entre las entidades financieras participantes."</span>
                         </div>
-                        <div class="demo-faq-item">
-                            <strong>3. ¿Qué pasa si PostgreSQL o el backend se caen?</strong> &rarr; "Arquitectura con Graceful Degradation: la consola detecta el fallo del canal REST y conmuta automáticamente al motor local reactivo con Web Crypto API sin pantallas en blanco."
+                        <div class="demo-faq-item" style="padding:6px 10px; background:rgba(255,255,255,0.02); border-radius:4px; border-left:3px solid #38BDF8;">
+                            <strong style="color:#38BDF8;">3. ¿Cuál es el valor regulatorio y probatorio de la firma digital SHA-256 en el Archivo SFT?</strong><br>
+                            <span style="color:#CBD5E1;">&rarr; "Garantiza integridad absoluta y no repudio ante la Gerencia de Operaciones Monetarias y Estabilidad Financiera del BCRP y la SBS, impidiendo cualquier alteración retroactiva de tiempos o categorización de incidentes."</span>
                         </div>
-                        <div class="demo-faq-item">
-                            <strong>4. ¿Problema del antipatrón N+1 en JPA?</strong> &rarr; "Resuelto mediante JPQL con cláusula <code>JOIN FETCH</code> sobre las entidades relacionadas, recuperando todo en un único round-trip a PostgreSQL."
+                        <div class="demo-faq-item" style="padding:6px 10px; background:rgba(255,255,255,0.02); border-radius:4px; border-left:3px solid #E2B357;">
+                            <strong style="color:#E2B357;">4. ¿Cómo se sustenta el cumplimiento de disponibilidad del 99.98%?</strong><br>
+                            <span style="color:#CBD5E1;">&rarr; "A través del cómputo ponderado de minutos fuera de servicio sobre la ventana operativa mensual (43,200 minutos), demostrando cumplimiento holgado del SLA normativo del 99.90% estipulado en la Circular BCRP 0014-2023."</span>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-tertiary);">
-                    Atajos: Alt+1 (Operación Normal) · Alt+2 (Simular Falla) · Alt+3 (Recuperar y Mitigar) · Alt+4 (Emitir Reporte) · Alt+G (Guía)
+            <!-- Pie de Modal con Atajos Globales -->
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; background:rgba(10,21,40,0.95); border-top:1px solid rgba(226,179,87,0.3);">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:#94A3B8;">
+                    Atajos de Sustentación: <strong style="color:#34D399;">Alt+1</strong> (Operación Nominal) · <strong style="color:#F87171;">Alt+2</strong> (Interrupción BCP) · <strong style="color:#38BDF8;">Alt+3</strong> (Drawer y Mitigación) · <strong style="color:#E2B357;">Alt+4</strong> (Compilación SFT) · <strong>Alt+G</strong> (Guía)
                 </div>
-                <button type="button" class="btn btn-primary" id="btnCerrarModalGuiaDemoFooter">
+                <button type="button" class="btn btn-primary" id="btnCerrarModalGuiaDemoFooter" style="background:#E2B357; color:#0A1528; font-weight:700; border:none; padding:6px 14px; border-radius:6px; cursor:pointer;">
                     <span>Entendido · Volver a la Consola</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Reloj en tiempo real PET -->
+    <!-- Reloj en tiempo real PET y Copia de Hash Regulatorio -->
     <script>
         function actualizarRelojPet() {
+            const ahora = new Date();
+            const horaStr = ahora.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
             const el = document.getElementById('relojUtc');
-            if (el) {
-                const ahora = new Date();
-                const horaStr = ahora.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
-                el.textContent = `${horaStr} PET`;
-            }
+            if (el) el.textContent = `${horaStr} PET`;
+            const elFooter = document.getElementById('relojPetFooter');
+            if (elFooter) elFooter.textContent = `${horaStr} PET (UTC-5)`;
         }
         actualizarRelojPet();
         setInterval(actualizarRelojPet, 1000);
+
+        // Copiar Hash SHA-256 de Estado Operativo al Portapapeles
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnCopy = document.getElementById('btnCopiarDockHash');
+            const codeHash = document.getElementById('dockHashSha256');
+            if (btnCopy && codeHash) {
+                btnCopy.addEventListener('click', async () => {
+                    const hashText = codeHash.textContent.trim();
+                    try {
+                        await navigator.clipboard.writeText(hashText);
+                    } catch (err) {
+                        const ta = document.createElement('textarea');
+                        ta.value = hashText;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                    if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+                        window.SoundFX.playClick();
+                    }
+                    const origSvg = btnCopy.innerHTML;
+                    btnCopy.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+                    btnCopy.style.borderColor = '#10B981';
+                    setTimeout(() => {
+                        btnCopy.innerHTML = origSvg;
+                        btnCopy.style.borderColor = '';
+                    }, 1800);
+                });
+            }
+        });
     </script>
     <!-- Librerías de Vanguardia para Seguridad y Animación -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-9+ilAOeXY8qy2bw/h51MmliNNHvdyhTpLIlqDmVpD26z8VjVJsUJtk5rhbDIUvYiD+EpGoAu0xTa7MhZohFQjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>
@@ -1085,6 +1463,7 @@
     <script src="js/incident-drawer.js"></script>
     <script src="js/command-palette.js"></script>
     <script src="js/demo-presets.js"></script>
+    <script src="js/quick-guide-modal.js"></script>
     <script src="js/app.js"></script>
 
     <!-- Controlador Segmentado de Modos del Cockpit -->

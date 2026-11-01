@@ -804,8 +804,9 @@
      */
     function configurarAtajosTecladoGlobales() {
         window.addEventListener('keydown', (e) => {
-            // Detectar Ctrl + K o Cmd + K (Mac)
-            const isCmdK = (e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K');
+            // Detectar Ctrl + K, Cmd + K (Mac) o Alt + K (Atajo Institucional NOC BCRP)
+            const isCmdK = ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) ||
+                           (e.altKey && !e.ctrlKey && !e.metaKey && (e.key === 'k' || e.key === 'K'));
 
             if (isCmdK) {
                 e.preventDefault();

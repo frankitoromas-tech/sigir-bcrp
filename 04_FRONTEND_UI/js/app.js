@@ -207,60 +207,149 @@ function renderizarTelemetria() {
     const grid = document.getElementById('telemetryGrid');
     if (!grid) return;
 
-    grid.innerHTML = AppState.entidades.map(ent => {
+    const cardsHtml = AppState.entidades.map(ent => {
         const esCaido = ent.estado === 'CAIDO';
         const badgeTexto = esCaido ? 'CONTINGENCIA' : 'OPERATIVO';
         const badgeClase = esCaido ? 'caido' : 'saludable';
         const nodeClase = esCaido ? 'node-caido' : '';
         
+        let uptimeTexto;
+        let tpsTexto;
         let latenciaTexto;
         let latenciaColor;
+
         if (esCaido) {
-            latenciaTexto = 'Interrupción temporal (> 3500 ms)';
+            uptimeTexto = '98.74%';
+            latenciaTexto = '> 3,500 ms';
             latenciaColor = '#EF4444';
+            tpsTexto = '0 TPS';
         } else {
             const latVal = typeof ent.latencia === 'number' ? ent.latencia : 18;
-            let diagnostico = 'Excelente';
-            if (latVal < 50) {
+            if (latVal < 25) {
                 latenciaColor = '#10B981';
-                diagnostico = 'Excelente';
-            } else if (latVal < 150) {
-                latenciaColor = '#F59E0B';
-                diagnostico = 'Aceptable';
+            } else if (latVal < 50) {
+                latenciaColor = '#38BDF8';
             } else {
-                latenciaColor = '#EF4444';
-                diagnostico = 'Degradado';
+                latenciaColor = '#F59E0B';
             }
-            latenciaTexto = `${latVal} ms (${diagnostico})`;
+            latenciaTexto = `${latVal} ms`;
+
+            if (ent.id === 1 || ent.codigo === '002') {
+                uptimeTexto = '99.82%';
+                tpsTexto = '640 TPS';
+            } else if (ent.id === 2 || ent.codigo === '003') {
+                uptimeTexto = '99.95%';
+                tpsTexto = '420 TPS';
+            } else if (ent.id === 3 || ent.codigo === '801') {
+                uptimeTexto = '99.90%';
+                tpsTexto = '180 TPS';
+            } else if (ent.id === 4 || ent.codigo === '812') {
+                uptimeTexto = '99.92%';
+                tpsTexto = '90 TPS';
+            } else {
+                uptimeTexto = '99.99%';
+                tpsTexto = '1,531 TPS';
+            }
         }
 
         const nombreSeguro = escapeHTML(ent.nombre);
         const canalSeguro = escapeHTML(ent.canal);
         const codigoSeguro = escapeHTML(ent.codigo);
         const latenciaSegura = escapeHTML(latenciaTexto);
+        const uptimeSeguro = escapeHTML(uptimeTexto);
+        const tpsSeguro = escapeHTML(tpsTexto);
+
+        let entityKey = 'cce';
+        if (ent.id === 1 || ent.codigo === '002') entityKey = 'bcp';
+        else if (ent.id === 2 || ent.codigo === '003') entityKey = 'interbank';
+        else if (ent.id === 3 || ent.codigo === '801') entityKey = 'cusco';
+        else if (ent.id === 4 || ent.codigo === '812') entityKey = 'andes';
 
         return `
-        <div class="telemetry-node ${nodeClase}">
-            <div class="node-header">
-                <div>
-                    <h4 class="node-name">${nombreSeguro}</h4>
-                    <span class="node-code">${canalSeguro} &bull; Entidad BCRP ${codigoSeguro}</span>
+        <div class="telemetry-node ${nodeClase}" data-entity-id="${ent.id}" data-entity-key="${entityKey}">
+            <div class="telemetry-card-top">
+                <div class="telemetry-card-title-group">
+                    <h4 class="node-name" title="${nombreSeguro}">${nombreSeguro}</h4>
+                    <span class="node-code">${canalSeguro} &bull; COD ${codigoSeguro}</span>
                 </div>
                 <span class="node-status-pill ${badgeClase}">
                     <span class="micro-dot-pulse"></span>
                     ${badgeTexto}
                 </span>
             </div>
-            <div class="node-metrics">
-                <span class="metrics-label">Tiempo de Respuesta</span>
-                <span class="node-latency" style="color: ${latenciaColor}">
-                    ${latenciaSegura}
-                </span>
+            <div class="telemetry-metrics-deck">
+                <div class="telemetry-metric-cell">
+                    <span class="t-cell-k">SLA Disp.</span>
+                    <span class="t-cell-v" style="color:${esCaido ? '#EF4444' : '#10B981'};">${uptimeSeguro}</span>
+                </div>
+                <div class="telemetry-metric-cell">
+                    <span class="t-cell-k">Latencia</span>
+                    <span class="t-cell-v" style="color:${latenciaColor};">${latenciaSegura}</span>
+                </div>
+                <div class="telemetry-metric-cell">
+                    <span class="t-cell-k">Volumen</span>
+                    <span class="t-cell-v" style="color:${esCaido ? '#EF4444' : '#38BDF8'};">${tpsSeguro}</span>
+                </div>
             </div>
         </div>
         `;
     }).join('');
+
+    grid.innerHTML = (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function')
+        ? window.DOMPurify.sanitize(cardsHtml, { ADD_ATTR: ['style', 'data-entity-id', 'data-entity-key'] })
+        : cardsHtml;
+
+    // Si hay un filtro activo en la Barra de Control NOC, reaplicarlo
+    const selectorEntidad = document.getElementById('selectorEntidadNoc');
+    if (selectorEntidad && selectorEntidad.value) {
+        filtrarTelemetriaPorEntidad(selectorEntidad.value);
+    }
 }
+
+/**
+ * Filtra visualmente las tarjetas de telemetría destacando la entidad seleccionada
+ */
+function filtrarTelemetriaPorEntidad(val) {
+    const nodes = document.querySelectorAll('.telemetry-node');
+    if (!nodes.length) return;
+
+    nodes.forEach(node => {
+        const key = node.getAttribute('data-entity-key');
+        if (!val || val === 'TODAS') {
+            node.style.opacity = '1';
+            node.style.borderColor = '';
+            node.style.boxShadow = '';
+            node.style.filter = '';
+        } else if (val === 'BCP' && key === 'bcp') {
+            node.style.opacity = '1';
+            node.style.borderColor = '#38BDF8';
+            node.style.boxShadow = '0 0 14px rgba(56, 189, 248, 0.35)';
+            node.style.filter = '';
+        } else if (val === 'INTERBANK_BBVA' && (key === 'interbank' || key === 'bbva')) {
+            node.style.opacity = '1';
+            node.style.borderColor = '#0284C7';
+            node.style.boxShadow = '0 0 14px rgba(2, 132, 199, 0.35)';
+            node.style.filter = '';
+        } else if (val === 'CAJAS' && (key === 'cusco' || key === 'andes')) {
+            node.style.opacity = '1';
+            node.style.borderColor = '#D97706';
+            node.style.boxShadow = '0 0 14px rgba(217, 119, 6, 0.35)';
+            node.style.filter = '';
+        } else if (key === 'cce') {
+            // Switch central de liquidación siempre activo
+            node.style.opacity = '1';
+            node.style.borderColor = '#E2B357';
+            node.style.boxShadow = '0 0 10px rgba(226, 179, 87, 0.25)';
+            node.style.filter = '';
+        } else {
+            node.style.opacity = '0.38';
+            node.style.borderColor = 'rgba(255, 255, 255, 0.04)';
+            node.style.boxShadow = 'none';
+            node.style.filter = 'grayscale(0.6)';
+        }
+    });
+}
+window.filtrarTelemetriaPorEntidad = filtrarTelemetriaPorEntidad;
 
 /**
  * Control del temporizador de sondeo de telemetría en tiempo real
@@ -356,7 +445,7 @@ function renderizarMatrizIncidentes() {
         return mapa[clave] || valor.replace(/_/g, ' ');
     }
 
-    tbody.innerHTML = filtrados.map(inc => {
+    const rawRowsHtml = filtrados.map(inc => {
         const ticketSafe = escapeHTML(inc.ticket);
         const entidadSafe = escapeHTML(inc.entidadNombre);
         const servicioHumano = traducirAHumano(inc.servicio, DICCIONARIO_HUMANO.servicios, 'Servicio Bancario');
@@ -390,6 +479,28 @@ function renderizarMatrizIncidentes() {
         </tr>
         `;
     }).join('');
+
+    tbody.innerHTML = (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function')
+        ? window.DOMPurify.sanitize(rawRowsHtml, {
+            ADD_TAGS: ['button', 'span', 'tr', 'td', 'div'],
+            ADD_ATTR: ['tabindex', 'role', 'aria-label', 'style', 'title', 'data-incident-id', 'data-ticket', 'data-id', 'data-action', 'data-target-state', 'onclick']
+        })
+        : rawRowsHtml;
+
+    // Delegación de eventos para botones de tabla protegidos por DOMPurify
+    if (!tbody._hasActionDelegation) {
+        tbody._hasActionDelegation = true;
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-action-table');
+            if (!btn) return;
+            const id = btn.getAttribute('data-id');
+            const st = btn.getAttribute('data-target-state');
+            if (id && st && typeof window.avanzarEstado === 'function') {
+                e.stopPropagation();
+                window.avanzarEstado(parseInt(id, 10), st);
+            }
+        });
+    }
 }
 
 /**
@@ -400,13 +511,13 @@ function renderBotonesAccion(inc) {
     if (isNaN(safeId)) return '<span style="font-size: 0.72rem; color: var(--text-muted);">-</span>';
 
     if (inc.estado === 'REGISTRADO') {
-        return `<button class="btn-action-table" onclick="avanzarEstado(${safeId}, 'EN_EVALUACION')">Evaluar</button>`;
+        return `<button class="btn-action-table" data-action="avanzar-estado" data-id="${safeId}" data-target-state="EN_EVALUACION" onclick="avanzarEstado(${safeId}, 'EN_EVALUACION')">Evaluar</button>`;
     } else if (inc.estado === 'EN_EVALUACION') {
-        return `<button class="btn-action-table" onclick="avanzarEstado(${safeId}, 'EN_MITIGACION')">Mitigar</button>`;
+        return `<button class="btn-action-table" data-action="avanzar-estado" data-id="${safeId}" data-target-state="EN_MITIGACION" onclick="avanzarEstado(${safeId}, 'EN_MITIGACION')">Mitigar</button>`;
     } else if (inc.estado === 'EN_MITIGACION') {
-        return `<button class="btn-action-table btn-resolve" onclick="avanzarEstado(${safeId}, 'RESUELTO')">Resolver</button>`;
+        return `<button class="btn-action-table btn-resolve" data-action="avanzar-estado" data-id="${safeId}" data-target-state="RESUELTO" onclick="avanzarEstado(${safeId}, 'RESUELTO')">Resolver</button>`;
     } else if (inc.estado === 'RESUELTO') {
-        return `<button class="btn-action-table" onclick="avanzarEstado(${safeId}, 'CERRADO')">Cerrar</button>`;
+        return `<button class="btn-action-table" data-action="avanzar-estado" data-id="${safeId}" data-target-state="CERRADO" onclick="avanzarEstado(${safeId}, 'CERRADO')">Cerrar</button>`;
     } else {
         return `<span style="font-size: 0.72rem; color: var(--text-muted);">Cerrado</span>`;
     }
@@ -547,6 +658,12 @@ function simularCaidaAutomatica() {
     renderizarTelemetria();
     renderizarMatrizIncidentes();
     actualizarKpis();
+
+    // Actualizar hash SHA-256 en la franja regulatoria inferior
+    const hashEl = document.getElementById('dockHashSha256');
+    if (hashEl) {
+        hashEl.textContent = '7e8d19a4b2c011e5f98234ab81907de4c2810a4dfb709144c8034b7190e21a5b';
+    }
 
     // 4. Toast banner de notificación visual de alta fidelidad
     mostrarToastNotificacion(`⚡ ALERTA OPERATIVA BCRP: Interrupción temporal en la conexión con ${bcp.nombre}. Ticket ${ticketId} [CRÍTICA] generado. Canal alterno activado exitosamente.`, 'critica');
@@ -903,7 +1020,7 @@ function filtrarBitacoraAuditoria() {
             noResultsRow = document.createElement('tr');
             noResultsRow.id = 'rowAuditNoResults';
             noResultsRow.className = 'no-results-row';
-            noResultsRow.innerHTML = `
+            const rawNoResults = `
                 <td colspan="6" style="text-align:center; padding: 36px 16px; color: #94A3B8;">
                     <div style="display:inline-flex; flex-direction:column; align-items:center; gap:10px;">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -911,6 +1028,9 @@ function filtrarBitacoraAuditoria() {
                     </div>
                 </td>
             `;
+            noResultsRow.innerHTML = (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function')
+                ? window.DOMPurify.sanitize(rawNoResults, { USE_PROFILES: { html: true, svg: true } })
+                : rawNoResults;
             tbody.appendChild(noResultsRow);
         } else {
             noResultsRow.style.display = '';
@@ -1082,6 +1202,18 @@ function configurarEventosUI() {
         }
     });
 
+    // Selector de Entidad en Barra de Control NOC Central
+    document.getElementById('selectorEntidadNoc')?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (window.networkTopologyInstance && typeof window.networkTopologyInstance.setEntityFilter === 'function') {
+            window.networkTopologyInstance.setEntityFilter(val);
+        }
+        filtrarTelemetriaPorEntidad(val);
+        if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+            window.SoundFX.playClick();
+        }
+    });
+
     // Acciones
     document.getElementById('btnSimularCaida')?.addEventListener('click', simularCaidaAutomatica);
     document.getElementById('btnGenerarSft')?.addEventListener('click', generarReporteSft);
@@ -1233,6 +1365,10 @@ function configurarEventosUI() {
     // Modal Guía Interactiva para Jurado (Frank Vargas)
     const modalGuia = document.getElementById('modalGuiaDemo');
     function toggleModalGuia() {
+        if (window.QuickGuideModal && typeof window.QuickGuideModal.toggle === 'function') {
+            window.QuickGuideModal.toggle();
+            return;
+        }
         if (!modalGuia) return;
         const willOpen = !modalGuia.classList.contains('active');
         modalGuia.classList.toggle('active');

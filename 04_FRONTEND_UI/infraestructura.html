@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cabeceras Meta de Seguridad HTTP / Navegador (AppSec BCRP Standard) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Infraestructura &amp; Pasarelas Interbancarias | SIGIR - BCRP</title>
     <!-- Fuentes Google: Plus Jakarta Sans, Inter y JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
 
     <style>
         /* ==========================================================================
-           ARQUITECTURA SANDWICH DE ÉLITE - INFRAESTRUCTURA Y PASARELAS (BCRP FINTECH)
+           ARQUITECTURA SANDWICH DE ALTA DENSIDAD VISUAL - INFRAESTRUCTURA Y PASARELAS
+           Estándar de Misión Crítica: Banco Central de Reserva del Perú (BCRP)
            ========================================================================== */
         
-        /* 1. PAN SUPERIOR: Barra Unificada de Contexto y Operación */
+        /* 1. PAN SUPERIOR: Barra Unificada de Contexto, Filtros y Diagnóstico */
         .infra-header-bar {
-            background: rgba(15, 23, 42, 0.78);
+            background: rgba(15, 23, 42, 0.82);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -30,13 +35,13 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 16px;
-            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.45);
         }
 
         .infra-title-block {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
 
         .infra-title-row {
@@ -51,20 +56,33 @@
             font-size: 1.15rem;
             font-weight: 800;
             color: #F8FAFC;
+            letter-spacing: -0.01em;
         }
 
         .infra-live-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.35);
             color: #10B981;
-            padding: 2px 8px;
+            padding: 2px 9px;
             border-radius: 9999px;
-            font-size: 0.67rem;
+            font-size: 0.68rem;
             font-weight: 700;
             letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .infra-badge-iso {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #E2B357;
+            background: rgba(226, 179, 87, 0.12);
+            border: 1px solid rgba(226, 179, 87, 0.3);
+            padding: 2px 8px;
+            border-radius: 6px;
             text-transform: uppercase;
         }
 
@@ -74,30 +92,99 @@
             color: #94A3B8;
         }
 
+        /* Control Cluster: Filtros por Estado Operacional + Acciones */
+        .infra-control-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .infra-filter-group {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(11, 15, 23, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
+            padding: 3px;
+            gap: 3px;
+        }
+
+        .infra-filter-btn {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            font-family: var(--font-sans);
+            font-size: 0.73rem;
+            font-weight: 600;
+            padding: 5px 11px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 160ms ease;
+        }
+
+        .infra-filter-btn:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .infra-filter-btn.active {
+            background: rgba(226, 179, 87, 0.18);
+            color: #E2B357;
+            border: 1px solid rgba(226, 179, 87, 0.4);
+            font-weight: 700;
+        }
+
+        .infra-filter-btn .filter-count {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 6px;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-family: var(--font-mono, monospace);
+        }
+
         .infra-actions-strip {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+
+        .btn-diagnostico {
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            color: #38BDF8;
+            font-weight: 600;
+            transition: all 140ms ease-out;
+        }
+
+        .btn-diagnostico:hover {
+            background: rgba(56, 189, 248, 0.22);
+            border-color: #38BDF8;
+            color: #7DD3FC;
+            transform: translateY(-1px);
         }
 
         /* 2. RELLENO DEL SANDWICH: NÚCLEO CENTRAL HERO (SWITCH CCE) */
         .infra-hero-core {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(226, 179, 87, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(226, 179, 87, 0.08) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 179, 87, 0.35);
+            border: 1px solid rgba(226, 179, 87, 0.38);
             border-radius: 14px;
             padding: 20px 24px;
             margin-bottom: 16px;
-            box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
             transition: all 250ms ease;
         }
 
         .infra-hero-core:hover {
-            border-color: rgba(226, 179, 87, 0.55);
-            box-shadow: 0 8px 30px -4px rgba(226, 179, 87, 0.18);
+            border-color: rgba(226, 179, 87, 0.58);
+            box-shadow: 0 8px 32px -4px rgba(226, 179, 87, 0.18);
         }
 
         .infra-hero-core::before {
@@ -107,7 +194,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #E2B357 0%, rgba(226, 179, 87, 0.3) 50%, #38BDF8 100%);
+            background: linear-gradient(90deg, #E2B357 0%, rgba(226, 179, 87, 0.4) 50%, #38BDF8 100%);
         }
 
         .infra-hero-header {
@@ -126,11 +213,11 @@
         }
 
         .infra-hero-icon-box {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             background: rgba(226, 179, 87, 0.12);
-            border: 1px solid rgba(226, 179, 87, 0.3);
+            border: 1px solid rgba(226, 179, 87, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -145,27 +232,44 @@
             margin-bottom: 3px;
         }
 
-        .infra-badge-iso {
+        .infra-tag {
             font-size: 0.65rem;
             font-weight: 700;
-            letter-spacing: 0.04em;
-            color: #94A3B8;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2px 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
             border-radius: 6px;
+            display: inline-block;
+        }
+
+        .infra-tag.gold {
+            background: rgba(226, 179, 87, 0.15);
+            color: #E2B357;
+            border: 1px solid rgba(226, 179, 87, 0.35);
+        }
+
+        .infra-tag.sky {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38BDF8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+
+        .infra-tag.amber {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.35);
         }
 
         .infra-hero-title {
             margin: 0;
-            font-size: 1.15rem;
+            font-size: 1.18rem;
             font-weight: 800;
             color: #F8FAFC;
             letter-spacing: -0.01em;
         }
 
         .infra-hero-sub {
-            font-size: 0.74rem;
+            font-size: 0.75rem;
             color: #94A3B8;
             margin-top: 2px;
             display: block;
@@ -204,26 +308,26 @@
         }
 
         .hero-kpi-card {
-            background: rgba(11, 15, 23, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(11, 15, 23, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 10px;
-            padding: 12px 14px;
+            padding: 13px 15px;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
             transition: all 200ms ease;
         }
 
         .hero-kpi-card:hover {
-            background: rgba(11, 15, 23, 0.85);
-            border-color: rgba(226, 179, 87, 0.25);
+            background: rgba(11, 15, 23, 0.9);
+            border-color: rgba(226, 179, 87, 0.3);
             transform: translateY(-1px);
         }
 
         .kpi-icon-mini {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -252,10 +356,10 @@
         }
 
         .kpi-val {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: #F8FAFC;
-            font-family: var(--font-mono, monospace);
+            font-family: 'JetBrains Mono', monospace;
             letter-spacing: -0.01em;
             white-space: nowrap;
             overflow: hidden;
@@ -267,13 +371,13 @@
         .kpi-val.sky { color: #38BDF8; }
 
         .kpi-note {
-            font-size: 0.65rem;
+            font-size: 0.66rem;
             color: #64748B;
             font-weight: 500;
             line-height: 1.25;
         }
 
-        /* 3. RELLENO DEL SANDWICH: MATRIZ SIMÉTRICA DE PASARELAS (2x2) */
+        /* 3. RELLENO DEL SANDWICH: MATRIZ SIMÉTRICA 2x2 DE PASARELAS BANCARIAS */
         .infra-gateways-matrix {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -281,136 +385,304 @@
             margin-bottom: 16px;
         }
 
-        @media (max-width: 860px) {
+        @media (max-width: 900px) {
             .infra-gateways-matrix {
                 grid-template-columns: 1fr;
             }
         }
 
-        .infra-node-card {
-            background: rgba(15, 23, 42, 0.78);
+        /* DISEÑO DE TARJETA BANCARIA / CRÉDITO DE ALTA DENSIDAD */
+        .infra-bank-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 41, 59, 0.78) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 18px 20px;
+            border-radius: 16px;
+            padding: 20px 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
-            transition: all 200ms ease;
+            box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.45);
+            transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .infra-node-card:hover {
-            border-color: rgba(226, 179, 87, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+        .infra-bank-card:hover {
+            border-color: rgba(226, 179, 87, 0.35);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.6), 0 0 15px -3px rgba(226, 179, 87, 0.12);
         }
 
-        .infra-card-header {
+        /* Filigrana sutil de seguridad en la tarjeta */
+        .infra-bank-card::after {
+            content: '';
+            position: absolute;
+            right: -25px;
+            bottom: -25px;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(226, 179, 87, 0.035) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .bank-card-top {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 12px;
             margin-bottom: 14px;
         }
 
-        .infra-tag {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 2px 8px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            display: inline-block;
+        .bank-brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .infra-tag.gold {
-            background: rgba(226, 179, 87, 0.15);
-            color: #E2B357;
-            border: 1px solid rgba(226, 179, 87, 0.35);
+        .bank-logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
         }
 
-        .infra-tag.sky {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38BDF8;
-            border: 1px solid rgba(56, 189, 248, 0.35);
+        .bank-emv-chip {
+            width: 24px;
+            height: 18px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #E2B357 0%, #D4A034 50%, #996F1D 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            flex-shrink: 0;
         }
 
-        .infra-tag.amber {
-            background: rgba(245, 158, 11, 0.15);
-            color: #F59E0B;
-            border: 1px solid rgba(245, 158, 11, 0.35);
+        .bank-emv-chip::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.25);
         }
 
-        .infra-card-title {
+        .bank-emv-chip::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .bank-card-title-wrap {
+            margin-bottom: 12px;
+        }
+
+        .bank-card-title {
             margin: 0;
-            font-size: 1.05rem;
-            font-weight: 700;
+            font-size: 1.08rem;
+            font-weight: 800;
             color: #F8FAFC;
+            letter-spacing: -0.01em;
         }
 
-        .infra-card-sub {
+        .bank-card-sub {
             font-size: 0.72rem;
             color: #94A3B8;
             margin-top: 2px;
             display: block;
         }
 
-        .infra-specs-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            background: rgba(11, 15, 23, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 12px 14px;
+        .bank-card-id-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
         }
 
-        .spec-box {
+        .bank-code-tag {
+            font-size: 0.64rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #CBD5E1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        /* Barra de Salud Operacional con Gradiente */
+        .bank-health-wrap {
+            background: rgba(11, 15, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+        }
+
+        .bank-health-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.66rem;
+            margin-bottom: 5px;
+        }
+
+        .bank-health-label {
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 600;
+        }
+
+        .bank-health-val {
+            font-weight: 800;
+            color: #10B981;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .bank-health-track {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bank-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10B981 0%, #34D399 70%, #38BDF8 100%);
+            border-radius: 9999px;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+            transition: width 400ms ease;
+        }
+
+        /* Grilla de Métricas Tabulares (JetBrains Mono) */
+        .bank-metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: rgba(11, 15, 23, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 11px 13px;
+            margin-bottom: 14px;
+        }
+
+        .metric-cell {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
 
-        .spec-label {
-            font-size: 0.65rem;
+        .metric-lbl {
+            font-size: 0.63rem;
             color: #94A3B8;
             text-transform: uppercase;
             letter-spacing: 0.03em;
+            font-weight: 600;
         }
 
-        .spec-val {
-            font-size: 0.82rem;
-            font-weight: 700;
+        .metric-val {
+            font-size: 0.88rem;
+            font-weight: 800;
             color: #F8FAFC;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.01em;
+        }
+
+        .metric-val.emerald { color: #10B981; }
+        .metric-val.sky { color: #38BDF8; }
+        .metric-val.gold { color: #E2B357; }
+
+        /* Pie de la Tarjeta Bancaria: Canal Seguro CCE + Botón Forense */
+        .bank-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            flex-wrap: wrap;
+        }
+
+        .channel-secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.67rem;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+
+        .channel-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 6px #10B981;
+            flex-shrink: 0;
+        }
+
+        .btn-forense {
+            background: rgba(226, 179, 87, 0.12);
+            border: 1px solid rgba(226, 179, 87, 0.35);
+            color: #E2B357;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 160ms ease;
             font-family: var(--font-sans);
         }
 
-        .spec-val.mono {
-            font-family: var(--font-mono, monospace);
+        .btn-forense:hover {
+            background: rgba(226, 179, 87, 0.22);
+            border-color: #E2B357;
+            color: #FBBF24;
+            transform: translateY(-1px);
         }
-
-        .spec-val.emerald { color: #10B981; }
-        .spec-val.sky { color: #38BDF8; }
-        .spec-val.gold { color: #E2B357; }
 
         /* 4. PAN INFERIOR: Sello y Regulación Institucional */
         .infra-footer-dock {
-            background: rgba(11, 15, 23, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 10px 16px;
+            background: rgba(11, 15, 23, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.7rem;
+            gap: 12px;
+            font-size: 0.72rem;
             color: #64748B;
+            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-author-tag {
+            color: #E2B357;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        /* Modal: Detalle Técnico Forense de Pasarela */
+        .forense-modal-card {
+            max-width: 620px;
+            background: #0D1527;
+            border: 1px solid rgba(226, 179, 87, 0.35);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
         }
     </style>
 </head>
@@ -559,39 +831,69 @@
     <main class="dashboard-main main-layout">
         
         <!-- ====================================================================
-             1. PAN SUPERIOR: Barra Unificada de Contexto y Operación
+             1. PAN SUPERIOR: Barra Compacta de Filtrado y Diagnóstico Rápido
              ==================================================================== -->
         <section class="infra-header-bar" aria-label="Control y Estado de Pasarelas">
             <div class="infra-title-block">
                 <div class="infra-title-row">
                     <h2>Mapa de Infraestructura &amp; Pasarelas Interbancarias</h2>
-                    <span class="infra-live-pill">
+                    <span class="infra-live-pill" id="pillEstadoGeneral">
                         <span class="status-dot online"></span>
-                        <span>5 Pasarelas Operativas</span>
+                        <span id="txtPasarelasOperativas">4 de 4 Pasarelas Operativas</span>
                     </span>
+                    <span class="infra-badge-iso">Switch CCE &bull; ISO 20022</span>
                 </div>
-                <p class="infra-subtitle">Supervisión en tiempo real del Switch Central CCE con la banca privada y cajas municipales bajo estándar ISO 20022.</p>
+                <p class="infra-subtitle">Supervisión en tiempo real del Switch Central CCE con la banca privada y cajas municipales bajo estándar ISO 20022 y Circular BCRP 0014-2023.</p>
             </div>
 
-            <div class="infra-actions-strip">
-                <a href="index.html" class="btn btn-secondary btn-sm" title="Volver a la Consola NOC Central">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    <span>Volver a Consola NOC</span>
-                </a>
+            <div class="infra-control-cluster">
+                <!-- Barra de Filtrado por Estado Operacional -->
+                <div class="infra-filter-group" role="group" aria-label="Filtro por estado operacional">
+                    <button type="button" class="infra-filter-btn active" id="btnFiltroTodas" data-filter="todas" onclick="filtrarPasarelas('todas', this)">
+                        <span>Todas las Pasarelas</span>
+                        <span class="filter-count" id="countTodas">4</span>
+                    </button>
+                    <button type="button" class="infra-filter-btn" id="btnFiltroOperativas" data-filter="operativas" onclick="filtrarPasarelas('operativas', this)">
+                        <span class="status-dot online"></span>
+                        <span>100% Operativas</span>
+                        <span class="filter-count" id="countOperativas">4</span>
+                    </button>
+                    <button type="button" class="infra-filter-btn" id="btnFiltroContingencia" data-filter="contingencia" onclick="filtrarPasarelas('contingencia', this)">
+                        <span class="status-dot warning"></span>
+                        <span>En Contingencia</span>
+                        <span class="filter-count" id="countContingencia">0</span>
+                    </button>
+                </div>
+
+                <div class="infra-actions-strip">
+                    <button type="button" class="btn btn-diagnostico btn-sm" id="btnDiagnosticoRapido" onclick="ejecutarDiagnosticoRapido()" title="Ejecutar diagnóstico rápido de enlaces interbancarios">
+                        <svg class="icon-svg icon-refresh-diag" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                            <path d="M16 16h5v5"></path>
+                        </svg>
+                        <span>Diagnóstico Rápido</span>
+                    </button>
+                    <a href="index.html" class="btn btn-secondary btn-sm" title="Volver a la Consola NOC Central">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>Consola NOC</span>
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- ====================================================================
-             2. RELLENO DEL SANDWICH - NÚCLEO CENTRAL: Switch CCE
+             2. RELLENO DEL SANDWICH - NÚCLEO HERO: Switch Central CCE
              ==================================================================== -->
         <section class="infra-hero-core" aria-label="Núcleo Central CCE">
             <div class="infra-hero-header">
                 <div class="infra-hero-brand">
-                    <div class="infra-hero-icon-box" title="Switch Central CCE">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <div class="infra-hero-icon-box" title="Switch Central de Compensación Electrónica">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
                             <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
                             <line x1="6" y1="6" x2="6.01" y2="6"></line>
@@ -600,11 +902,11 @@
                     </div>
                     <div>
                         <div class="infra-hero-tag-row">
-                            <span class="infra-tag gold">Núcleo Central de Compensación</span>
+                            <span class="infra-tag gold">Switch Interbancario Nacional</span>
                             <span class="infra-badge-iso">Estándar ISO 20022</span>
                         </div>
-                        <h3 class="infra-hero-title">CCE &bull; Switch Central de Compensación Electrónica</h3>
-                        <span class="infra-hero-sub">Plataforma Matriz de Enlace e Interoperabilidad Inmediata</span>
+                        <h3 class="infra-hero-title">Cámara de Compensación Electrónica (CCE Central)</h3>
+                        <span class="infra-hero-sub">Plataforma Matriz de Enlace e Interoperabilidad Inmediata BCRP</span>
                     </div>
                 </div>
                 <div class="infra-hero-status">
@@ -612,224 +914,508 @@
                         <span class="micro-dot-pulse"></span>
                         <span>Operación Normal 100%</span>
                     </span>
-                    <span class="infra-hero-meta">Disponibilidad 99.999% &bull; SLA Cumplido</span>
+                    <span class="infra-hero-meta">Disponibilidad 99.999% &bull; SLA Cumplido &bull; Ciclo Activo</span>
                 </div>
             </div>
 
-            <!-- 4 KPIs Ejecutivos Estilizados del Núcleo Central CCE -->
+            <!-- 4 KPIs Ejecutivos del Switch CCE Central -->
             <div class="infra-hero-kpis">
                 <div class="hero-kpi-card">
                     <div class="kpi-icon-mini gold">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
                     </div>
                     <div class="kpi-body">
-                        <span class="kpi-label">Capacidad de Procesamiento</span>
-                        <span class="kpi-val gold">4,500 pagos/seg</span>
-                        <span class="kpi-note">Carga pico garantizada en tiempo real</span>
+                        <span class="kpi-label">Volumen Compensado en Soles</span>
+                        <span class="kpi-val gold" id="kpiVolumenSoles">S/ 148,920,400.00</span>
+                        <span class="kpi-note">Liquidación bruta acumulada en ciclo diario BCRP</span>
                     </div>
                 </div>
 
                 <div class="hero-kpi-card">
                     <div class="kpi-icon-mini emerald">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
                     </div>
                     <div class="kpi-body">
-                        <span class="kpi-label">Tiempo de Liquidación</span>
-                        <span class="kpi-val emerald">12 ms (Inmediato)</span>
-                        <span class="kpi-note">Margen operacional óptimo BCRP</span>
+                        <span class="kpi-label">Latencia de Procesamiento</span>
+                        <span class="kpi-val emerald" id="kpiLatenciaCCE">12 ms</span>
+                        <span class="kpi-note">Tiempo de conmutación interbancaria inmediata</span>
                     </div>
                 </div>
 
                 <div class="hero-kpi-card">
                     <div class="kpi-icon-mini sky">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
                     </div>
                     <div class="kpi-body">
-                        <span class="kpi-label">Seguridad y Homologación</span>
-                        <span class="kpi-val sky">Cifrado Bancario Homologado</span>
-                        <span class="kpi-note">Validación de identidad institucional mutua</span>
+                        <span class="kpi-label">Disponibilidad en Tiempo Real</span>
+                        <span class="kpi-val sky">99.999%</span>
+                        <span class="kpi-note">Arquitectura activo-activo sin pérdida de mensajes</span>
                     </div>
                 </div>
 
                 <div class="hero-kpi-card">
                     <div class="kpi-icon-mini purple">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
                     </div>
                     <div class="kpi-body">
-                        <span class="kpi-label">Continuidad Operativa</span>
-                        <span class="kpi-val">Alta Disponibilidad Activo-Activo</span>
-                        <span class="kpi-note">Conmutación de contingencia sin cortes</span>
+                        <span class="kpi-label">Capacidad y Rendimiento</span>
+                        <span class="kpi-val">4,500 TPS</span>
+                        <span class="kpi-note">Carga pico garantizada con liquidación inmediata</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ====================================================================
-             3. RELLENO DEL SANDWICH - MATRIZ SIMÉTRICA 2x2: Pasarelas Homologadas
+             3. RELLENO DEL SANDWICH: MATRIZ SIMÉTRICA 2x2 DE PASARELAS BANCARIAS
              ==================================================================== -->
-        <section class="infra-gateways-matrix" aria-label="Nodos de Pasarela Interbancaria">
+        <section class="infra-gateways-matrix" id="matrizPasarelas" aria-label="Matriz Simétrica de Pasarelas Bancarias">
             
-            <!-- Pasarela 1: BCP (Yape) -->
-            <div class="infra-node-card">
-                <div class="infra-card-header">
-                    <div>
+            <!-- FILA 1 - TARJETA 1: BCP (Pasarela Yape / Transferencias Inmediatas) -->
+            <article class="infra-bank-card" id="cardPasarelaBcp" data-estado="operativa">
+                <div>
+                    <div class="bank-card-top">
+                        <div class="bank-brand-cluster">
+                            <!-- Logo Oficial SVG BCP -->
+                            <div class="bank-logo-wrap" title="Banco de Crédito del Perú">
+                                <svg width="68" height="26" viewBox="0 0 100 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="38" rx="6" fill="#002A64"/>
+                                    <text x="12" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="19" fill="#FFFFFF" letter-spacing="1">BCP</text>
+                                    <path d="M72 8L60 30H67L79 8H72Z" fill="#FF7800"/>
+                                </svg>
+                            </div>
+                            <div class="bank-emv-chip" title="Validación Criptográfica de Enlace CCE"></div>
+                        </div>
+                        <span class="status-pill-human" id="badgeBcpInfra">
+                            <span class="micro-dot-pulse"></span>
+                            <span>100% Operativa</span>
+                        </span>
+                    </div>
+
+                    <div class="bank-card-title-wrap">
                         <span class="infra-tag sky">Banca Privada Interoperable</span>
-                        <h3 class="infra-card-title">BCP &bull; Banco de Crédito del Perú (Yape)</h3>
-                        <span class="infra-card-sub">Canal Interoperable de Billeteras Digitales</span>
+                        <h3 class="bank-card-title">BCP &bull; Banco de Crédito del Perú</h3>
+                        <span class="bank-card-sub">Pasarela Yape &bull; Transferencias Inmediatas</span>
+                        <div class="bank-card-id-row">
+                            <span class="bank-code-tag">CCE-ID: PE-BCP-GW01</span>
+                            <span class="bank-code-tag">SWIFT: BCPLPEPLXXX</span>
+                        </div>
                     </div>
-                    <span id="badgeBcpInfra" class="status-pill-human">
-                        <span class="micro-dot-pulse"></span>
-                        <span>Operación Normal</span>
-                    </span>
+
+                    <!-- Barra de Salud Operacional con Gradiente -->
+                    <div class="bank-health-wrap">
+                        <div class="bank-health-meta">
+                            <span class="bank-health-label">Salud Operacional de Enlace</span>
+                            <span class="bank-health-val font-mono">100% Óptima</span>
+                        </div>
+                        <div class="bank-health-track">
+                            <div class="bank-health-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Métricas Tabulares en JetBrains Mono -->
+                    <div class="bank-metrics-grid">
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Latencia Media</span>
+                            <span class="metric-val emerald" id="latenciaBcpInfra">18 ms</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Rendimiento Operativo</span>
+                            <span class="metric-val sky">1,850 TPS</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Volumen Diario</span>
+                            <span class="metric-val">12.4M ops (S/ 58.2M)</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Protocolo Activo</span>
+                            <span class="metric-val gold">ISO 20022 pacs.008</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="infra-specs-grid">
-                    <div class="spec-box">
-                        <span class="spec-label">Volumen Diario Promedio</span>
-                        <span class="spec-val mono">12.4M operaciones</span>
+                <div class="bank-card-footer">
+                    <div class="channel-secure-badge">
+                        <span class="channel-dot"></span>
+                        <span>Canal Cifrado CCE Activo &bull; Validación Institucional Mutua</span>
                     </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Tiempo de Respuesta</span>
-                        <span id="latenciaBcpInfra" class="spec-val mono emerald">18 ms</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Enlace Operativo Principal</span>
-                        <span class="spec-val">Canal Privado Dedicado BCP-CCE</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Canal Alterno de Contingencia</span>
-                        <span class="spec-val">Enlace Redundante de Respaldo Inmediato</span>
-                    </div>
+                    <button class="btn-forense" type="button" onclick="abrirModalDetalleForense('bcp')" title="Inspeccionar telemetría y bitácora técnica de enlace">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Ver Detalle Forense</span>
+                    </button>
                 </div>
-            </div>
+            </article>
 
-            <!-- Pasarela 2: Interbank / BBVA (Plin) -->
-            <div class="infra-node-card">
-                <div class="infra-card-header">
-                    <div>
+            <!-- FILA 1 - TARJETA 2: BBVA Perú (Pasarela Plin / Pagos Inmediatos) -->
+            <article class="infra-bank-card" id="cardPasarelaBbva" data-estado="operativa">
+                <div>
+                    <div class="bank-card-top">
+                        <div class="bank-brand-cluster">
+                            <!-- Logo Oficial SVG BBVA -->
+                            <div class="bank-logo-wrap" title="BBVA Perú">
+                                <svg width="68" height="26" viewBox="0 0 100 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="38" rx="6" fill="#004481"/>
+                                    <text x="12" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" letter-spacing="2">BBVA</text>
+                                </svg>
+                            </div>
+                            <div class="bank-emv-chip" title="Validación Criptográfica de Enlace CCE"></div>
+                        </div>
+                        <span class="status-pill-human">
+                            <span class="micro-dot-pulse"></span>
+                            <span>100% Operativa</span>
+                        </span>
+                    </div>
+
+                    <div class="bank-card-title-wrap">
                         <span class="infra-tag sky">Banca Privada Interoperable</span>
-                        <h3 class="infra-card-title">Interbank / BBVA (Plin)</h3>
-                        <span class="infra-card-sub">Canal Interoperable de Pagos Inmediatos</span>
+                        <h3 class="bank-card-title">BBVA Perú &bull; Banco Continental</h3>
+                        <span class="bank-card-sub">Pasarela Plin &bull; Pagos Inmediatos</span>
+                        <div class="bank-card-id-row">
+                            <span class="bank-code-tag">CCE-ID: PE-BBVA-GW02</span>
+                            <span class="bank-code-tag">SWIFT: BBVAPEPLXXX</span>
+                        </div>
                     </div>
-                    <span class="status-pill-human">
-                        <span class="micro-dot-pulse"></span>
-                        <span>Operación Normal</span>
-                    </span>
+
+                    <!-- Barra de Salud Operacional con Gradiente -->
+                    <div class="bank-health-wrap">
+                        <div class="bank-health-meta">
+                            <span class="bank-health-label">Salud Operacional de Enlace</span>
+                            <span class="bank-health-val font-mono">100% Óptima</span>
+                        </div>
+                        <div class="bank-health-track">
+                            <div class="bank-health-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Métricas Tabulares en JetBrains Mono -->
+                    <div class="bank-metrics-grid">
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Latencia Media</span>
+                            <span class="metric-val emerald">21 ms</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Rendimiento Operativo</span>
+                            <span class="metric-val sky">1,120 TPS</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Volumen Diario</span>
+                            <span class="metric-val">7.6M ops (S/ 36.4M)</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Protocolo Activo</span>
+                            <span class="metric-val gold">ISO 20022 pacs.008</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="infra-specs-grid">
-                    <div class="spec-box">
-                        <span class="spec-label">Volumen Diario Promedio</span>
-                        <span class="spec-val mono">6.8M operaciones</span>
+                <div class="bank-card-footer">
+                    <div class="channel-secure-badge">
+                        <span class="channel-dot"></span>
+                        <span>Canal Cifrado CCE Activo &bull; Validación Institucional Mutua</span>
                     </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Tiempo de Respuesta</span>
-                        <span class="spec-val mono emerald">24 ms</span>
+                    <button class="btn-forense" type="button" onclick="abrirModalDetalleForense('bbva')" title="Inspeccionar telemetría y bitácora técnica de enlace">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Ver Detalle Forense</span>
+                    </button>
+                </div>
+            </article>
+
+            <!-- FILA 2 - TARJETA 3: Interbank (Pasarela Plin / Canal Empresa) -->
+            <article class="infra-bank-card" id="cardPasarelaInterbank" data-estado="operativa">
+                <div>
+                    <div class="bank-card-top">
+                        <div class="bank-brand-cluster">
+                            <!-- Logo Oficial SVG Interbank -->
+                            <div class="bank-logo-wrap" title="Interbank">
+                                <svg width="78" height="26" viewBox="0 0 110 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="110" height="38" rx="6" fill="#05264E"/>
+                                    <circle cx="20" cy="19" r="10" fill="#009B3A"/>
+                                    <path d="M17 14L23 19L17 24" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <text x="36" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="13" fill="#FFFFFF">Interbank</text>
+                                </svg>
+                            </div>
+                            <div class="bank-emv-chip" title="Validación Criptográfica de Enlace CCE"></div>
+                        </div>
+                        <span class="status-pill-human">
+                            <span class="micro-dot-pulse"></span>
+                            <span>100% Operativa</span>
+                        </span>
                     </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Enlace Operativo Principal</span>
-                        <span class="spec-val">Canal Interbancario Homologado CCE</span>
+
+                    <div class="bank-card-title-wrap">
+                        <span class="infra-tag sky">Banca Privada Interoperable</span>
+                        <h3 class="bank-card-title">Interbank &bull; Banco Internacional del Perú</h3>
+                        <span class="bank-card-sub">Pasarela Plin &bull; Canal Empresa</span>
+                        <div class="bank-card-id-row">
+                            <span class="bank-code-tag">CCE-ID: PE-IBK-GW03</span>
+                            <span class="bank-code-tag">SWIFT: BINSPEPLXXX</span>
+                        </div>
                     </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Canal Alterno de Contingencia</span>
-                        <span class="spec-val">Entrega Garantizada con Conciliación Posterior</span>
+
+                    <!-- Barra de Salud Operacional con Gradiente -->
+                    <div class="bank-health-wrap">
+                        <div class="bank-health-meta">
+                            <span class="bank-health-label">Salud Operacional de Enlace</span>
+                            <span class="bank-health-val font-mono">100% Óptima</span>
+                        </div>
+                        <div class="bank-health-track">
+                            <div class="bank-health-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Métricas Tabulares en JetBrains Mono -->
+                    <div class="bank-metrics-grid">
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Latencia Media</span>
+                            <span class="metric-val emerald">24 ms</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Rendimiento Operativo</span>
+                            <span class="metric-val sky">740 TPS</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Volumen Diario</span>
+                            <span class="metric-val">4.9M ops (S/ 24.8M)</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Protocolo Activo</span>
+                            <span class="metric-val gold">ISO 20022 pacs.008</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Pasarela 3: Caja Cusco (Tunki) -->
-            <div class="infra-node-card">
-                <div class="infra-card-header">
-                    <div>
+                <div class="bank-card-footer">
+                    <div class="channel-secure-badge">
+                        <span class="channel-dot"></span>
+                        <span>Canal Cifrado CCE Activo &bull; Validación Institucional Mutua</span>
+                    </div>
+                    <button class="btn-forense" type="button" onclick="abrirModalDetalleForense('interbank')" title="Inspeccionar telemetría y bitácora técnica de enlace">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Ver Detalle Forense</span>
+                    </button>
+                </div>
+            </article>
+
+            <!-- FILA 2 - TARJETA 4: Cajas Municipales (Caja Cusco & Caja de los Andes) -->
+            <article class="infra-bank-card" id="cardPasarelaCajas" data-estado="operativa">
+                <div>
+                    <div class="bank-card-top">
+                        <div class="bank-brand-cluster">
+                            <!-- Logo Oficial SVG Cajas Municipales -->
+                            <div class="bank-logo-wrap" title="Cajas Municipales del Perú">
+                                <svg width="84" height="26" viewBox="0 0 120 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="120" height="38" rx="6" fill="#1E293B"/>
+                                    <rect x="10" y="14" width="10" height="10" fill="#E2B357" rx="1"/>
+                                    <rect x="12.5" y="11.5" width="5" height="15" fill="#E2B357" rx="0.5"/>
+                                    <rect x="7.5" y="16.5" width="15" height="5" fill="#E2B357" rx="0.5"/>
+                                    <circle cx="15" cy="19" r="2" fill="#1E293B"/>
+                                    <text x="30" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="10" fill="#F8FAFC">CAJAS</text>
+                                    <text x="30" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="8.5" fill="#E2B357">MUNICIPALES</text>
+                                </svg>
+                            </div>
+                            <div class="bank-emv-chip" title="Validación Criptográfica de Enlace CCE"></div>
+                        </div>
+                        <span class="status-pill-human">
+                            <span class="micro-dot-pulse"></span>
+                            <span>100% Operativa</span>
+                        </span>
+                    </div>
+
+                    <div class="bank-card-title-wrap">
                         <span class="infra-tag amber">Microfinanzas e Inclusión</span>
-                        <h3 class="infra-card-title">Caja Cusco (Tunki)</h3>
-                        <span class="infra-card-sub">Microfinanzas e Inclusión Financiera</span>
+                        <h3 class="bank-card-title">Cajas Municipales &bull; Caja Cusco &amp; Caja de los Andes</h3>
+                        <span class="bank-card-sub">Caja Cusco &bull; Caja de los Andes &bull; Macro Sur</span>
+                        <div class="bank-card-id-row">
+                            <span class="bank-code-tag">CCE-ID: PE-CMAC-GW04</span>
+                            <span class="bank-code-tag">SWIFT: CMACPEPLXXX</span>
+                        </div>
                     </div>
-                    <span class="status-pill-human">
-                        <span class="micro-dot-pulse"></span>
-                        <span>Operación Normal</span>
-                    </span>
+
+                    <!-- Barra de Salud Operacional con Gradiente -->
+                    <div class="bank-health-wrap">
+                        <div class="bank-health-meta">
+                            <span class="bank-health-label">Salud Operacional de Enlace</span>
+                            <span class="bank-health-val font-mono">100% Óptima</span>
+                        </div>
+                        <div class="bank-health-track">
+                            <div class="bank-health-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Métricas Tabulares en JetBrains Mono -->
+                    <div class="bank-metrics-grid">
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Latencia Media</span>
+                            <span class="metric-val emerald">34 ms</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Rendimiento Operativo</span>
+                            <span class="metric-val sky">480 TPS</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Volumen Diario</span>
+                            <span class="metric-val">1.27M ops (S/ 8.9M)</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-lbl">Protocolo Activo</span>
+                            <span class="metric-val gold">ISO 20022 pacs.008</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="infra-specs-grid">
-                    <div class="spec-box">
-                        <span class="spec-label">Volumen Diario Promedio</span>
-                        <span class="spec-val mono">850K operaciones</span>
+                <div class="bank-card-footer">
+                    <div class="channel-secure-badge">
+                        <span class="channel-dot"></span>
+                        <span>Canal Cifrado Macro-Regional Activo &bull; Validación Institucional Mutua</span>
                     </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Tiempo de Respuesta</span>
-                        <span class="spec-val mono emerald">32 ms</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Enlace Operativo Principal</span>
-                        <span class="spec-val">Canal Regional Macro Sur - Lima</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Canal Alterno de Contingencia</span>
-                        <span class="spec-val">Ruta Alternativa Interconectada BCRP</span>
-                    </div>
+                    <button class="btn-forense" type="button" onclick="abrirModalDetalleForense('cajas')" title="Inspeccionar telemetría y bitácora técnica de enlace">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Ver Detalle Forense</span>
+                    </button>
                 </div>
-            </div>
-
-            <!-- Pasarela 4: Caja de los Andes -->
-            <div class="infra-node-card">
-                <div class="infra-card-header">
-                    <div>
-                        <span class="infra-tag amber">Microfinanzas y Banca Rural</span>
-                        <h3 class="infra-card-title">Caja de los Andes</h3>
-                        <span class="infra-card-sub">Microfinanzas y Banca Rural</span>
-                    </div>
-                    <span class="status-pill-human">
-                        <span class="micro-dot-pulse"></span>
-                        <span>Operación Normal</span>
-                    </span>
-                </div>
-
-                <div class="infra-specs-grid">
-                    <div class="spec-box">
-                        <span class="spec-label">Volumen Diario Promedio</span>
-                        <span class="spec-val mono">420K operaciones</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Tiempo de Respuesta</span>
-                        <span class="spec-val mono emerald">45 ms</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Enlace Operativo Principal</span>
-                        <span class="spec-val">Canal Regional Altiplano - CCE</span>
-                    </div>
-                    <div class="spec-box">
-                        <span class="spec-label">Canal Alterno de Contingencia</span>
-                        <span class="spec-val">Respaldo Satelital y Enlace de Contingencia</span>
-                    </div>
-                </div>
-            </div>
+            </article>
 
         </section>
 
         <!-- ====================================================================
-             4. PAN INFERIOR: Sello y Regulación Institucional
+             4. PAN INFERIOR: Sello y Regulación Institucional BCRP
              ==================================================================== -->
         <footer class="infra-footer-dock">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="status-dot online"></span>
-                <span>Supervisión Continua de Pasarelas &bull; Subgerencia de Operaciones de Pago BCRP</span>
+                <span>Supervisión Continua de Pasarelas &bull; Subgerencia de Operaciones de Pago BCRP &bull; Circular BCRP N° 0014-2023 (Art. 12 &amp; 14)</span>
             </div>
-            <div>
-                <span>Circular BCRP N° 0014-2023 &bull; Liquidación Bruta en Tiempo Real (LBTR)</span>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <span>Liquidación Bruta en Tiempo Real (LBTR)</span>
+                <span style="color: rgba(255, 255, 255, 0.2);">&bull;</span>
+                <span class="dock-author-tag">Frank Vargas Huamán (Frankosyni @frankitoromas-tech)</span>
             </div>
         </footer>
 
     </main>
 
+    <!-- Modal: Detalle Técnico Forense de Pasarela Bancaria -->
+    <div class="modal-overlay" id="modalDetalleForense" role="dialog" aria-modal="true" aria-labelledby="tituloModalForense">
+        <div class="modal-card modal-lg forense-modal-card">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div id="modalForenseLogoBox"></div>
+                    <div>
+                        <h3 id="tituloModalForense" style="margin:0; font-size:1.02rem; font-weight:800; color:#F8FAFC;">
+                            Dictamen Técnico de Enlace &bull; Pasarela Bancaria
+                        </h3>
+                        <p id="subtituloModalForense" style="margin:2px 0 0 0; font-size:0.73rem; color:#94A3B8;">
+                            Inspección Operacional y Cumplimiento Normativo BCRP Circular 0014-2023
+                        </p>
+                    </div>
+                </div>
+                <button class="modal-close" id="btnCerrarModalForense" type="button" onclick="cerrarModalDetalleForense()" aria-label="Cerrar detalle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body" style="padding: 20px 22px;">
+                <div class="audit-dictamen-banner" style="display:flex; align-items:center; gap:14px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.28); border-radius:10px; padding:12px 16px; margin-bottom:14px;">
+                    <div style="width:38px; height:38px; border-radius:8px; background:rgba(16,185,129,0.16); border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <polyline points="9 12 11 14 15 10"></polyline>
+                        </svg>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:3px;">
+                        <div style="display:flex; align-items:center; gap:7px; font-size:0.82rem; font-weight:800; color:#10B981; letter-spacing:0.02em;">
+                            <span class="status-dot online"></span>
+                            <span id="modalForenseEstadoTexto">ENLACE 100% OPERATIVO Y HOMOLOGADO BCRP</span>
+                        </div>
+                        <div style="font-size:0.73rem; color:#94A3B8;">
+                            Sondeo CCE: <span id="modalForenseTimestamp" class="font-mono">--:--:-- PET</span> &bull; Canal de Contingencia: <strong style="color:#10B981;">En Espera Activa</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="audit-kpi-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;">
+                    <div style="background:#0B0F17; border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:3px;">
+                        <div style="font-size:0.65rem; color:#64748B; font-weight:600; text-transform:uppercase;">Latencia Actual</div>
+                        <div id="modalForenseLatencia" style="font-size:1.05rem; font-weight:800; font-family:'JetBrains Mono',monospace; color:#10B981;">-- ms</div>
+                        <div style="font-size:0.65rem; color:#94A3B8;">Umbral SLA: &lt; 50 ms</div>
+                    </div>
+                    <div style="background:#0B0F17; border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:3px;">
+                        <div style="font-size:0.65rem; color:#64748B; font-weight:600; text-transform:uppercase;">Tasa de Éxito</div>
+                        <div style="font-size:1.05rem; font-weight:800; font-family:'JetBrains Mono',monospace; color:#E2B357;">99.98%</div>
+                        <div style="font-size:0.65rem; color:#94A3B8;">Cero rechazos técnicos</div>
+                    </div>
+                    <div style="background:#0B0F17; border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:3px;">
+                        <div style="font-size:0.65rem; color:#64748B; font-weight:600; text-transform:uppercase;">Estándar Mensajes</div>
+                        <div style="font-size:1.05rem; font-weight:800; font-family:'JetBrains Mono',monospace; color:#38BDF8;">ISO 20022</div>
+                        <div style="font-size:0.65rem; color:#94A3B8;">pacs.008 / camt.053</div>
+                    </div>
+                    <div style="background:#0B0F17; border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:3px;">
+                        <div style="font-size:0.65rem; color:#64748B; font-weight:600; text-transform:uppercase;">Validación Enlace</div>
+                        <div style="font-size:1.05rem; font-weight:800; font-family:'JetBrains Mono',monospace; color:#10B981;">Mutua</div>
+                        <div style="font-size:0.65rem; color:#94A3B8;">Identidad Homologada</div>
+                    </div>
+                </div>
+
+                <div style="background:#090E18; border:1px solid rgba(255,255,255,0.06); border-left:3px solid #E2B357; border-radius:6px; padding:12px 14px; margin-bottom:14px;">
+                    <h4 style="margin:0 0 6px 0; font-size:0.80rem; text-transform:uppercase; letter-spacing:0.04em; color:#E2B357;">
+                        Dictamen Técnico Bancario &bull; Canal CCE
+                    </h4>
+                    <p id="modalForenseDictamen" style="margin:0; font-size:0.79rem; line-height:1.55; color:#CBD5E1;">
+                        La pasarela interbancaria mantiene comunicación fluida y sincrónica con el Switch Central CCE. No se evidencian paquetes descartados ni anomalías en el encauzamiento de pagos inmediatos.
+                    </p>
+                </div>
+
+                <div style="background:#0B0F17; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 14px; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.72rem; font-weight:600; color:#94A3B8;">
+                        <span>Firma Digital de Certificación de Canal CCE (SHA-256):</span>
+                    </div>
+                    <code id="modalForenseHash" style="font-size:0.75rem; color:#38BDF8; word-break:break-all; user-select:all; background:rgba(14,20,36,0.9); padding:6px 10px; border-radius:4px; border:1px solid rgba(56,189,248,0.2); font-family:'JetBrains Mono',monospace;">--</code>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding:12px 22px; background:#0B0F17; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary btn-sm" type="button" onclick="cerrarModalDetalleForense()">
+                    <span>Cerrar Detalle</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts Esenciales Registrados -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-9+ilAOeXY8qy2bw/h51MmliNNHvdyhTpLIlqDmVpD26z8VjVJsUJtk5rhbDIUvYiD+EpGoAu0xTa7MhZohFQjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>
+    <script src="js/command-palette.js"></script>
     <script>
+        // Actualización en Tiempo Real del Reloj Oficial del Perú
         function actualizarReloj() {
             const reloj = document.getElementById('relojUtc');
             if (reloj) {
@@ -840,6 +1426,175 @@
         }
         setInterval(actualizarReloj, 1000);
         actualizarReloj();
+
+        // 1. Filtrado por Estado Operacional
+        function filtrarPasarelas(filtro, btn) {
+            if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+                window.SoundFX.playClick();
+            }
+
+            document.querySelectorAll('.infra-filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const tarjetas = document.querySelectorAll('.infra-bank-card');
+            let visibles = 0;
+
+            tarjetas.forEach(card => {
+                const estado = card.getAttribute('data-estado');
+                if (filtro === 'todas') {
+                    card.style.display = '';
+                    visibles++;
+                } else if (filtro === 'operativas' && estado === 'operativa') {
+                    card.style.display = '';
+                    visibles++;
+                } else if (filtro === 'contingencia' && estado === 'contingencia') {
+                    card.style.display = '';
+                    visibles++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Si no hay tarjetas visibles (por ejemplo en contingencia)
+            let noResults = document.getElementById('noResultsPasarelas');
+            if (visibles === 0) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.id = 'noResultsPasarelas';
+                    noResults.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 12px; color: #94A3B8;';
+                    noResults.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <polyline points="9 12 11 14 15 10"></polyline>
+                            </svg>
+                            <span style="font-weight: 700; color: #F8FAFC;">¡Cero Pasarelas en Contingencia!</span>
+                            <span style="font-size: 0.78rem;">El 100% de las pasarelas interbancarias se encuentran plenamente operativas en la red nacional CCE.</span>
+                        </div>
+                    `;
+                    document.getElementById('matrizPasarelas').appendChild(noResults);
+                } else {
+                    noResults.style.display = '';
+                }
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // 2. Diagnóstico Rápido con Animación Háptica
+        function ejecutarDiagnosticoRapido() {
+            const btn = document.getElementById('btnDiagnosticoRapido');
+            const icon = btn?.querySelector('.icon-refresh-diag');
+
+            if (window.SoundFX && typeof window.SoundFX.playPop === 'function') {
+                window.SoundFX.playPop();
+            }
+
+            if (icon) {
+                icon.style.transition = 'transform 800ms ease';
+                icon.style.transform = 'rotate(360deg)';
+                setTimeout(() => {
+                    icon.style.transition = 'none';
+                    icon.style.transform = 'rotate(0deg)';
+                }, 850);
+            }
+
+            // Simular sondeo de micro-latencias
+            const latBcp = document.getElementById('latenciaBcpInfra');
+            if (latBcp) {
+                const randomLat = Math.floor(Math.random() * 5) + 16;
+                latBcp.textContent = `${randomLat} ms`;
+            }
+
+            const kpiLat = document.getElementById('kpiLatenciaCCE');
+            if (kpiLat) {
+                const randomCCELat = Math.floor(Math.random() * 3) + 11;
+                kpiLat.textContent = `${randomCCELat} ms`;
+            }
+
+            if (typeof window.confetti === 'function') {
+                try {
+                    window.confetti({
+                        particleCount: 25,
+                        spread: 45,
+                        origin: { y: 0.3 },
+                        colors: ['#38BDF8', '#10B981', '#E2B357']
+                    });
+                } catch(e) {}
+            }
+        }
+
+        // 3. Modal de Detalle Técnico Forense de Pasarela
+        const DATOS_PASARELAS = {
+            bcp: {
+                nombre: "BCP • Banco de Crédito del Perú",
+                canal: "Pasarela Yape • Transferencias Inmediatas (CCE)",
+                latencia: "18 ms",
+                dictamen: "Canal seguro homologado con validación mutua institucional. Protocolo ISO 20022 activo para mensajería pacs.008 en tiempo real. Enlace redundante listo para conmutación inmediata sin pérdida de mensajes.",
+                hash: "7a33d87afd2e5bf8d0f6478f9ca925a9289d11cb6a52c0e6da27664c5b9bf596"
+            },
+            bbva: {
+                nombre: "BBVA Perú • Banco Continental",
+                canal: "Pasarela Plin • Pagos Inmediatos (CCE)",
+                latencia: "21 ms",
+                dictamen: "Canal interbancario homologado CCE con disponibilidad del 99.99%. Soporte integral para billeteras digitales bajo la normativa Circular BCRP 0014-2023. Entrega garantizada con conciliación posterior.",
+                hash: "5054ba9b724f114c0296716a4be8556d11b2299d255148671400bf1b147fb120"
+            },
+            interbank: {
+                nombre: "Interbank • Banco Internacional del Perú",
+                canal: "Pasarela Plin • Canal Empresa (CCE)",
+                latencia: "24 ms",
+                dictamen: "Canal cifrado homologado CCE para interoperabilidad empresarial y corporativa. Alta concurrencia garantizada con balanceo dinámico y validación de firma institucional.",
+                hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            cajas: {
+                nombre: "Cajas Municipales • Caja Cusco & Caja de los Andes",
+                canal: "Microfinanzas e Inclusión Regional • Macro Sur",
+                latencia: "34 ms",
+                dictamen: "Canal cifrado macro-regional conectado al Switch Central CCE. Enlace directo BCRP para liquidación bruta de microfinanzas y respaldo satelital de contingencia.",
+                hash: "a8f3c7e9124a954bbce0014a098ef65719bc45129841cbde9017643b21814e91"
+            }
+        };
+
+        function abrirModalDetalleForense(bancoKey) {
+            const data = DATOS_PASARELAS[bancoKey] || DATOS_PASARELAS.bcp;
+            const modal = document.getElementById('modalDetalleForense');
+            if (!modal) return;
+
+            if (window.SoundFX && typeof window.SoundFX.playPop === 'function') {
+                window.SoundFX.playPop();
+            }
+
+            document.getElementById('tituloModalForense').textContent = data.nombre;
+            document.getElementById('subtituloModalForense').textContent = data.canal;
+            document.getElementById('modalForenseLatencia').textContent = data.latencia;
+            document.getElementById('modalForenseDictamen').textContent = data.dictamen;
+            document.getElementById('modalForenseHash').textContent = data.hash;
+
+            const ahora = new Date();
+            const horaLima = ahora.toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour12: false });
+            document.getElementById('modalForenseTimestamp').textContent = `${horaLima} PET`;
+
+            modal.classList.add('active');
+        }
+
+        function cerrarModalDetalleForense() {
+            const modal = document.getElementById('modalDetalleForense');
+            if (modal) {
+                modal.classList.remove('active');
+                if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+                    window.SoundFX.playClick();
+                }
+            }
+        }
+
+        // Listener para cerrar modal con Escape o clic exterior
+        document.getElementById('modalDetalleForense')?.addEventListener('click', (e) => {
+            if (e.target.id === 'modalDetalleForense') cerrarModalDetalleForense();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarModalDetalleForense();
+        });
     </script>
 </body>
 </html>

@@ -23,6 +23,8 @@
     let elapsedSecondsSession = 0;
     let drawerMounted = false;
     let lastFocusedElement = null;
+    function safeHTML(html) { return (typeof window !== 'undefined' && window.sanitizeHTML) ? window.sanitizeHTML(html) : ((typeof window !== 'undefined' && window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') ? window.DOMPurify.sanitize(html) : html); }
+
 
     // Configuración regulatoria BCRP
     const SLA_LIMIT_SECONDS = 30 * 60; // 30 minutos normativos BCRP
@@ -593,10 +595,10 @@
             document.body.appendChild(toast);
         }
         const mensajeSafe = escapeHTML(mensaje);
-        toast.innerHTML = `
+        toast.innerHTML = safeHTML(`
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             <span>${mensajeSafe}</span>
-        `;
+        `);
         toast.classList.add('visible');
         clearTimeout(toast._timeout);
         toast._timeout = setTimeout(() => {
@@ -971,7 +973,7 @@
                 id: 'MITIGACION',
                 titulo: 'Ejecución de Mitigación & Conmutación CCE',
                 actor: 'Equipo NOC & Administrador de Continuidad CCE',
-                detalle: 'Activado bypass hacia ruta alternativa CCE-BGP-ALT. Normalización progresiva del flujo de compensación.',
+                detalle: 'Activado bypass hacia ruta alternativa CCE-CANAL-HOMOLOGADO-ALT. Normalización progresiva del flujo de compensación.',
                 tiempoRelativoSeg: 860,
                 activoSi: ['EN_MITIGACION', 'RESUELTO', 'CERRADO'],
                 completadoSi: ['RESUELTO', 'CERRADO']
@@ -987,7 +989,7 @@
             }
         ];
 
-        cont.innerHTML = etapas.map((etapa, idx) => {
+        cont.innerHTML = safeHTML(etapas.map((etapa, idx) => {
             const isCompleted = etapa.completadoSi.includes(estado);
             const isCurrent = !isCompleted && etapa.activoSi.includes(estado);
             const isPending = !isCompleted && !isCurrent;
@@ -1037,7 +1039,7 @@
                     </div>
                 </div>
             `;
-        }).join('');
+        }).join(''));
     }
 
     /**
@@ -1096,7 +1098,7 @@
 
         const jsonFinal = JSON.stringify(payloadData, null, 2);
         viewer.setAttribute('data-raw-json', jsonFinal);
-        viewer.innerHTML = colorearSintaxisJson(jsonFinal);
+        viewer.innerHTML = safeHTML(colorearSintaxisJson(jsonFinal));
 
         if (hashDisplay) {
             hashDisplay.textContent = hashSha256;
@@ -1144,7 +1146,7 @@
         const severidadSafe = escapeHTML(inc.severidad);
         const operadorSafe = escapeHTML(OPERADOR_DEFAULT);
 
-        elDesc.innerHTML = `
+        elDesc.innerHTML = safeHTML(`
             <p><strong>Causa Raíz Diagnosticada:</strong> ${descSafe}</p>
             <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
                 <span class="drawer-kpi-pill"><strong>Entidad:</strong> ${entidadSafe}</span>
@@ -1152,7 +1154,7 @@
                 <span class="drawer-kpi-pill"><strong>Severidad:</strong> ${severidadSafe}</span>
                 <span class="drawer-kpi-pill"><strong>Operador Asignado:</strong> ${operadorSafe}</span>
             </div>
-        `;
+        `);
     }
 
     /**

@@ -8,20 +8,17 @@
  * Firma de Edición: Frankosyni (Φρανκοσύνη/Francus. @frankitoromas-tech)
  * ==========================================================================
  * 
- * Especificaciones Técnicas del Motor Canvas:
- * 1. Renderizado de Alta Definición con soporte DPR / Retina (window.devicePixelRatio).
+ * Especificaciones Técnicas del Motor de Topología:
+ * 1. Renderizado de Alta Definición y Máxima Claridad Operativa BCRP.
  * 2. Arquitectura de Red Hub-and-Spoke de Compensación y Liquidación CCE.
- * 3. 5 Nodos Institucionales:
- *    - CCE Switch Central (Core Hub central)
- *    - BCP (Yape)
- *    - BBVA / Interbank (Plin)
- *    - Caja Cusco
- *    - Caja de los Andes
- * 4. Flujo continuo de partículas que representan paquetes ISO 20022
- *    (pacs.008, pacs.002, camt.053, pain.001) con estelas lumínicas.
- * 5. Integración reactiva con telemetría: si un nodo entra en contingencia (ej. HTTP 503 BCP),
+ * 3. Nodos Institucionales:
+ *    - Centro = Switch Central CCE (Core Hub central) con halo pulsante dorado/azul
+ *    - Nodos Periféricos = Entidades Financieras: BCP (Yape), Interbank (Plin), BBVA (Plin), Caja Cusco y Caja de los Andes
+ * 4. Flujo continuo de paquetes ISO 20022
+ *    (pacs.008, pacs.002, camt.053, pain.001) con estelas lumínicas a 60 FPS normalizados.
+ * 5. Integración reactiva con telemetría: si un nodo entra en contingencia (ej. timeout BCP),
  *    el enlace pulsa en carmesí #EF4444 con modulación de onda sísmica y partículas dispersas.
- * 6. Interactividad completa: hover con halo táctico e inspección HUD, arrastre (drag-and-drop),
+ * 6. Interactividad completa: selector de entidad, hover con halo táctico e inspección HUD, arrastre,
  *    restablecimiento y control de partículas.
  * 7. Paleta corporativa BCRP: Slate profundo, Navy, Gold y Sky Blue. Cero emojis.
  */
@@ -75,7 +72,7 @@
         gridCross: 'rgba(56, 189, 248, 0.15)'
     };
 
-    // Definición institucional de los 5 nodos
+    // Definición institucional de los nodos: Core Hub CCE + 5 Entidades Financieras Periféricas
     const NODE_DEFINITIONS = [
         {
             id: 5,
@@ -90,7 +87,7 @@
             anchoBanda: '40 Gbps Enlace Seguro BCRP',
             colorAcento: THEME.gold,
             colorSubtle: THEME.goldSubtle,
-            radius: 46,
+            radius: 44,
             isCentral: true
         },
         {
@@ -106,15 +103,15 @@
             anchoBanda: '10 Gbps Canal Privado BCRP',
             colorAcento: '#002A8F',
             colorHighlight: '#38BDF8',
-            radius: 36,
+            radius: 34,
             isCentral: false,
-            preferredAngle: -140 // Cuadrante superior izquierdo
+            preferredAngle: -150 // Cuadrante superior izquierdo
         },
         {
             id: 2,
             key: 'interbank',
-            nombre: 'BBVA / Interbank (Plin)',
-            badge: 'INTEROPERABILIDAD · COD 003',
+            nombre: 'Interbank (Plin)',
+            badge: 'BILLETERA MOVIL · COD 003',
             canal: 'Billetera Móvil & Pasarela Plin',
             tipo: 'SPOKE',
             codigoIso: 'BINP-PE-PLIN',
@@ -123,9 +120,27 @@
             anchoBanda: '10 Gbps Canal Privado BCRP',
             colorAcento: '#0284C7',
             colorHighlight: '#38BDF8',
-            radius: 36,
+            radius: 34,
             isCentral: false,
-            preferredAngle: -40 // Cuadrante superior derecho
+            preferredAngle: -85 // Cuadrante superior central
+        },
+        {
+            id: 20,
+            key: 'bbva',
+            entityRefId: 2,
+            nombre: 'BBVA (Plin)',
+            badge: 'PASARELA PLIN · COD 011',
+            canal: 'Banca Digital & Pasarela Plin',
+            tipo: 'SPOKE',
+            codigoIso: 'BBVA-PE-PLIN',
+            protocolo: 'ISO 20022 pacs.008 · Enlace Cifrado BCRP',
+            mtu: 'Canal Bancario Homologado',
+            anchoBanda: '10 Gbps Canal Privado BCRP',
+            colorAcento: '#004481',
+            colorHighlight: '#38BDF8',
+            radius: 34,
+            isCentral: false,
+            preferredAngle: -25 // Cuadrante superior derecho
         },
         {
             id: 3,
@@ -140,9 +155,9 @@
             anchoBanda: '2 Gbps Enlace Seguro BCRP',
             colorAcento: '#D97706',
             colorHighlight: '#F59E0B',
-            radius: 34,
+            radius: 32,
             isCentral: false,
-            preferredAngle: 140 // Cuadrante inferior izquierdo
+            preferredAngle: 45 // Cuadrante inferior derecho
         },
         {
             id: 4,
@@ -157,9 +172,9 @@
             anchoBanda: '1 Gbps Enlace Seguro BCRP',
             colorAcento: '#059669',
             colorHighlight: '#10B981',
-            radius: 34,
+            radius: 32,
             isCentral: false,
-            preferredAngle: 40 // Cuadrante inferior derecho
+            preferredAngle: 135 // Cuadrante inferior izquierdo
         }
     ];
 
@@ -204,10 +219,16 @@
             this.hoveredNode = null;
             this.hoveredLink = null;
             this.mousePos = { x: -1000, y: -1000 };
+            this.hasMovedDrag = false;
+            this.dragStartPos = { x: 0, y: 0 };
 
             this.radarAngle = 0;
             this.tpsCurrent = 1480;
             this.tpsTarget = 1480;
+
+            this.isRunning = false;
+            this.isDestroyed = false;
+            this.activeFilter = null;
 
             this.init();
         }
@@ -229,12 +250,48 @@
             this.setupLinks();
             this.handleResize();
 
-            // Listeners de redimensionamiento
-            window.addEventListener('resize', () => this.handleResize());
+            // Guardar referencias vinculadas para reciclado limpio y prevención de memory leaks
+            this.boundHandleResize = () => this.handleResize();
+            this.boundVisibilityChange = () => this.handleVisibilityChange();
+            this.boundRenderLoop = (ts) => this.renderLoop(ts);
+
+            // Listeners de redimensionamiento de ventana
+            window.addEventListener('resize', this.boundHandleResize);
+
+            // Observador de cambios de tamaño en el viewport del contenedor
             if (typeof ResizeObserver !== 'undefined') {
-                const ro = new ResizeObserver(() => this.handleResize());
-                ro.observe(this.viewport);
+                this.resizeObserver = new ResizeObserver((entries) => {
+                    for (const entry of entries) {
+                        const cr = entry.contentRect;
+                        if (cr && cr.width > 0 && cr.height > 0) {
+                            this.handleResize();
+                        }
+                    }
+                });
+                this.resizeObserver.observe(this.viewport);
             }
+
+            // Observador de visibilidad (IntersectionObserver) para reactivación al cambiar de pestaña
+            if (typeof IntersectionObserver !== 'undefined') {
+                this.intersectionObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            this.handleResize();
+                            this.lastFrameTime = performance.now();
+                            if (!this.isRunning) {
+                                this.startRenderLoop();
+                            }
+                        }
+                    }
+                }, { threshold: 0.05 });
+                this.intersectionObserver.observe(this.viewport);
+            }
+
+            // Listener de visibilidad de pestaña del navegador
+            document.addEventListener('visibilitychange', this.boundVisibilityChange);
+
+            // Sincronizar con pestañas de Cockpit Tabs en index.html
+            this.setupTabListeners();
 
             // Listeners de interactividad mouse / touch
             this.setupInteractionListeners();
@@ -245,12 +302,10 @@
             // Generar paquete inicial de partículas
             this.populateInitialParticles();
 
-            // Arrancar bucle cinemático
-            this.lastFrameTime = performance.now();
-            this.renderLoop = this.renderLoop.bind(this);
-            this.animationFrameId = requestAnimationFrame(this.renderLoop);
+            // Arrancar bucle de animación continua a 60 FPS calibrados
+            this.startRenderLoop();
 
-            console.log('[TopologyCanvas] Motor de Topología Interbancaria BCRP/CCE inicializado con soporte Retina DPR:', this.dpr);
+            console.log('[TopologyCanvas] Motor de Topología Interbancaria BCRP/CCE inicializado · Alta Definición BCRP');
         }
 
         /**
@@ -273,6 +328,7 @@
                 // Estado dinámico sincronizado con AppState
                 telemetria: {
                     estado: 'SALUDABLE',
+                    prevEstado: 'SALUDABLE',
                     latencia: 18,
                     incidentes: 0,
                     tps: 340,
@@ -302,19 +358,90 @@
         }
 
         /**
-         * Cálculo de dimensiones nítidas para Retina / DPR
+         * Sincronización con pestañas del cockpit para alternancias sin pérdida de estado
+         */
+        setupTabListeners() {
+            const cockpitTabs = document.querySelectorAll('.cockpit-tab');
+            cockpitTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetPane = tab.getAttribute('data-pane');
+                    if (targetPane === 'pane-topologia') {
+                        setTimeout(() => {
+                            this.handleResize();
+                            this.lastFrameTime = performance.now();
+                            if (!this.isRunning) {
+                                this.startRenderLoop();
+                            }
+                        }, 50);
+                    }
+                });
+            });
+
+            const btnToggleLayout = document.getElementById('btnToggleCockpitLayout');
+            if (btnToggleLayout) {
+                btnToggleLayout.addEventListener('click', () => {
+                    setTimeout(() => {
+                        this.handleResize();
+                        this.lastFrameTime = performance.now();
+                    }, 60);
+                });
+            }
+        }
+
+        /**
+         * Control del bucle de animación para prevenir acumulación de frames y memory leaks
+         */
+        startRenderLoop() {
+            if (this.isDestroyed) return;
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+            this.isRunning = true;
+            this.lastFrameTime = performance.now();
+            this.animationFrameId = requestAnimationFrame(this.boundRenderLoop);
+        }
+
+        stopRenderLoop() {
+            this.isRunning = false;
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+        }
+
+        handleVisibilityChange() {
+            if (document.hidden) {
+                this.stopRenderLoop();
+            } else {
+                this.lastFrameTime = performance.now();
+                this.handleResize();
+                this.startRenderLoop();
+            }
+        }
+
+        /**
+         * Cálculo de dimensiones nítidas para Retina / DPR (window.devicePixelRatio)
          */
         handleResize() {
             if (!this.canvas || !this.viewport) return;
 
             const rect = this.viewport.getBoundingClientRect();
+            // Si la pestaña está oculta, el ancho y alto serán 0; ignorar para preservar geometría
+            if (rect.width <= 0 || rect.height <= 0) return;
+
             this.dpr = Math.max(1, window.devicePixelRatio || 1);
             this.width = Math.max(320, Math.floor(rect.width));
-            this.height = Math.max(260, Math.floor(rect.height || 360));
+            this.height = Math.max(260, Math.floor(rect.height || 380));
 
             // Dimensionar buffer del canvas en píxeles físicos
-            this.canvas.width = Math.floor(this.width * this.dpr);
-            this.canvas.height = Math.floor(this.height * this.dpr);
+            const targetPhysicalWidth = Math.floor(this.width * this.dpr);
+            const targetPhysicalHeight = Math.floor(this.height * this.dpr);
+
+            if (this.canvas.width !== targetPhysicalWidth || this.canvas.height !== targetPhysicalHeight) {
+                this.canvas.width = targetPhysicalWidth;
+                this.canvas.height = targetPhysicalHeight;
+            }
 
             // Dimensionar estilo CSS en píxeles lógicos
             this.canvas.style.width = `${this.width}px`;
@@ -322,6 +449,10 @@
 
             // Escalar contexto para que todas las coordenadas se piensen en píxeles lógicos
             this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+
+            // Forzar suavizado de imagen de alta calidad
+            this.ctx.imageSmoothingEnabled = true;
+            this.ctx.imageSmoothingQuality = 'high';
 
             // Reubicar nodos en el espacio según la nueva geometría
             this.positionNodesGeometrically();
@@ -334,10 +465,10 @@
             const cx = this.width / 2;
             const cy = this.height / 2;
 
-            // Radio de la órbita de los bancos hacia el Switch Central
+            // Radio de la órbita de los bancos hacia el Switch Central (órbita elíptica balanceada)
             const minDim = Math.min(this.width, this.height);
-            const orbitRadiusX = Math.min(this.width * 0.38, Math.max(180, minDim * 0.44));
-            const orbitRadiusY = Math.min(this.height * 0.38, Math.max(105, minDim * 0.34));
+            const orbitRadiusX = Math.min(this.width * 0.36, Math.max(180, minDim * 0.44));
+            const orbitRadiusY = Math.min(this.height * 0.34, Math.max(95, minDim * 0.32));
 
             this.nodes.forEach(node => {
                 if (node.isCentral) {
@@ -400,6 +531,9 @@
                 this.mousePos = pos;
 
                 if (this.isDragging && this.draggedNode) {
+                    if (Math.hypot(pos.x - this.dragStartPos.x, pos.y - this.dragStartPos.y) > 4) {
+                        this.hasMovedDrag = true;
+                    }
                     this.draggedNode.x = Math.max(40, Math.min(this.width - 40, pos.x - this.dragOffsetX));
                     this.draggedNode.y = Math.max(40, Math.min(this.height - 40, pos.y - this.dragOffsetY));
                     this.canvas.style.cursor = 'grabbing';
@@ -433,6 +567,9 @@
             this.canvas.addEventListener('mousedown', (e) => {
                 const pos = getCanvasCoords(e);
                 const foundNode = this.getNodeAtPosition(pos.x, pos.y);
+                this.dragStartPos = { x: pos.x, y: pos.y };
+                this.hasMovedDrag = false;
+
                 if (foundNode) {
                     this.isDragging = true;
                     this.draggedNode = foundNode;
@@ -441,6 +578,29 @@
                     this.dragOffsetY = pos.y - foundNode.y;
                     this.canvas.style.cursor = 'grabbing';
                     this.hideTooltip();
+                }
+            });
+
+            // Click / Tap sobre nodo para inspección focalizada y micro-interacción táctil
+            this.canvas.addEventListener('click', (e) => {
+                if (this.hasMovedDrag) {
+                    this.hasMovedDrag = false;
+                    return;
+                }
+                const pos = getCanvasCoords(e);
+                const foundNode = this.getNodeAtPosition(pos.x, pos.y);
+                if (foundNode) {
+                    // Micro-animación de pulso táctil
+                    foundNode.pulsePhase = Math.PI * 0.5;
+                    this.showNodeTooltip(foundNode, pos.x, pos.y);
+
+                    // Feedback auditivo/háptico si está disponible
+                    if (window.SoundFX && typeof window.SoundFX.playPop === 'function') {
+                        window.SoundFX.playPop();
+                    }
+
+                    // Notificar evento global conservando contratos
+                    window.dispatchEvent(new CustomEvent('topology-node-clicked', { detail: { node: foundNode } }));
                 }
             });
 
@@ -453,6 +613,7 @@
                     this.canvas.style.cursor = 'default';
                 }
             };
+            this.boundStopDrag = stopDrag;
 
             window.addEventListener('mouseup', stopDrag);
             this.canvas.addEventListener('mouseleave', () => {
@@ -509,6 +670,31 @@
                     btnReset.style.transform = 'scale(0.92)';
                     setTimeout(() => { btnReset.style.transform = 'scale(1)'; }, 150);
                 });
+            }
+
+            // Sincronización con el selector de entidad de la Barra de Control NOC
+            const selectorEntidad = document.getElementById('selectorEntidadNoc');
+            if (selectorEntidad) {
+                selectorEntidad.addEventListener('change', (e) => {
+                    this.setEntityFilter(e.target.value);
+                });
+            }
+        }
+
+        /**
+         * Filtra la visualización de la topología según la entidad seleccionada en la Barra de Control
+         */
+        setEntityFilter(filterKey) {
+            if (!filterKey || filterKey === 'TODAS') {
+                this.activeFilter = null;
+            } else if (filterKey === 'BCP') {
+                this.activeFilter = ['bcp'];
+            } else if (filterKey === 'INTERBANK_BBVA') {
+                this.activeFilter = ['interbank', 'bbva'];
+            } else if (filterKey === 'CAJAS') {
+                this.activeFilter = ['cusco', 'andes'];
+            } else {
+                this.activeFilter = [filterKey.toLowerCase()];
             }
         }
 
@@ -639,14 +825,22 @@
             let totalIncidentes = 0;
 
             this.nodes.forEach(node => {
-                const ent = appState.entidades.find(e => e.id === node.id);
+                const targetId = node.entityRefId || node.id;
+                const ent = appState.entidades.find(e => e.id === targetId);
                 if (ent) {
+                    const prevEstado = node.telemetria.estado;
                     node.telemetria.estado = ent.estado || 'SALUDABLE';
                     node.telemetria.latencia = ent.latencia;
                     node.telemetria.incidentes = ent.incidentes || 0;
                     totalIncidentes += node.telemetria.incidentes;
 
-                    if (ent.estado === 'CAIDO') {
+                    // Si el nodo pasa a CAIDO (interrupción simulada), disparar paquete de ondas concéntricas de pulso
+                    if (node.telemetria.estado === 'CAIDO' && prevEstado !== 'CAIDO') {
+                        hayContingenciaGlobal = true;
+                        node.telemetria.tps = 0;
+                        this.triggerShockwave(node.x, node.y, 4);
+                        this.emitScatteredSparks(node.x, node.y, 12);
+                    } else if (node.telemetria.estado === 'CAIDO') {
                         hayContingenciaGlobal = true;
                         node.telemetria.tps = 0;
                     } else {
@@ -663,9 +857,9 @@
 
                 if (sourceCaido) {
                     link.seismicIntensity = Math.min(1, link.seismicIntensity + 0.08);
-                    // Disparar onda sísmica periódica si está en contingencia
-                    if (Math.random() < 0.04) {
-                        this.triggerShockwave(link.source.x, link.source.y);
+                    // Disparar onda concéntrica periódica si está en contingencia
+                    if (Math.random() < 0.025) {
+                        this.triggerShockwave(link.source.x, link.source.y, 2);
                     }
                 } else {
                     link.seismicIntensity = Math.max(0, link.seismicIntensity - 0.05);
@@ -699,18 +893,26 @@
         }
 
         /**
-         * Dispara una onda de choque sísmica desde el nodo afectado
+         * Dispara ondas concéntricas de pulso (Shockwaves) desde el nodo afectado
+         * Genera anillos concéntricos en rojo carmesí suave #EF4444 con desvanecimiento alfa gradual
          */
-        triggerShockwave(x, y) {
-            this.shockwaveRings.push({
-                x,
-                y,
-                radius: 12,
-                maxRadius: 140,
-                opacity: 0.9,
-                speed: 2.2,
-                color: THEME.crimson
-            });
+        triggerShockwave(x, y, count = 3) {
+            const baseRadius = 14;
+            const spacing = 18;
+            for (let i = 0; i < count; i++) {
+                this.shockwaveRings.push({
+                    x: x,
+                    y: y,
+                    radius: baseRadius + i * spacing,
+                    maxRadius: 160 + i * 25,
+                    opacity: 0.85 - i * 0.15,
+                    initialOpacity: 0.85 - i * 0.15,
+                    speed: 2.2 - i * 0.25,
+                    lineWidth: 2.0 - i * 0.3,
+                    color: '#EF4444',
+                    glowColor: 'rgba(239, 68, 68, 0.55)'
+                });
+            }
         }
 
         /**
@@ -746,10 +948,13 @@
                     const p = this.particles[i];
                     const link = p.link;
 
+                    // Calibración cinemática fluida con delta time a 60 FPS estables
+                    const dtNorm = Math.min(2.5, Math.max(0.4, (dt || 0.016) / 0.016));
+
                     // Si el enlace está en contingencia severa, el tráfico se ve alterado
                     if (link.isDegraded) {
                         // Partículas erráticas que se dispersan
-                        p.progress += p.speed * 0.7;
+                        p.progress += p.speed * 0.7 * dtNorm;
                         if (p.progress > 0.55 && Math.random() < 0.25) {
                             // Punto de ruptura en el enlace
                             const currPos = this.getPointOnLink(link, p.progress, 0);
@@ -757,7 +962,7 @@
                             p.progress = 0; // Reiniciar
                         }
                     } else {
-                        p.progress += p.speed;
+                        p.progress += p.speed * dtNorm;
                     }
 
                     if (p.progress >= 1.0) {
@@ -789,13 +994,15 @@
                 }
             }
 
-            // 3. Actualizar anillos de onda sísmica
+            // 3. Actualizar anillos de onda concéntrica sísmica
             for (let i = this.shockwaveRings.length - 1; i >= 0; i--) {
                 const ring = this.shockwaveRings[i];
-                ring.radius += ring.speed;
-                ring.opacity = Math.max(0, 0.9 * (1 - ring.radius / ring.maxRadius));
+                ring.radius += ring.speed * (dt / 0.016);
+                const progress = Math.min(1, ring.radius / ring.maxRadius);
+                // Desvanecimiento alfa gradual cúbico
+                ring.opacity = Math.max(0, ring.initialOpacity * Math.pow(1 - progress, 1.4));
 
-                if (ring.radius >= ring.maxRadius || ring.opacity <= 0.01) {
+                if (ring.radius >= ring.maxRadius || ring.opacity <= 0.005) {
                     this.shockwaveRings.splice(i, 1);
                 }
             }
@@ -840,10 +1047,16 @@
         }
 
         /**
-         * Bucle Principal de Renderizado a 60 FPS
+         * Bucle Principal de Renderizado calibrado a 60 FPS estables
          */
         renderLoop(timestamp) {
-            const dt = Math.min(0.05, (timestamp - this.lastFrameTime) / 1000);
+            if (!this.isRunning || this.isDestroyed) return;
+
+            // Calibrar delta time evitando aceleraciones bruscas en saltos de pestaña
+            if (!this.lastFrameTime) {
+                this.lastFrameTime = timestamp;
+            }
+            const dt = Math.min((timestamp - this.lastFrameTime) / 1000, 0.1);
             this.lastFrameTime = timestamp;
 
             // Medición de FPS
@@ -864,7 +1077,7 @@
             // 1. Actualizar física
             this.updatePhysics(dt);
 
-            // 2. Limpieza de pantalla con fondo Deep Slate
+            // 2. Limpieza de pantalla con fondo Deep Slate y retícula de alta definición
             this.renderBackground();
 
             // 3. Dibujar enlaces y ondas sísmicas
@@ -878,25 +1091,27 @@
             // 5. Dibujar partículas dispersas
             this.renderScatteredSparks();
 
-            // 6. Dibujar anillos sísmicos
+            // 6. Dibujar anillos sísmicos (Shockwaves concéntricas)
             this.renderShockwaves();
 
             // 7. Dibujar nodos y badges institucionales
             this.renderNodes();
 
-            // Continuar bucle
-            this.animationFrameId = requestAnimationFrame(this.renderLoop);
+            // Continuar bucle de animación con ID único
+            if (this.isRunning && !this.isDestroyed) {
+                this.animationFrameId = requestAnimationFrame(this.boundRenderLoop);
+            }
         }
 
         /**
-         * Fondo técnico de alta resolución: rejilla sutil y retículas
+         * Fondo técnico de alta resolución Retina: rejilla nanométrica y radar cristalino
          */
         renderBackground() {
             const ctx = this.ctx;
             const w = this.width;
             const h = this.height;
 
-            // Fondo base
+            // Fondo base Deep Slate
             ctx.fillStyle = THEME.bgBase;
             ctx.fillRect(0, 0, w, h);
 
@@ -918,28 +1133,29 @@
 
             // Cruces de retícula en intersecciones (cada 120px)
             ctx.strokeStyle = THEME.gridCross;
+            ctx.lineWidth = 1;
             ctx.beginPath();
             for (let x = gridSize; x < w; x += gridSize * 3) {
                 for (let y = gridSize; y < h; y += gridSize * 3) {
                     const s = 3;
-                    ctx.moveTo(x - s, y);
-                    ctx.lineTo(x + s, y);
-                    ctx.moveTo(x, y - s);
-                    ctx.lineTo(x, y + s);
+                    ctx.moveTo(x - s, y + 0.5);
+                    ctx.lineTo(x + s, y + 0.5);
+                    ctx.moveTo(x + 0.5, y - s);
+                    ctx.lineTo(x + 0.5, y + s);
                 }
             }
             ctx.stroke();
 
-            // Círculos concéntricos de telemetría alrededor del CCE Switch Central
+            // Círculos concéntricos de telemetría y radar alrededor del CCE Switch Central
             const central = this.nodes.find(n => n.isCentral);
             if (central) {
                 const cx = central.x;
                 const cy = central.y;
 
                 ctx.save();
-                ctx.setLineDash([2, 4]);
+                ctx.setLineDash([3, 5]);
                 ctx.lineWidth = 1;
-                ctx.strokeStyle = 'rgba(226, 179, 87, 0.12)';
+                ctx.strokeStyle = 'rgba(226, 179, 87, 0.14)';
 
                 [80, 150, 230].forEach(r => {
                     ctx.beginPath();
@@ -947,13 +1163,32 @@
                     ctx.stroke();
                 });
 
-                // Línea de barrido de radar tenue
+                // Línea de barrido de radar tenue con cono de estela luminosa
                 ctx.setLineDash([]);
-                ctx.strokeStyle = 'rgba(226, 179, 87, 0.08)';
+                const sweepLen = 230;
+                const sweepAngle = 0.38; // ~22 grados de estela
+                const startAngle = this.radarAngle - sweepAngle;
+                
+                // Cono de barrido radar degradado
+                const radarGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, sweepLen);
+                radarGrad.addColorStop(0, 'rgba(226, 179, 87, 0.12)');
+                radarGrad.addColorStop(1, 'rgba(226, 179, 87, 0.0)');
+
+                ctx.fillStyle = radarGrad;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
-                ctx.lineTo(cx + Math.cos(this.radarAngle) * 230, cy + Math.sin(this.radarAngle) * 230);
+                ctx.arc(cx, cy, sweepLen, startAngle, this.radarAngle, false);
+                ctx.closePath();
+                ctx.fill();
+
+                // Haz frontal de barrido radar nítido
+                ctx.strokeStyle = 'rgba(226, 179, 87, 0.35)';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + Math.cos(this.radarAngle) * sweepLen, cy + Math.sin(this.radarAngle) * sweepLen);
                 ctx.stroke();
+
                 ctx.restore();
             }
         }
@@ -970,6 +1205,12 @@
                 const steps = 60;
 
                 ctx.save();
+
+                // Atenuación si no pertenece a la entidad filtrada en la Barra de Control
+                const isLinkActive = !this.activeFilter || this.activeFilter.includes(link.source.key);
+                if (!isLinkActive) {
+                    ctx.globalAlpha = 0.22;
+                }
 
                 if (isDegraded && intensity > 0.05) {
                     // ==========================================================
@@ -1089,6 +1330,12 @@
 
                 ctx.save();
 
+                // Atenuación de partículas si el enlace no corresponde a la entidad filtrada
+                const isLinkActive = !this.activeFilter || this.activeFilter.includes(link.source.key);
+                if (!isLinkActive) {
+                    ctx.globalAlpha = 0.18;
+                }
+
                 // Estela lumínica
                 if (p.trail && p.trail.length > 1) {
                     for (let i = 0; i < p.trail.length; i++) {
@@ -1143,28 +1390,44 @@
         }
 
         /**
-         * Renderiza las ondas de choque concéntricas (Shockwaves)
+         * Renderiza las ondas concéntricas de choque sísmico (Shockwaves)
+         * Color rojo carmesí suave #EF4444 con desvanecimiento alfa gradual
          */
         renderShockwaves() {
             if (this.shockwaveRings.length === 0) return;
             const ctx = this.ctx;
 
             ctx.save();
+            ctx.lineCap = 'round';
             for (const ring of this.shockwaveRings) {
+                if (ring.opacity <= 0.005) continue;
+                const progress = Math.min(1, ring.radius / ring.maxRadius);
+                const currentWidth = Math.max(0.7, ring.lineWidth * (1 - progress * 0.5));
+
                 ctx.globalAlpha = ring.opacity;
                 ctx.strokeStyle = ring.color;
-                ctx.lineWidth = 1.5;
-                ctx.shadowColor = ring.color;
-                ctx.shadowBlur = 6;
+                ctx.lineWidth = currentWidth;
+                ctx.shadowColor = ring.glowColor;
+                ctx.shadowBlur = Math.max(2, 8 * (1 - progress));
+
                 ctx.beginPath();
                 ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
                 ctx.stroke();
+
+                // Sutil halo atenuado en el epicentro para impacto cinético suave
+                if (progress < 0.4) {
+                    ctx.globalAlpha = ring.opacity * 0.12;
+                    ctx.fillStyle = ring.color;
+                    ctx.beginPath();
+                    ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
             ctx.restore();
         }
 
         /**
-         * Renderiza los 5 nodos con badges institucionales y estilos ejecutivos
+         * Renderiza los 5 nodos con badges institucionales y estilos ejecutivos Retina
          */
         renderNodes() {
             const ctx = this.ctx;
@@ -1193,14 +1456,26 @@
                     ctx.arc(x, y, (r + 8) * pulse, 0, Math.PI * 2);
                     ctx.stroke();
                 } else if (isCentral) {
-                    // Halo dorado institucional del Switch CCE
-                    const pulse = 1 + Math.sin(this.globalTime * 3) * 0.05;
+                    // Halo pulsante dual dorado / azul financiero del Switch Central CCE
+                    const pulseGold = 1 + Math.sin(this.globalTime * 2.8) * 0.06;
+                    const pulseBlue = 1 + Math.sin(this.globalTime * 2.2 + 1.2) * 0.10;
+
+                    // 1. Halo exterior azul financiero con brillo de interconexión
+                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+                    ctx.lineWidth = 1.6;
+                    ctx.shadowColor = '#38BDF8';
+                    ctx.shadowBlur = 12;
+                    ctx.beginPath();
+                    ctx.arc(x, y, (r + 11) * pulseBlue, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    // 2. Halo interior dorado institucional BCRP
                     ctx.strokeStyle = THEME.gold;
-                    ctx.lineWidth = 1.5;
+                    ctx.lineWidth = 2.0;
                     ctx.shadowColor = THEME.gold;
                     ctx.shadowBlur = 10;
                     ctx.beginPath();
-                    ctx.arc(x, y, (r + 6) * pulse, 0, Math.PI * 2);
+                    ctx.arc(x, y, (r + 5) * pulseGold, 0, Math.PI * 2);
                     ctx.stroke();
                 } else if (isHovered) {
                     // Halo táctico al apuntar con mouse
@@ -1214,6 +1489,15 @@
                 }
 
                 ctx.shadowBlur = 0; // Reset sombra
+
+                // Atenuación o Realce según Filtro de Entidad Seleccionada
+                const isFilteredOut = this.activeFilter && !isCentral && !this.activeFilter.includes(node.key);
+                if (isFilteredOut) {
+                    ctx.globalAlpha = 0.28;
+                } else if (this.activeFilter && !isCentral && this.activeFilter.includes(node.key)) {
+                    ctx.shadowColor = THEME.gold;
+                    ctx.shadowBlur = 18;
+                }
 
                 // ==========================================================
                 // CUERPO DEL NODO (Disco Principal)
@@ -1271,17 +1555,22 @@
         }
 
         /**
-         * Emblema vectorial institucional dentro del círculo
+         * Emblemas vectoriales institucionales con nitidez cristalina Retina / High-DPI
          */
         renderNodeVectorEmblem(ctx, node, x, y, isCaido, isCentral) {
             ctx.save();
-            ctx.fillStyle = isCaido ? THEME.crimson : (isCentral ? THEME.gold : THEME.textPrimary);
-            ctx.strokeStyle = ctx.fillStyle;
-            ctx.lineWidth = 1.4;
+            const accentColor = isCaido ? THEME.crimson : (isCentral ? THEME.gold : THEME.textPrimary);
+            ctx.fillStyle = accentColor;
+            ctx.strokeStyle = accentColor;
+            ctx.lineWidth = 1.6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
 
             if (isCentral) {
-                // Emblema Central: Core Switch Hub (Rombo y Router)
-                const s = 11;
+                // ==========================================================
+                // 1. CCE SWITCH CENTRAL (Hub de Liquidación y Compensación CCE/BCRP)
+                // ==========================================================
+                const s = 13;
                 ctx.beginPath();
                 ctx.moveTo(x, y - s);
                 ctx.lineTo(x + s, y);
@@ -1290,37 +1579,159 @@
                 ctx.closePath();
                 ctx.stroke();
 
-                // Núcleo concéntrico
+                // Núcleo concéntrico de conmutación
                 ctx.beginPath();
                 ctx.arc(x, y, 3.5, 0, Math.PI * 2);
                 ctx.fill();
+
+                // 4 Terminales cardinales de bus interbancario
+                const armOffset = 8;
+                const armLen = 5;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(x, y - armOffset); ctx.lineTo(x, y - armOffset - armLen);
+                ctx.moveTo(x + armOffset, y); ctx.lineTo(x + armOffset + armLen, y);
+                ctx.moveTo(x, y + armOffset); ctx.lineTo(x, y + armOffset + armLen);
+                ctx.moveTo(x - armOffset, y); ctx.lineTo(x - armOffset - armLen, y);
+                ctx.stroke();
+
             } else if (node.key === 'bcp') {
-                // Emblema BCP: Siglas BCP nítidas en JetBrains Mono
-                ctx.font = "800 11px 'JetBrains Mono', monospace";
+                // ==========================================================
+                // 2. BCP (Yape) - Banco de Crédito del Perú
+                // Chevrons dobles dinámicos corporativos + Tipografía JetBrains Mono
+                // ==========================================================
+                ctx.save();
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                // Chevron primario
+                ctx.moveTo(x - 9, y - 9);
+                ctx.lineTo(x - 3, y - 3);
+                ctx.lineTo(x - 9, y + 3);
+                // Chevron secundario
+                ctx.moveTo(x - 4, y - 9);
+                ctx.lineTo(x + 2, y - 3);
+                ctx.lineTo(x - 4, y + 3);
+                ctx.stroke();
+                ctx.restore();
+
+                // Siglas corporativas 'BCP' nítidas con antialiasing
+                ctx.font = "800 10.5px 'JetBrains Mono', 'Plus Jakarta Sans', monospace";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('BCP', x, y);
+                ctx.fillText('BCP', x + 5, y - 3);
+
             } else if (node.key === 'interbank') {
-                // Emblema Interbank / Plin: Siglas IBK
-                ctx.font = "800 11px 'JetBrains Mono', monospace";
+                // ==========================================================
+                // 3. INTERBANK (Plin)
+                // Símbolo de Interoperabilidad en bucle (2 aros enlazados) + 'IBK'
+                // ==========================================================
+                ctx.save();
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                ctx.arc(x - 6, y - 5, 4.5, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(x + 6, y - 5, 4.5, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x - 2, y - 5);
+                ctx.lineTo(x + 2, y - 5);
+                ctx.stroke();
+                ctx.restore();
+
+                // Siglas corporativas 'IBK'
+                ctx.font = "800 10px 'JetBrains Mono', 'Plus Jakarta Sans', monospace";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('IBK', x, y);
+                ctx.fillText('IBK', x, y + 6);
+
+            } else if (node.key === 'bbva') {
+                // ==========================================================
+                // 3b. BBVA (Plin)
+                // Emblema Geométrico de Pasarela Plin + 'BBVA'
+                // ==========================================================
+                ctx.save();
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                ctx.moveTo(x - 9, y - 5);
+                ctx.lineTo(x - 4, y - 5);
+                ctx.lineTo(x - 2, y - 1);
+                ctx.lineTo(x - 4, y + 2);
+                ctx.lineTo(x - 9, y + 2);
+                ctx.closePath();
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(x + 2, y - 5);
+                ctx.lineTo(x + 7, y - 5);
+                ctx.lineTo(x + 9, y - 1);
+                ctx.lineTo(x + 7, y + 2);
+                ctx.lineTo(x + 2, y + 2);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.restore();
+
+                // Siglas corporativas 'BBVA'
+                ctx.font = "800 8.5px 'JetBrains Mono', 'Plus Jakarta Sans', monospace";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('BBVA', x, y + 8);
+
             } else if (node.key === 'cusco') {
-                // Emblema Caja Cusco: C-CSK
-                ctx.font = "800 10px 'JetBrains Mono', monospace";
+                // ==========================================================
+                // 4. CAJA CUSCO (Tunki QR / Microfinanzas)
+                // Emblema Chakana / Sol Andino geométrico + 'CSK'
+                // ==========================================================
+                ctx.save();
+                ctx.lineWidth = 1.4;
+                const cs = 5;
+                ctx.beginPath();
+                ctx.moveTo(x - 2, y - cs - 4);
+                ctx.lineTo(x + 2, y - cs - 4);
+                ctx.lineTo(x + 2, y - cs);
+                ctx.lineTo(x + cs + 4, y - cs);
+                ctx.lineTo(x + cs + 4, y - cs + 4);
+                ctx.lineTo(x + 2, y - cs + 4);
+                ctx.lineTo(x + 2, y);
+                ctx.lineTo(x - 2, y);
+                ctx.lineTo(x - 2, y - cs + 4);
+                ctx.lineTo(x - cs - 4, y - cs + 4);
+                ctx.lineTo(x - cs - 4, y - cs);
+                ctx.lineTo(x - 2, y - cs);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.restore();
+
+                // Siglas 'CSK'
+                ctx.font = "800 9.5px 'JetBrains Mono', 'Plus Jakarta Sans', monospace";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('CSK', x, y);
+                ctx.fillText('CSK', x, y + 6);
+
             } else if (node.key === 'andes') {
-                // Emblema Caja de los Andes: AND
-                ctx.font = "800 10px 'JetBrains Mono', monospace";
+                // ==========================================================
+                // 5. CAJA DE LOS ANDES (Banca Rural)
+                // Cordillera Andina bicúspide geométrica + 'AND'
+                // ==========================================================
+                ctx.save();
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                ctx.moveTo(x - 10, y - 2);
+                ctx.lineTo(x - 5, y - 8);
+                ctx.lineTo(x, y - 2);
+                ctx.lineTo(x + 5, y - 10);
+                ctx.lineTo(x + 10, y - 2);
+                ctx.stroke();
+                ctx.restore();
+
+                // Siglas 'AND'
+                ctx.font = "800 9.5px 'JetBrains Mono', 'Plus Jakarta Sans', monospace";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('AND', x, y);
+                ctx.fillText('AND', x, y + 6);
             }
 
-            // Semáforo LED miniatura en la esquina superior derecha del nodo
+            // Semáforo LED miniatura en la esquina superior derecha del nodo con halo
             const dotR = 3.5;
             const dotX = x + node.radius * 0.707;
             const dotY = y - node.radius * 0.707;
@@ -1361,7 +1772,11 @@
             ctx.strokeStyle = isCaido ? 'rgba(239, 68, 68, 0.4)' : (isCentral ? 'rgba(226, 179, 87, 0.35)' : THEME.borderDim);
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.roundRect(x - bw / 2, badgeY - bh / 2, bw, bh, 3);
+            if (typeof ctx.roundRect === 'function') {
+                ctx.roundRect(x - bw / 2, badgeY - bh / 2, bw, bh, 3);
+            } else {
+                ctx.rect(x - bw / 2, badgeY - bh / 2, bw, bh);
+            }
             ctx.fill();
             ctx.stroke();
 
@@ -1374,11 +1789,32 @@
         }
 
         /**
-         * Limpieza y destrucción del motor si fuese necesario
+         * Limpieza y destrucción del motor previniendo memory leaks
          */
         destroy() {
-            if (this.animationFrameId) {
-                cancelAnimationFrame(this.animationFrameId);
+            this.isDestroyed = true;
+            this.stopRenderLoop();
+
+            if (this.resizeObserver) {
+                this.resizeObserver.disconnect();
+                this.resizeObserver = null;
+            }
+
+            if (this.intersectionObserver) {
+                this.intersectionObserver.disconnect();
+                this.intersectionObserver = null;
+            }
+
+            if (this.boundHandleResize) {
+                window.removeEventListener('resize', this.boundHandleResize);
+            }
+
+            if (this.boundVisibilityChange) {
+                document.removeEventListener('visibilitychange', this.boundVisibilityChange);
+            }
+
+            if (this.boundStopDrag) {
+                window.removeEventListener('mouseup', this.boundStopDrag);
             }
         }
     }

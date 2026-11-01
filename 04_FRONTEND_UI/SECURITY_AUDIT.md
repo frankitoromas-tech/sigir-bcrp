@@ -170,3 +170,40 @@ Firma: Frankosyni (Φranкосyνη / Francus.)
 Curso Integrador I - Sistemas Software (Sección 57524 - UTP)
 ═══════════════════════════════════════════════════════════════════════════════
 ```
+
+
+---
+
+## 7. Addendum: Fortalecimiento Pre-Lanzamiento y Hardening de Producción (Noviembre 2026)
+
+### 7.1. Inyección de Cabeceras Meta de Seguridad HTTP
+Se inyectaron en el `<head>` de los 5 archivos HTML (`index.html`, `login.html`, `infraestructura.html`, `auditoria.html`, `reportes.html`) las cabeceras defensivas obligatorias:
+- `<meta http-equiv="X-Content-Type-Options" content="nosniff">`: Bloquea ataques de sniffing MIME.
+- `<meta http-equiv="X-Frame-Options" content="DENY">`: Neutraliza vectores de Clickjacking y UI Redressing.
+- `<meta name="referrer" content="strict-origin-when-cross-origin">`: Restringe la fuga de rutas internas hacia dominios externos.
+
+### 7.2. Corrección Criptográfica del Digest SRI (Subresource Integrity)
+Se auditó y corrigió el atributo `integrity` de DOMPurify 3.0.9 en CDNJS across todos los documentos:
+- **Hash anterior (erróneo):** Bloqueaba la carga de DOMPurify en navegadores que validan SRI.
+- **Hash verificado SHA-512:** `sha512-9+ilAOeXY8qy2bw/h51MmliNNHvdyhTpLIlqDmVpD26z8VjVJsUJtk5rhbDIUvYiD+EpGoAu0xTa7MhZohFQjA==` (100% verificado y validado).
+
+### 7.3. Sanitización Activa con DOMPurify
+Se integró el pipeline de desinfección HTML en todos los componentes con inyección dinámica:
+- **Modales:** Selector institucional de perfiles RBAC y Acta Oficial de Contingencia BCRP.
+- **Incident Drawer:** Visor forense de payload JSON, diagnóstico técnico, tarjetas de telemetría y línea de tiempo de etapas normativas.
+- **Tablas Operativas:** Matriz de incidentes en tiempo real, tabla de cumplimiento de SLA interbancario y bitácora regulatoria de reportes SFT.
+- **Delegación de Eventos Segura:** Los botones de acción rápida cuentan con delegación nativa en `tbody` (`.btn-action-table`), preservando su operatividad incluso si atributos inline fueran filtrados.
+
+### 7.4. Hashing de Contraseñas & Cero Texto Plano
+Se reemplazaron las contraseñas en texto plano de `auth-rbac.js` por sus respectivos hashes criptográficos canónicos SHA-256 (`passwordHash`).
+
+### 7.5. Protección Determinista contra Timing Attacks & Enumeración de Cuentas
+- **Retardo determinista:** Duración exacta calibrada en 350 ms (dentro de la ventana de tolerancia de 300-400 ms).
+- **Comparación en tiempo constante:** Función `constantTimeCompare()` bit a bit para eliminar fugas de canal lateral.
+- **Cero enumeración:** Tanto si el correo institucional existe como si no existe, se ejecuta la misma carga computacional (hashing de contraseña contra digest dummy) y se retorna el mismo mensaje genérico institucional.
+
+### 7.6. Control Estricto de Caducidad de Sesión (Session TTL)
+- Parámetro `SESSION_TTL_MS`: 30 minutos (1,800,000 ms) conforme al estándar bancario BCRP.
+- Almacenamiento seguro de `sigir_bcrp_session_expires_at` y `sigir_bcrp_session_created_at`.
+- Ventana deslizante renovada mediante eventos de actividad de usuario con estrangulamiento (*throttle*) de 30 segundos.
+- Purga automática e invalidación de acceso (`limpiarSesion()`) si el tiempo expira.

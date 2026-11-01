@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <!-- Cabeceras Meta de Seguridad HTTP / Navegador (AppSec BCRP Standard) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Portal de Acceso Institucional | SIGIR - BCRP</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,25 +15,42 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
     
     <!-- Librerías de Vanguardia para Animación y Seguridad -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-9+ilAOeXY8qy2bw/h51MmliNNHvdyhTpLIlqDmVpD26z8VjVJsUJtk5rhbDIUvYiD+EpGoAu0xTa7MhZohFQjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <style>
         /* ==========================================================================
            ESTÁNDAR VISUAL ÉLITE FINTECH - LOGIN INSTITUCIONAL BCRP (SPLIT COCKPIT)
+           Arquitectura y Maquetación: Frank Vargas Huamán (@frankitoromas-tech)
            ========================================================================== */
         *, *::before, *::after {
             box-sizing: border-box;
+        }
+
+        :root {
+            --bcrp-gold: #E2B357;
+            --bcrp-gold-dark: #C59A44;
+            --bcrp-gold-glow: rgba(226, 179, 87, 0.28);
+            --bcrp-navy-deep: #060A12;
+            --bcrp-card-bg: rgba(13, 21, 38, 0.92);
+            --bcrp-sapphire: #1D4ED8;
+            --bcrp-sapphire-glow: rgba(37, 99, 235, 0.45);
+            --bcrp-cyan: #38BDF8;
+            --bcrp-emerald: #10B981;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         html, body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-            background-color: #060A12;
+            min-height: 100dvh;
+            font-family: var(--font-sans);
+            background-color: var(--bcrp-navy-deep);
             color: #F8FAFC;
             overflow-x: hidden;
+            width: 100%;
         }
 
         body.login-page {
@@ -37,22 +58,24 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px 24px;
+            min-height: 100dvh;
+            padding: 24px 20px;
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(30, 58, 138, 0.28) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(226, 179, 87, 0.12) 0%, transparent 45%),
-                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 28px 28px;
-            background-position: 0 0, 0 0, 0 0;
+                radial-gradient(circle at 18% 22%, rgba(30, 58, 138, 0.32) 0%, transparent 48%),
+                radial-gradient(circle at 82% 78%, rgba(226, 179, 87, 0.14) 0%, transparent 46%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.7) 0%, transparent 100%),
+                radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+            background-position: 0 0, 0 0, 0 0, 0 0;
         }
 
         /* Contenedor Split Screen Ejecutivo */
         .login-split-shell {
             width: 100%;
-            max-width: 1040px;
+            max-width: 1060px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 32px;
             align-items: center;
             position: relative;
             z-index: 10;
@@ -62,7 +85,7 @@
            COLUMNA IZQUIERDA: SHOWCASE INSTITUCIONAL BCRP
            -------------------------------------------------------------------------- */
         .login-showcase-column {
-            padding: 20px 10px;
+            padding: 20px 12px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -75,22 +98,24 @@
         }
 
         .emblem-wrapper-lg {
-            width: 62px;
-            height: 62px;
+            width: 66px;
+            height: 66px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(226, 179, 87, 0.2) 0%, rgba(11, 19, 43, 0.95) 100%);
-            border: 1.5px solid rgba(226, 179, 87, 0.6);
+            background: radial-gradient(circle, rgba(226, 179, 87, 0.22) 0%, rgba(11, 19, 43, 0.98) 100%);
+            border: 1.8px solid var(--bcrp-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 28px rgba(226, 179, 87, 0.35);
+            box-shadow: 
+                0 0 28px var(--bcrp-gold-glow),
+                inset 0 0 16px rgba(226, 179, 87, 0.18);
             flex-shrink: 0;
             transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
         }
 
         .emblem-wrapper-lg:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 36px rgba(226, 179, 87, 0.5);
+            transform: scale(1.06) rotate(1deg);
+            box-shadow: 0 0 38px rgba(226, 179, 87, 0.55), inset 0 0 20px rgba(226, 179, 87, 0.25);
         }
 
         .showcase-brand-title h1 {
@@ -99,22 +124,22 @@
             font-weight: 800;
             color: #F8FAFC;
             letter-spacing: -0.02em;
-            line-height: 1.2;
+            line-height: 1.22;
         }
 
         .showcase-brand-title p {
             margin: 4px 0 0 0;
             font-size: 0.76rem;
-            color: #E2B357;
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            color: var(--bcrp-gold);
+            font-weight: 700;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
         }
 
         .showcase-hero-desc {
             font-size: 0.84rem;
             color: #94A3B8;
-            line-height: 1.55;
+            line-height: 1.58;
             margin: 0;
         }
 
@@ -135,17 +160,19 @@
             align-items: flex-start;
             gap: 12px;
             padding: 12px 14px;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            transition: all 180ms ease;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .pillar-card:hover {
-            background: rgba(15, 23, 42, 0.9);
-            border-color: rgba(226, 179, 87, 0.3);
+            background: rgba(15, 23, 42, 0.92);
+            border-color: rgba(226, 179, 87, 0.4);
             transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         .pillar-icon-box {
@@ -153,85 +180,137 @@
             height: 32px;
             border-radius: 8px;
             background: rgba(226, 179, 87, 0.12);
-            border: 1px solid rgba(226, 179, 87, 0.3);
-            color: #E2B357;
+            border: 1px solid rgba(226, 179, 87, 0.35);
+            color: var(--bcrp-gold);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: transform 200ms ease;
+        }
+
+        .pillar-card:hover .pillar-icon-box {
+            transform: scale(1.08);
+            background: rgba(226, 179, 87, 0.2);
         }
 
         .pillar-content h4 {
             margin: 0;
-            font-size: 0.8rem;
+            font-size: 0.81rem;
             font-weight: 700;
             color: #F8FAFC;
+            letter-spacing: -0.01em;
         }
 
         .pillar-content p {
-            margin: 2px 0 0 0;
-            font-size: 0.72rem;
+            margin: 3px 0 0 0;
+            font-size: 0.73rem;
             color: #94A3B8;
-            line-height: 1.4;
+            line-height: 1.42;
         }
 
         .showcase-status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            gap: 10px;
+            padding: 7px 16px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
             border-radius: 9999px;
-            font-size: 0.72rem;
-            color: #10B981;
+            font-size: 0.73rem;
+            color: var(--bcrp-emerald);
             font-weight: 700;
             margin-top: 6px;
             align-self: flex-start;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
         }
 
         .status-dot-pulse {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #10B981;
-            box-shadow: 0 0 10px #10B981;
+            background: var(--bcrp-emerald);
+            box-shadow: 0 0 10px var(--bcrp-emerald);
             animation: pulseDot 2s infinite ease-in-out;
+            flex-shrink: 0;
         }
 
         @keyframes pulseDot {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
+            50% { opacity: 0.45; transform: scale(0.85); }
         }
 
         /* --------------------------------------------------------------------------
-           COLUMNA DERECHA: TERMINAL DE ACCESO EJECUTIVO
+           COLUMNA DERECHA: TERMINAL DE ACCESO SEGURO BCRP
            -------------------------------------------------------------------------- */
         .login-auth-card {
             width: 100%;
-            background: rgba(15, 23, 42, 0.88);
+            background: var(--bcrp-card-bg);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(226, 179, 87, 0.25);
+            border: 1px solid rgba(226, 179, 87, 0.28);
             border-radius: 18px;
-            padding: 26px 24px;
+            padding: 28px 24px 22px 24px;
             box-shadow: 
                 0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 25px 60px -15px rgba(0, 0, 0, 0.85),
+                0 25px 60px -15px rgba(0, 0, 0, 0.9),
                 0 0 45px rgba(226, 179, 87, 0.08);
             position: relative;
-            overflow: hidden;
             text-align: left;
+            box-sizing: border-box;
         }
 
         .card-top-accent {
             position: absolute;
             top: 0;
-            left: 10%;
-            right: 10%;
+            left: 8%;
+            right: 8%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #E2B357, #38BDF8, transparent);
-            opacity: 0.9;
+            background: linear-gradient(90deg, transparent, var(--bcrp-gold), var(--bcrp-cyan), transparent);
+            opacity: 0.95;
+            border-radius: 2px;
+        }
+
+        /* Encabezado Institucional Móvil (Solo visible en pantallas <=860px) */
+        .auth-mobile-brand {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .emblem-wrapper-sm {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(226, 179, 87, 0.22) 0%, rgba(11, 19, 43, 0.98) 100%);
+            border: 1.5px solid var(--bcrp-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px var(--bcrp-gold-glow);
+            flex-shrink: 0;
+        }
+
+        .mobile-brand-title {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .mobile-brand-subtitle {
+            display: block;
+            font-size: 0.70rem;
+            color: var(--bcrp-gold);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
         .auth-card-header {
@@ -243,16 +322,17 @@
             font-size: 1.25rem;
             font-weight: 800;
             color: #F8FAFC;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
         }
 
         .auth-card-header p {
             margin: 4px 0 0 0;
-            font-size: 0.76rem;
+            font-size: 0.77rem;
             color: #94A3B8;
+            line-height: 1.4;
         }
 
-        /* Alerta Dinámica */
+        /* Alerta Dinámica de Validación */
         .login-alert-box {
             display: none;
             padding: 10px 12px;
@@ -276,7 +356,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Inputs Modernos */
+        /* Inputs Modernos con Resplandor Sutil (Glow) */
         .form-group-login {
             margin-bottom: 13px;
         }
@@ -302,6 +382,7 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .input-icon-left {
@@ -312,86 +393,114 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 150ms ease;
+            transition: color 180ms ease, filter 180ms ease;
         }
 
         .login-input {
             width: 100%;
-            padding: 9.5px 12px 9.5px 38px;
-            background: rgba(11, 15, 23, 0.75);
+            min-height: 46px;
+            padding: 11px 14px 11px 40px;
+            background: rgba(11, 15, 23, 0.82);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 9px;
             color: #F8FAFC;
-            font-size: 0.83rem;
-            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+            font-size: 0.88rem;
+            font-family: var(--font-sans);
             outline: none;
-            transition: all 180ms ease;
+            transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+            box-sizing: border-box;
         }
 
         .login-input::placeholder {
             color: #475569;
         }
 
+        /* Resplandor sutil (glow) al enfocar los inputs */
         .login-input:focus {
-            background: rgba(11, 15, 23, 0.95);
-            border-color: #E2B357;
-            box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.22);
+            background: rgba(11, 15, 23, 0.98);
+            border-color: var(--bcrp-gold);
+            box-shadow: 
+                0 0 0 3px rgba(226, 179, 87, 0.25),
+                0 0 20px rgba(226, 179, 87, 0.18);
         }
 
         .input-wrapper:focus-within .input-icon-left {
-            color: #E2B357;
+            color: var(--bcrp-gold);
+            filter: drop-shadow(0 0 6px rgba(226, 179, 87, 0.5));
         }
 
         .btn-input-action {
             position: absolute;
-            right: 8px;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
             background: transparent;
             border: none;
             color: #64748B;
-            padding: 4px;
-            border-radius: 6px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 150ms ease;
+            transition: color 150ms ease, background-color 150ms ease;
+            touch-action: manipulation;
         }
 
-        .btn-input-action:hover {
-            color: #E2B357;
+        .btn-input-action:hover,
+        .btn-input-action:focus-visible {
+            color: var(--bcrp-gold);
+            background: rgba(226, 179, 87, 0.1);
+            outline: none;
         }
 
         .btn-gen-token {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.69rem;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.72rem;
             font-weight: 600;
-            color: #E2B357;
+            color: var(--bcrp-gold);
             background: rgba(226, 179, 87, 0.12);
-            border: 1px solid rgba(226, 179, 87, 0.28);
-            padding: 2px 8px;
-            border-radius: 5px;
+            border: 1px solid rgba(226, 179, 87, 0.32);
+            padding: 6px 12px;
+            min-height: 44px;
+            border-radius: 7px;
             cursor: pointer;
-            transition: all 150ms ease;
+            transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+            touch-action: manipulation;
         }
 
-        .btn-gen-token:hover {
-            background: rgba(226, 179, 87, 0.22);
-            border-color: #E2B357;
+        .btn-gen-token:hover,
+        .btn-gen-token:focus-visible {
+            background: rgba(226, 179, 87, 0.24);
+            border-color: var(--bcrp-gold);
+            box-shadow: 0 0 12px rgba(226, 179, 87, 0.25);
             transform: translateY(-1px);
+            outline: none;
         }
 
-        /* Botón de Autenticación */
+        .btn-gen-token:active {
+            transform: scale(0.97);
+        }
+
+        /* Botón de Autenticación Principal con Gradiente Zafiro y Micro-interacción Shimmer */
         .btn-login-submit {
+            position: relative;
+            overflow: hidden;
             width: 100%;
-            padding: 11px 16px;
-            background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #1D4ED8 100%);
-            border: 1px solid rgba(59, 130, 246, 0.4);
+            min-height: 48px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #0E224E 0%, #1D4ED8 45%, #2563EB 75%, #3B82F6 100%);
+            border: 1px solid rgba(96, 165, 250, 0.45);
             border-radius: 9px;
             color: #FFFFFF;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             cursor: pointer;
             transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
@@ -399,20 +508,55 @@
             justify-content: center;
             gap: 8px;
             margin-top: 8px;
-            box-shadow: 0 6px 20px -3px rgba(37, 99, 235, 0.45);
+            box-shadow: 
+                0 6px 20px -3px rgba(37, 99, 235, 0.5),
+                0 0 25px rgba(37, 99, 235, 0.2);
+            touch-action: manipulation;
+            box-sizing: border-box;
+        }
+
+        /* Efecto de destello de luz (Shimmer) al pasar el cursor */
+        .btn-login-submit::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -65%;
+            width: 45%;
+            height: 200%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                transparent 100%
+            );
+            transform: rotate(25deg);
+            transition: left 650ms cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .btn-login-submit:hover::before {
+            left: 125%;
         }
 
         .btn-login-submit:hover {
             transform: translateY(-1.5px);
-            box-shadow: 0 10px 25px -4px rgba(37, 99, 235, 0.65);
-            border-color: rgba(147, 197, 253, 0.6);
+            box-shadow: 
+                0 10px 28px -4px rgba(37, 99, 235, 0.7),
+                0 0 35px rgba(37, 99, 235, 0.35);
+            border-color: rgba(147, 197, 253, 0.7);
+        }
+
+        .btn-login-submit:focus-visible {
+            outline: 2px solid var(--bcrp-gold);
+            outline-offset: 2px;
         }
 
         .btn-login-submit:active {
-            transform: scale(0.98);
+            transform: scale(0.985) translateY(1px);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.5);
         }
 
-        /* Sección de Acceso Rápido para Demostración */
+        /* Sección de Acceso Rápido para Demostración al Jurado */
         .quick-access-section {
             margin-top: 16px;
             padding-top: 14px;
@@ -424,7 +568,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            font-size: 0.66rem;
+            font-size: 0.67rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             color: #94A3B8;
@@ -436,103 +580,370 @@
         .quick-role-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 6px;
+            gap: 8px;
         }
 
         .btn-quick-role {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px;
+            min-height: 52px;
+            padding: 10px 14px;
             background: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
             color: #CBD5E1;
             font-size: 0.77rem;
             cursor: pointer;
-            transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
+            touch-action: manipulation;
+            gap: 10px;
+            box-sizing: border-box;
+            width: 100%;
         }
 
         .btn-quick-role:hover {
-            background: rgba(30, 41, 59, 0.85);
-            border-color: rgba(226, 179, 87, 0.35);
-            transform: translateY(-1px);
+            transform: translateY(-1.5px);
+        }
+
+        .btn-quick-role:focus-visible {
+            outline: 2px solid var(--bcrp-gold);
+            outline-offset: 2px;
+        }
+
+        .btn-quick-role:active {
+            transform: scale(0.985);
+        }
+
+        /* Variantes de Color por Rol */
+        .btn-role-architect:hover {
+            background: rgba(226, 179, 87, 0.08);
+            border-color: rgba(226, 179, 87, 0.45);
+            box-shadow: 0 4px 18px rgba(226, 179, 87, 0.15);
+        }
+
+        .btn-role-operator:hover {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 4px 18px rgba(56, 189, 248, 0.15);
+        }
+
+        .btn-role-auditor:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.45);
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.15);
         }
 
         .role-left-group {
             display: flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
+            flex: 1;
         }
 
         .role-monogram {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-mono);
             font-weight: 800;
-            font-size: 0.72rem;
+            font-size: 0.74rem;
             flex-shrink: 0;
         }
 
         .role-name-bold {
             color: #F8FAFC;
             font-weight: 700;
-            font-size: 0.78rem;
-            line-height: 1.2;
+            font-size: 0.79rem;
+            line-height: 1.25;
         }
 
         .role-desc-dim {
-            font-size: 0.68rem;
+            font-size: 0.69rem;
             color: #94A3B8;
         }
 
         .role-pill-badge {
             font-size: 0.65rem;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 3px 8px;
             border-radius: 9999px;
             white-space: nowrap;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
         }
 
-        /* Footer Regulatorio */
+        /* Footer Regulatorio & Tooltip */
         .login-trust-footer {
             margin-top: 14px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 11px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
             gap: 12px;
-            font-size: 0.65rem;
+            font-size: 0.66rem;
             color: #64748B;
+            position: relative;
         }
 
         .trust-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            transition: color 150ms ease;
         }
 
         .trust-item svg {
-            color: #E2B357;
-            opacity: 0.8;
+            color: var(--bcrp-gold);
+            opacity: 0.85;
+            flex-shrink: 0;
         }
 
-        /* Adaptación Responsiva */
+        /* Tooltip Informativo sobre Circular BCRP N° 0014-2023 */
+        .bcrp-tooltip-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+            outline: none;
+        }
+
+        .trust-item-interactive {
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 150ms ease;
+        }
+
+        .bcrp-tooltip-container:hover .trust-item-interactive,
+        .bcrp-tooltip-container:focus .trust-item-interactive {
+            color: var(--bcrp-gold);
+            background: rgba(226, 179, 87, 0.08);
+        }
+
+        .bcrp-tooltip-popover {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            width: 295px;
+            background: rgba(11, 19, 43, 0.98);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(226, 179, 87, 0.45);
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: 
+                0 14px 34px rgba(0, 0, 0, 0.85),
+                0 0 24px rgba(226, 179, 87, 0.18);
+            z-index: 999;
+            transition: opacity 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1), visibility 180ms ease;
+            pointer-events: none;
+            text-align: left;
+        }
+
+        .bcrp-tooltip-popover::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(226, 179, 87, 0.45) transparent transparent transparent;
+        }
+
+        .bcrp-tooltip-container:hover .bcrp-tooltip-popover,
+        .bcrp-tooltip-container:focus .bcrp-tooltip-popover,
+        .bcrp-tooltip-container:focus-within .bcrp-tooltip-popover,
+        .bcrp-tooltip-container.active .bcrp-tooltip-popover {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--bcrp-gold);
+            margin-bottom: 5px;
+        }
+
+        .tooltip-body {
+            margin: 0;
+            font-size: 0.71rem;
+            color: #CBD5E1;
+            line-height: 1.45;
+        }
+
+        .tooltip-footer {
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #94A3B8;
+        }
+
+        .tooltip-tag {
+            color: var(--bcrp-gold);
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        /* Sello de Agua Oficial de Edición y Maquetación */
+        .login-watermark {
+            margin-top: 12px;
+            padding-top: 9px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+            text-align: center;
+            font-size: 0.64rem;
+            color: #64748B;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+            transition: color 200ms ease;
+        }
+
+        .login-watermark:hover {
+            color: #94A3B8;
+        }
+
+        .login-watermark strong {
+            color: #CBD5E1;
+            font-weight: 600;
+        }
+
+        .login-watermark .watermark-mono {
+            font-family: var(--font-mono);
+            color: var(--bcrp-gold);
+            opacity: 0.9;
+        }
+
+        /* Adaptación Responsiva y Ergonomía Móvil (Antislop Mobile Standard) */
         @media (max-width: 860px) {
+            body.login-page {
+                padding: 16px 14px;
+                min-height: 100dvh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
             .login-split-shell {
                 grid-template-columns: 1fr;
-                max-width: 480px;
-                gap: 18px;
+                max-width: 440px;
+                width: 100%;
+                margin: 0 auto;
+                gap: 0;
             }
+
+            /* Ocultamos columna showcase en móvil para acceso instantáneo */
             .login-showcase-column {
-                display: none; /* En pantallas móviles priorizamos el acceso inmediato */
+                display: none;
+            }
+
+            .login-auth-card {
+                padding: 24px 18px 18px 18px;
+                border-radius: 16px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Mostramos encabezado móvil institucional con escudo BCRP */
+            .auth-mobile-brand {
+                display: flex;
+            }
+
+            .role-left-group {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .role-name-bold {
+                font-size: 0.79rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .role-desc-dim {
+                font-size: 0.69rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            /* Tipografía mínima de 16px en inputs para evitar zoom involuntario en iOS */
+            .login-input {
+                font-size: 16px !important;
+                min-height: 48px;
+            }
+
+            /* Posicionamiento centrado absoluto relativo al contenedor de pie */
+            .bcrp-tooltip-container {
+                position: static;
+            }
+
+            .bcrp-tooltip-popover {
+                width: min(290px, calc(100vw - 36px));
+                left: 50% !important;
+                transform: translateX(-50%) translateY(6px) !important;
+                font-size: 0.70rem;
+                bottom: calc(100% + 8px);
+            }
+
+            .bcrp-tooltip-container:hover .bcrp-tooltip-popover,
+            .bcrp-tooltip-container:focus .bcrp-tooltip-popover,
+            .bcrp-tooltip-container:focus-within .bcrp-tooltip-popover,
+            .bcrp-tooltip-container.active .bcrp-tooltip-popover {
+                transform: translateX(-50%) translateY(0) !important;
+            }
+
+            .bcrp-tooltip-popover::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 400px) {
+            body.login-page {
+                padding: 10px 8px;
+            }
+
+            .login-auth-card {
+                padding: 18px 12px 14px 12px;
+                border-radius: 14px;
+            }
+
+            .btn-quick-role {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+
+            .role-pill-badge {
+                font-size: 0.60rem;
+                padding: 2px 6px;
+            }
+
+            .login-trust-footer {
+                gap: 8px;
+            }
+
+            .bcrp-tooltip-popover {
+                width: min(250px, calc(100vw - 32px));
+                left: 0;
             }
         }
     </style>
@@ -544,8 +955,8 @@
         <!-- COLUMNA 1: SHOWCASE INSTITUCIONAL BCRP -->
         <section class="login-showcase-column" aria-label="Información Institucional BCRP">
             <div class="showcase-brand-header">
-                <div class="emblem-wrapper-lg" title="Banco Central de Reserva del Perú - CCE">
-                    <svg class="icon-svg bcrp-emblem" width="38" height="38" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="emblem-wrapper-lg" title="Banco Central de Reserva del Perú - Supervisión CCE">
+                    <svg class="icon-svg bcrp-emblem" width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Escudo Institucional BCRP">
                         <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
                         <circle cx="18" cy="18" r="14" stroke="#E2B357" stroke-dasharray="1 2" stroke-width="0.8" opacity="0.6"/>
                         <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
@@ -565,10 +976,11 @@
             </div>
 
             <p class="showcase-hero-desc">
-                Plataforma oficial de control operativo para la <strong>Cámara de Compensación Electrónica (CCE)</strong>. Supervisión en tiempo real de pagos digitales inmediatos, transferencias interbancarias y cumplimiento normativo.
+                Plataforma oficial de supervisión para la <strong>Cámara de Compensación Electrónica (CCE)</strong>. Monitoreo en tiempo real de liquidación multilateral inmediata, trazabilidad de contingencias y control de cumplimiento normativo.
             </p>
 
             <div class="showcase-pillars-list">
+                <!-- Pilar 1: Cumplimiento Normativo -->
                 <div class="pillar-card">
                     <div class="pillar-icon-box">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -577,10 +989,11 @@
                     </div>
                     <div class="pillar-content">
                         <h4>Cumplimiento Normativo Vigente</h4>
-                        <p>Circular BCRP N° 0014-2023 con exigencia de disponibilidad del servicio SLA ≥ 99.90%.</p>
+                        <p>Circular BCRP N° 0014-2023 con exigencia de disponibilidad del servicio SLA &ge; 99.90%.</p>
                     </div>
                 </div>
 
+                <!-- Pilar 2: Canal Cifrado Homologado CCE -->
                 <div class="pillar-card">
                     <div class="pillar-icon-box">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -588,11 +1001,12 @@
                         </svg>
                     </div>
                     <div class="pillar-content">
-                        <h4>Seguridad Criptográfica Nacional</h4>
-                        <p>Canal Cifrado Bancario y Sellado Digital Inalterable SHA-256 para cada evento regulatorio.</p>
+                        <h4>Canal Cifrado Homologado CCE</h4>
+                        <p>Seguridad de grado central bancario y Sellado Digital SHA-256 para cada transacción interbancaria.</p>
                     </div>
                 </div>
 
+                <!-- Pilar 3: Interoperabilidad de Pagos Inmediatos -->
                 <div class="pillar-card">
                     <div class="pillar-icon-box">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -600,29 +1014,63 @@
                         </svg>
                     </div>
                     <div class="pillar-content">
-                        <h4>Interoperabilidad Inmediata</h4>
-                        <p>Monitoreo de pasarelas BCP (Yape), Interbank/BBVA (Plin) y Cajas Municipales.</p>
+                        <h4>Interoperabilidad de Pagos Inmediatos</h4>
+                        <p>Monitoreo en tiempo real de pasarelas BCP (Yape), Interbank/BBVA (Plin) y Cajas Municipales.</p>
+                    </div>
+                </div>
+
+                <!-- Pilar 4: Liquidación & Monitoreo en Tiempo Real -->
+                <div class="pillar-card">
+                    <div class="pillar-icon-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-content">
+                        <h4>Liquidación &amp; Monitoreo en Tiempo Real</h4>
+                        <p>Switch CCE con latencia sub-segundo, conciliación multilateral continua y no repudio regulatorio.</p>
                     </div>
                 </div>
             </div>
 
             <div class="showcase-status-badge">
                 <span class="status-dot-pulse" aria-hidden="true"></span>
-                <span>Switch Interbancario: 100% Operativo &bull; Liquidación en Línea</span>
+                <span>Switch CCE: 100% Operativo &bull; SLA: 99.98% &bull; Liquidación en Línea</span>
             </div>
         </section>
 
-        <!-- COLUMNA 2: TERMINAL DE ACCESO EJECUTIVO -->
-        <section class="login-auth-card" aria-label="Terminal de Acceso">
+        <!-- COLUMNA 2: TERMINAL DE ACCESO SEGURO BCRP -->
+        <section class="login-auth-card" aria-label="Terminal de Acceso Seguro BCRP">
             <div class="card-top-accent" aria-hidden="true"></div>
+
+            <!-- Encabezado Móvil Institucional -->
+            <div class="auth-mobile-brand">
+                <div class="emblem-wrapper-sm">
+                    <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18" cy="18" r="16.5" stroke="#E2B357" stroke-width="1.5" fill="#0B132B"/>
+                        <path d="M10 14.5L18 9L26 14.5H10Z" fill="#E2B357"/>
+                        <rect x="11" y="15" width="14" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="12" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="15.3" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="18.7" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="22" y="17.5" width="2" height="6.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="10.5" y="24.5" width="15" height="1.5" rx="0.5" fill="#E2B357"/>
+                        <rect x="9" y="26.5" width="18" height="1.5" rx="0.5" fill="#E2B357"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="mobile-brand-title">BANCO CENTRAL DE RESERVA DEL PERÚ</span>
+                    <span class="mobile-brand-subtitle">Supervisión CCE &bull; Sistema SIGIR</span>
+                </div>
+            </div>
 
             <header class="auth-card-header">
                 <h2>Portal de Acceso Institucional</h2>
                 <p>Ingrese sus credenciales de funcionario o seleccione un perfil para evaluación.</p>
             </header>
 
-            <!-- Alerta Dinámica de Error -->
-            <div id="loginAlertBox" class="login-alert-box" role="alert">
+            <!-- Alerta Dinámica de Validación -->
+            <div id="loginAlertBox" class="login-alert-box" role="alert" aria-live="polite">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
@@ -686,7 +1134,7 @@
                             <span>Token Digital de Seguridad (MFA)</span>
                         </label>
                         <button type="button" class="btn-gen-token" onclick="generarOtpDemo()" title="Generar código temporal aleatorio de 6 dígitos">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                             </svg>
                             <span>Generar Token Demo</span>
@@ -698,17 +1146,17 @@
                                 <rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/>
                             </svg>
                         </span>
-                        <input type="text" id="txtOtp" class="login-input" placeholder="6 dígitos (ej: 849201)" maxlength="6" inputmode="numeric" style="font-family:var(--font-mono, monospace); letter-spacing:0.18em; font-weight:600;">
+                        <input type="text" id="txtOtp" class="login-input" placeholder="6 dígitos (ej: 849201)" maxlength="6" inputmode="numeric" style="font-family:var(--font-mono); letter-spacing:0.18em; font-weight:600;">
                     </div>
                 </div>
 
                 <!-- Botón de Envío Principal -->
-                <button type="submit" id="btnSubmitLogin" class="btn-login-submit">
+                <button type="submit" id="btnSubmitLogin" class="btn-login-submit" aria-label="Autenticar e ingresar al sistema SIGIR BCRP">
                     <span id="btnSubmitText" style="display:inline-flex; align-items:center; gap:8px;">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                         </svg>
-                        <span>Autenticar &amp; Ingresar a la Consola</span>
+                        <span>Autenticar &amp; Ingresar al Sistema</span>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                         </svg>
@@ -717,13 +1165,13 @@
                         <svg class="spinner-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;">
                             <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
                         </svg>
-                        <span>Validando credenciales...</span>
+                        <span>Validando credenciales bancarias...</span>
                     </span>
                 </button>
             </form>
 
-            <!-- Sección de Acceso Rápido para Demostración -->
-            <section class="quick-access-section" aria-label="Acceso Rápido para Demostración">
+            <!-- Sección de Acceso Rápido para Demostración al Jurado -->
+            <section class="quick-access-section" aria-label="Acceso Rápido para Demostración al Jurado">
                 <div class="quick-access-divider">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
@@ -732,58 +1180,84 @@
                 </div>
                 
                 <div class="quick-role-grid">
-                    <!-- Perfil Frank Vargas (NOC Lead / SuperAdmin) -->
-                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('ARQUITECTO')" title="Ingresar de inmediato como Frank Vargas Huamán">
+                    <!-- 1. Perfil Frank Vargas Huamán (Arquitecto de Software & NOC Lead BCRP) -->
+                    <button type="button" class="btn-quick-role btn-role-architect" onclick="autocompletarYAcceder('ARQUITECTO')" title="Ingresar de inmediato como Frank Vargas Huamán (Arquitecto de Software &amp; NOC Lead BCRP)" aria-label="Acceder como Frank Vargas Huamán, Arquitecto de Software y NOC Lead BCRP">
                         <div class="role-left-group">
-                            <span class="role-monogram" style="background:rgba(226,179,87,0.18); color:#E2B357; border:1px solid rgba(226,179,87,0.45);">FV</span>
+                            <span class="role-monogram" style="background:rgba(226,179,87,0.18); color:#E2B357; border:1px solid rgba(226,179,87,0.48); box-shadow:0 0 10px rgba(226,179,87,0.2);">FV</span>
                             <div>
                                 <div class="role-name-bold">Frank Vargas Huamán</div>
                                 <div class="role-desc-dim">Arquitecto de Software &bull; NOC Lead BCRP</div>
                             </div>
                         </div>
-                        <span class="role-pill-badge" style="background:rgba(226,179,87,0.14); color:#E2B357; border:1px solid rgba(226,179,87,0.38);">Acceso Total</span>
+                        <span class="role-pill-badge" style="background:rgba(226,179,87,0.16); color:#E2B357; border:1px solid rgba(226,179,87,0.45); box-shadow:0 0 8px rgba(226,179,87,0.15);">Acceso Total</span>
                     </button>
 
-                    <!-- Perfil Operador NOC -->
-                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('OPERADOR')" title="Ingresar de inmediato como Fernando Romero / Joel Olaya">
+                    <!-- 2. Perfil Operador NOC & Mesa de Ayuda -->
+                    <button type="button" class="btn-quick-role btn-role-operator" onclick="autocompletarYAcceder('OPERADOR')" title="Ingresar de inmediato como Fernando Romero / Joel Olaya (Operador NOC &amp; Mesa de Ayuda)" aria-label="Acceder como Fernando Romero o Joel Olaya, Operador NOC y Mesa de Ayuda">
                         <div class="role-left-group">
-                            <span class="role-monogram" style="background:rgba(56,189,248,0.18); color:#38BDF8; border:1px solid rgba(56,189,248,0.45);">OP</span>
+                            <span class="role-monogram" style="background:rgba(56,189,248,0.18); color:#38BDF8; border:1px solid rgba(56,189,248,0.48); box-shadow:0 0 10px rgba(56,189,248,0.2);">OP</span>
                             <div>
                                 <div class="role-name-bold">Fernando Romero / Joel Olaya</div>
                                 <div class="role-desc-dim">Operador NOC &bull; Mesa de Ayuda</div>
                             </div>
                         </div>
-                        <span class="role-pill-badge" style="background:rgba(56,189,248,0.14); color:#38BDF8; border:1px solid rgba(56,189,248,0.38);">Operación</span>
+                        <span class="role-pill-badge" style="background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.45); box-shadow:0 0 8px rgba(56,189,248,0.15);">Operación</span>
                     </button>
 
-                    <!-- Perfil Jurado / Auditor -->
-                    <button type="button" class="btn-quick-role" onclick="autocompletarYAcceder('AUDITOR')" title="Ingresar de inmediato como Prof. Zamata">
+                    <!-- 3. Perfil Jurado Evaluador / Auditor Regulatorio BCRP -->
+                    <button type="button" class="btn-quick-role btn-role-auditor" onclick="autocompletarYAcceder('AUDITOR')" title="Ingresar de inmediato como Prof. Juan Antonio Zamata Mendoza (Auditor Regulatorio BCRP / Jurado)" aria-label="Acceder como Prof. Juan Antonio Zamata Mendoza, Auditor Regulatorio BCRP y Jurado Evaluador">
                         <div class="role-left-group">
-                            <span class="role-monogram" style="background:rgba(16,185,129,0.18); color:#10B981; border:1px solid rgba(16,185,129,0.45);">PZ</span>
+                            <span class="role-monogram" style="background:rgba(16,185,129,0.18); color:#10B981; border:1px solid rgba(16,185,129,0.48); box-shadow:0 0 10px rgba(16,185,129,0.2);">PZ</span>
                             <div>
                                 <div class="role-name-bold">Prof. Zamata</div>
-                                <div class="role-desc-dim">Auditor Regulatorio BCRP &bull; Jurado</div>
+                                <div class="role-desc-dim">Auditor Regulatorio BCRP &bull; Jurado Evaluador</div>
                             </div>
                         </div>
-                        <span class="role-pill-badge" style="background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.38);">Solo Lectura</span>
+                        <span class="role-pill-badge" style="background:rgba(16,185,129,0.16); color:#10B981; border:1px solid rgba(16,185,129,0.45); box-shadow:0 0 8px rgba(16,185,129,0.15);">Solo Lectura</span>
                     </button>
                 </div>
             </section>
 
-            <!-- Sellos de Confianza y Regulación -->
+            <!-- Sellos de Confianza y Regulación con Tooltip Informativo -->
             <footer class="login-trust-footer">
-                <span class="trust-item">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    <span>Circular BCRP N° 0014-2023</span>
-                </span>
+                <!-- Tooltip Informativo: Circular BCRP N° 0014-2023 -->
+                <div class="bcrp-tooltip-container" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Información regulatoria sobre la Circular BCRP N° 0014-2023" onclick="this.classList.toggle('active')">
+                    <span class="trust-item trust-item-interactive">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <span>Circular BCRP N° 0014-2023</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.75;">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </span>
+
+                    <div class="bcrp-tooltip-popover" role="tooltip">
+                        <div class="tooltip-header">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <strong>Reglamento de Pagos BCRP</strong>
+                        </div>
+                        <p class="tooltip-body">
+                            <strong>Circular BCRP N° 0014-2023:</strong> Establece el marco obligatorio de interoperabilidad para servicios de pago y compensación electrónica inmediata en el Perú, exigiendo una disponibilidad operativa continua con un <strong>SLA no menor a 99.90%</strong> y liquidación multilateral en tiempo real.
+                        </p>
+                        <div class="tooltip-footer">
+                            <span>Supervisión Central BCRP</span>
+                            <span class="tooltip-tag">SLA &ge; 99.90%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canal Cifrado Homologado CCE -->
                 <span class="trust-item">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
-                    <span>Canal Seguro CCE</span>
+                    <span>Canal Cifrado Homologado CCE</span>
                 </span>
+
+                <!-- Sellado SHA-256 Validado -->
                 <span class="trust-item">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
@@ -791,6 +1265,11 @@
                     <span>Sellado SHA-256 Validado</span>
                 </span>
             </footer>
+
+            <!-- Sello de Agua Oficial de Edición y Maquetación -->
+            <div class="login-watermark">
+                <span>Desarrollado y Maquetado por <strong>Frank Vargas Huamán</strong> (<span class="watermark-mono">Φranκosýni / Francus. @frankitoromas-tech</span>)</span>
+            </div>
         </section>
 
     </main>
@@ -823,7 +1302,7 @@
             if (inputOtp) {
                 inputOtp.value = otp;
                 inputOtp.style.borderColor = '#E2B357';
-                inputOtp.style.boxShadow = '0 0 0 3px rgba(226, 179, 87, 0.25)';
+                inputOtp.style.boxShadow = '0 0 0 3px rgba(226, 179, 87, 0.25), 0 0 20px rgba(226, 179, 87, 0.2)';
                 setTimeout(() => {
                     inputOtp.style.borderColor = '';
                     inputOtp.style.boxShadow = '';

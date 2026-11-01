@@ -20,20 +20,159 @@ if (typeof window !== 'undefined' && !window.escapeHTML) {
     window.escapeHTML = escapeHTML;
 }
 
+/**
+ * Sanitizador centralizado con DOMPurify para prevención de inyecciones XSS
+ */
+function sanitizeHTML(dirty) {
+    if (dirty === null || dirty === undefined) return '';
+    const raw = String(dirty);
+    if (typeof window !== 'undefined' && window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+        return window.DOMPurify.sanitize(raw, {
+            ADD_TAGS: ['svg', 'path', 'circle', 'line', 'polyline', 'rect', 'use', 'g', 'polygon', 'mark'],
+            ADD_ATTR: [
+                'viewBox', 'd', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin',
+                'cx', 'cy', 'r', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'points', 'width', 'height',
+                'target', 'tabindex', 'role', 'aria-label', 'aria-modal', 'aria-expanded', 'aria-hidden',
+                'data-action', 'data-ticket', 'data-incident-id', 'data-id', 'data-raw-json', 'data-entidad',
+                'data-rol', 'data-target-state', 'data-step'
+            ]
+        });
+    }
+    return escapeHTML(raw);
+}
+
+if (typeof window !== 'undefined' && !window.sanitizeHTML) {
+    window.sanitizeHTML = sanitizeHTML;
+}
+
+/**
+ * Motor SHA-256 FIPS 180-4 puro para compatibilidad universal garantizada (fallback defensivo)
+ */
+function sha256Sync(ascii) {
+    function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    let i, j;
+    let result = '';
+    const words = [];
+    const asciiBitLength = ascii.length * 8;
+    let hash = [];
+    const k = [];
+    let primeCounter = 0;
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+            for (i = 0; i < 312; i += candidate) {
+                isComposite[i] = true;
+            }
+            hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+            k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+    }
+    hash = hash.slice(0, 8);
+    let padded = ascii + '\x80';
+    while ((padded.length % 64) - 56) padded += '\x00';
+    for (i = 0; i < padded.length; i++) {
+        j = padded.charCodeAt(i);
+        words[i >> 2] |= j << (((3 - i) % 4) * 8);
+    }
+    words[words.length] = ((asciiBitLength / maxWord) | 0);
+    words[words.length] = (asciiBitLength | 0);
+    for (j = 0; j < words.length;) {
+        const w = words.slice(j, j += 16);
+        const oldHash = hash;
+        hash = hash.slice(0, 8);
+        for (i = 0; i < 64; i++) {
+            const w15 = w[i - 15], w2 = w[i - 2];
+            const s0 = i < 16 ? w[i] : (
+                w[i] = (
+                    (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
+                    w[i - 7] +
+                    (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10)) +
+                    w[i - 16]
+                ) | 0
+            );
+            const ch = (hash[4] & hash[5]) ^ (~hash[4] & hash[6]);
+            const maj = (hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]);
+            const s1 = rightRotate(hash[4], 6) ^ rightRotate(hash[4], 11) ^ rightRotate(hash[4], 25);
+            const s0_round = rightRotate(hash[0], 2) ^ rightRotate(hash[0], 13) ^ rightRotate(hash[0], 22);
+            const t1 = (hash[7] + s1 + ch + k[i] + w[i]) | 0;
+            const t2 = (s0_round + maj) | 0;
+            hash = [(t1 + t2) | 0].concat(hash);
+            hash[4] = (hash[4] + t1) | 0;
+        }
+        for (i = 0; i < 8; i++) {
+            hash[i] = (hash[i] + oldHash[i]) | 0;
+        }
+    }
+    for (i = 0; i < 8; i++) {
+        for (j = 3; j >= 0; j--) {
+            const b = (hash[i] >> (8 * j)) & 255;
+            result += (b < 16 ? '0' : '') + b.toString(16);
+        }
+    }
+    return result;
+}
+
+/**
+ * Cálculo asíncrono seguro de SHA-256 (WebCrypto Subtle con fallback determinista)
+ */
+async function sha256Hex(str) {
+    const raw = String(str || '');
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+        try {
+            const buffer = new TextEncoder().encode(raw);
+            const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+            if (hex.length === 64 && /^[0-9a-f]{64}$/.test(hex)) {
+                return hex;
+            }
+        } catch (e) {
+            // fallback
+        }
+    }
+    return sha256Sync(raw);
+}
+
+/**
+ * Comparación en tiempo constante para mitigar ataques de temporización (Timing Attacks)
+ */
+function constantTimeCompare(a, b) {
+    if (typeof a !== 'string' || typeof b !== 'string') return false;
+    let mismatch = a.length ^ b.length;
+    for (let i = 0; i < a.length; i++) {
+        mismatch |= a.charCodeAt(i) ^ (i < b.length ? b.charCodeAt(i) : 0);
+    }
+    return mismatch === 0;
+}
+
+/**
+ * Credenciales institucionales seguras: NUNCA en texto plano.
+ * Se almacenan digests criptográficos SHA-256 canónicos.
+ */
 const CREDENCIALES_DEMO = {
     'frank.vargas@bcrp.gob.pe': {
-        password: 'Bcrp2026!',
+        // SHA-256 de 'Bcrp2026!'
+        passwordHash: '11a2010490c4a7c86939d2040bf796481e3bc3095c8bcab65cb68b2b0652ebee',
         rolId: 'ARQUITECTO'
     },
     'operador.noc@bcrp.gob.pe': {
-        password: 'Operador2026!',
+        // SHA-256 de 'Operador2026!'
+        passwordHash: '6337daaf55c2b28570b3790379ca4328afeb60d143daed3237880d652ebcf68b',
         rolId: 'OPERADOR'
     },
     'auditor.zamata@bcrp.gob.pe': {
-        password: 'Auditor2026!',
+        // SHA-256 de 'Auditor2026!'
+        passwordHash: 'df112afd046f96ddd661debd06d9241762e9f57bcf120d2b5227ab0caf9c3baa',
         rolId: 'AUDITOR'
     }
 };
+
+// Digest dummy para neutralizar ataques de enumeración y temporización cuando el usuario no existe
+const DUMMY_HASH = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
 const ROLES_BCRP = {
     ARQUITECTO: {
@@ -102,13 +241,55 @@ const AuthRBAC = {
     KEY_AUTH: 'sigir_bcrp_authenticated',
     KEY_ROLE: 'sigir_bcrp_active_role',
     KEY_USER: 'sigir_bcrp_user_email',
+    KEY_CREATED_AT: 'sigir_bcrp_session_created_at',
+    KEY_EXPIRES_AT: 'sigir_bcrp_session_expires_at',
+    SESSION_TTL_MS: 30 * 60 * 1000, // TTL estricto: 30 minutos de inactividad operativa (Estándar BCRP)
 
     estaAutenticado() {
         try {
-            return sessionStorage.getItem(this.KEY_AUTH) === 'true';
+            const isAuth = sessionStorage.getItem(this.KEY_AUTH) === 'true';
+            if (!isAuth) return false;
+
+            const expiresAt = parseInt(sessionStorage.getItem(this.KEY_EXPIRES_AT), 10);
+            const ahora = Date.now();
+            if (!expiresAt || isNaN(expiresAt)) {
+                // Si está explícitamente autenticado pero falta timestamp de expiración, inicializar ventana TTL
+                sessionStorage.setItem(this.KEY_CREATED_AT, String(ahora));
+                sessionStorage.setItem(this.KEY_EXPIRES_AT, String(ahora + this.SESSION_TTL_MS));
+                return true;
+            }
+
+            if (ahora > expiresAt) {
+                console.warn('[SIGIR AppSec] Sesión institucional caducada por política estricta de TTL.');
+                this.limpiarSesion();
+                return false;
+            }
+
+            // Renovar ventana deslizante
+            sessionStorage.setItem(this.KEY_EXPIRES_AT, String(ahora + this.SESSION_TTL_MS));
+            return true;
         } catch (e) {
             return false;
         }
+    },
+
+    renovarSesion() {
+        try {
+            if (sessionStorage.getItem(this.KEY_AUTH) === 'true') {
+                sessionStorage.setItem(this.KEY_EXPIRES_AT, String(Date.now() + this.SESSION_TTL_MS));
+            }
+        } catch (e) {}
+    },
+
+    limpiarSesion() {
+        try {
+            sessionStorage.removeItem(this.KEY_AUTH);
+            sessionStorage.removeItem(this.KEY_ROLE);
+            sessionStorage.removeItem(this.KEY_USER);
+            sessionStorage.removeItem(this.KEY_CREATED_AT);
+            sessionStorage.removeItem(this.KEY_EXPIRES_AT);
+            sessionStorage.removeItem('sigir_redirect_after_login');
+        } catch (e) {}
     },
 
     obtenerRolActual() {
@@ -142,38 +323,82 @@ const AuthRBAC = {
         return true;
     },
 
+    /**
+     * Inicia sesión con retardo determinista (350 ms, ventana 300-400ms)
+     * e inmunidad completa ante ataques de temporización (Timing Attacks)
+     * y enumeración de cuentas.
+     */
     async iniciarSesion(email, password, otp) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const cred = CREDENCIALES_DEMO[email.trim().toLowerCase()];
-                if (!cred) {
-                    reject(new Error('Usuario no registrado en el directorio institucional del BCRP.'));
-                    return;
-                }
-                if (cred.password !== password) {
-                    reject(new Error('Contraseña incorrecta para el usuario institucional.'));
-                    return;
-                }
-                if (otp && otp.trim().length !== 6) {
-                    reject(new Error('El Token Digital BCRP debe contener exactamente 6 dígitos.'));
-                    return;
-                }
+        const TARGET_DELAY_MS = 350; // Retardo determinista de verificación segura
+        const t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
 
-                sessionStorage.setItem(this.KEY_AUTH, 'true');
-                sessionStorage.setItem(this.KEY_ROLE, cred.rolId);
-                sessionStorage.setItem(this.KEY_USER, email);
+        const emailNormalizado = String(email || '').trim().toLowerCase();
+        const rawPassword = String(password || '');
+        const otpTrimmed = String(otp || '').trim();
 
-                resolve(ROLES_BCRP[cred.rolId]);
-            }, 450);
-        });
+        let errorParaLanzar = null;
+        let rolAutenticado = null;
+
+        try {
+            // 1. Validación de entradas
+            if (!emailNormalizado || !rawPassword) {
+                errorParaLanzar = new Error('Por favor complete su correo institucional y su contraseña de acceso.');
+            } else if (otpTrimmed && (otpTrimmed.length !== 6 || !/^\d{6}$/.test(otpTrimmed))) {
+                errorParaLanzar = new Error('El Token Digital BCRP debe contener exactamente 6 dígitos numéricos.');
+            }
+
+            // 2. Cálculo criptográfico de hash de la contraseña ingresada
+            const passHash = await sha256Hex(rawPassword);
+
+            // 3. Búsqueda y comparación en tiempo constante (previene timing attack y user enumeration)
+            const credEncontrada = CREDENCIALES_DEMO[emailNormalizado];
+            const targetHash = credEncontrada ? credEncontrada.passwordHash : DUMMY_HASH;
+            const esPasswordValido = constantTimeCompare(passHash, targetHash);
+
+            if (!errorParaLanzar) {
+                if (!credEncontrada || !esPasswordValido) {
+                    // Mensaje genérico conforme al estándar bancario BCRP para evitar enumeración de usuarios
+                    errorParaLanzar = new Error('Credenciales institucionales incorrectas. Verifique su correo electrónico y contraseña.');
+                } else {
+                    rolAutenticado = ROLES_BCRP[credEncontrada.rolId];
+                }
+            }
+        } catch (e) {
+            errorParaLanzar = errorParaLanzar || new Error('Fallo en el servicio criptográfico de autenticación.');
+        }
+
+        // 4. Retardo determinista estricto (350 ms totales de ejecución)
+        const t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        const transcurrido = t1 - t0;
+        const restante = Math.max(0, TARGET_DELAY_MS - transcurrido);
+        if (restante > 0) {
+            await new Promise(r => setTimeout(r, restante));
+        }
+
+        if (errorParaLanzar) {
+            throw errorParaLanzar;
+        }
+
+        // 5. Establecer sesión con timestamp y TTL estricto
+        const ahora = Date.now();
+        sessionStorage.setItem(this.KEY_AUTH, 'true');
+        sessionStorage.setItem(this.KEY_ROLE, rolAutenticado.id);
+        sessionStorage.setItem(this.KEY_USER, emailNormalizado);
+        sessionStorage.setItem(this.KEY_CREATED_AT, String(ahora));
+        sessionStorage.setItem(this.KEY_EXPIRES_AT, String(ahora + this.SESSION_TTL_MS));
+
+        return rolAutenticado;
     },
 
     iniciarSesionRapida(rolId) {
         if (!ROLES_BCRP[rolId]) return;
         const rol = ROLES_BCRP[rolId];
+        const ahora = Date.now();
         sessionStorage.setItem(this.KEY_AUTH, 'true');
         sessionStorage.setItem(this.KEY_ROLE, rolId);
         sessionStorage.setItem(this.KEY_USER, rol.email);
+        sessionStorage.setItem(this.KEY_CREATED_AT, String(ahora));
+        sessionStorage.setItem(this.KEY_EXPIRES_AT, String(ahora + this.SESSION_TTL_MS));
 
         if (window.SoundFX && typeof window.SoundFX.playSuccess === 'function') {
             window.SoundFX.playSuccess();
@@ -185,11 +410,7 @@ const AuthRBAC = {
     },
 
     cerrarSesion() {
-        try {
-            sessionStorage.removeItem(this.KEY_AUTH);
-            sessionStorage.removeItem(this.KEY_ROLE);
-            sessionStorage.removeItem(this.KEY_USER);
-        } catch (e) {}
+        this.limpiarSesion();
 
         if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
             window.SoundFX.playClick();
@@ -268,7 +489,7 @@ const AuthRBAC = {
         const userAvatarElem = document.querySelector('.user-avatar');
 
         if (userNameElem) userNameElem.textContent = rol.nombreCompleto;
-        if (userRoleElem) userRoleElem.innerHTML = `<span class="status-dot online"></span> ${escapeHTML(rol.cargo)}`;
+        if (userRoleElem) userRoleElem.innerHTML = sanitizeHTML(`<span class="status-dot online"></span> ${escapeHTML(rol.cargo)}`);
         if (userAvatarElem) userAvatarElem.textContent = rol.avatar;
 
         // Botón Simular Falla
@@ -326,7 +547,7 @@ const AuthRBAC = {
         const nombreSafe = escapeHTML(rol.nombreCompleto);
         const cargoSafe = escapeHTML(rol.cargo);
         const nivelSafe = escapeHTML(rol.nivelAcceso);
-        toast.innerHTML = `
+        const html = `
             <div style="display:flex; align-items:center; gap:10px;">
                 <span style="font-size:1.2rem;">${rol.avatar === 'FV' ? '👑' : (rol.avatar === 'PZ' ? '⚖️' : '👨‍💻')}</span>
                 <div>
@@ -335,6 +556,7 @@ const AuthRBAC = {
                 </div>
             </div>
         `;
+        toast.innerHTML = sanitizeHTML(html);
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add('visible'), 50);
         setTimeout(() => {
@@ -372,7 +594,7 @@ const AuthRBAC = {
         const modal = document.createElement('div');
         modal.id = 'modalSelectorRoles';
         modal.className = 'modal-overlay';
-        modal.innerHTML = `
+        const modalHtml = `
             <div class="modal-box rbac-modal-box" role="dialog" aria-modal="true" aria-label="Control de Acceso Institucional BCRP">
                 <div class="modal-header">
                     <div>
@@ -384,7 +606,7 @@ const AuthRBAC = {
                     <button class="modal-close" aria-label="Cerrar selector de roles" onclick="AuthRBAC.cerrarModalRoles()">&times;</button>
                 </div>
                 <div class="rbac-roles-list">
-                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Frank Vargas Huamán, Arquitecto de Software" onclick="AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();}">
+                    <div class="rbac-role-card" data-rol="ARQUITECTO" tabindex="0" role="button" aria-label="Seleccionar perfil: Frank Vargas Huamán, Arquitecto de Software" onclick="AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid #E2B357;">FV</span>
                             <div>
@@ -398,7 +620,7 @@ const AuthRBAC = {
                         </p>
                     </div>
 
-                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Fernando Romero o Joel Olaya, Operador NOC" onclick="AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();}">
+                    <div class="rbac-role-card" data-rol="OPERADOR" tabindex="0" role="button" aria-label="Seleccionar perfil: Fernando Romero o Joel Olaya, Operador NOC" onclick="AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid #38BDF8;">OP</span>
                             <div>
@@ -412,7 +634,7 @@ const AuthRBAC = {
                         </p>
                     </div>
 
-                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Prof. Zamata, Auditor Regulatorio BCRP" onclick="AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();}">
+                    <div class="rbac-role-card" data-rol="AUDITOR" tabindex="0" role="button" aria-label="Seleccionar perfil: Prof. Zamata, Auditor Regulatorio BCRP" onclick="AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981;">PZ</span>
                             <div>
@@ -428,6 +650,31 @@ const AuthRBAC = {
                 </div>
             </div>
         `;
+        modal.innerHTML = sanitizeHTML(modalHtml);
+
+        // Delegación de eventos accesibles deterministas
+        modal.querySelectorAll('.rbac-role-card').forEach(card => {
+            const rolId = card.getAttribute('data-rol');
+            if (rolId) {
+                card.addEventListener('click', () => {
+                    AuthRBAC.establecerRol(rolId);
+                    AuthRBAC.cerrarModalRoles();
+                });
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        AuthRBAC.establecerRol(rolId);
+                        AuthRBAC.cerrarModalRoles();
+                    }
+                });
+            }
+        });
+
+        const btnClose = modal.querySelector('.modal-close');
+        if (btnClose) {
+            btnClose.addEventListener('click', () => AuthRBAC.cerrarModalRoles());
+        }
+
         modal.addEventListener('click', (e) => {
             if (e.target === modal) AuthRBAC.cerrarModalRoles();
         });
@@ -451,6 +698,17 @@ const AuthRBAC = {
 
         const rol = this.obtenerRolActual();
         this.aplicarPermisosEnUI(rol);
+
+        // Monitoreo de actividad de usuario para renovación segura de ventana deslizante de TTL
+        ['click', 'keydown', 'mousemove', 'scroll'].forEach(evtName => {
+            window.addEventListener(evtName, () => {
+                if (!AuthRBAC._throttleRenewal) {
+                    AuthRBAC._throttleRenewal = true;
+                    AuthRBAC.renovarSesion();
+                    setTimeout(() => { AuthRBAC._throttleRenewal = false; }, 30000); // Mínimo 30s entre escrituras
+                }
+            }, { passive: true });
+        });
 
         // Inicializar trigger del Dropdown de Usuario Unificado
         const userTrigger = document.getElementById('btnUserMenuTrigger');

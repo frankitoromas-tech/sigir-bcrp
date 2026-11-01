@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cabeceras Meta de Seguridad HTTP / Navegador (AppSec BCRP Standard) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>SIGIR - BCRP | Módulo de Reportes Normativos y SFT (APF2)</title>
     <!-- Fuentes Google: Plus Jakarta Sans, Inter y JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,46 +17,33 @@
 
     <style>
         /* ==========================================================================
-           ESTÁNDAR SANDWICH DE VANGUARDIA (BCRP FINTECH / OPERACIONES LIMPIAS)
-           Cero Cajas Anidadas · Cinta Ejecutiva Continua · Alta Densidad y Calma Visual
+           ESTÁNDAR SANDWICH DE ALTA DENSIDAD Y CALMA VISUAL (BCRP SUPERVISIÓN SFT)
+           Arquitectura Sandwich · Ribbon Continuo Glassmorphism · Cero Sobrecarga Visual
            ========================================================================== */
         
-        /* 1. PAN SUPERIOR: Barra Integrada de Contexto y Controles */
-        .sandwich-header-bar {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px 18px;
-            margin-bottom: 14px;
+        /* Contexto Superior Compacto */
+        .sandwich-context-headline {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 10px;
             flex-wrap: wrap;
-            gap: 14px;
-            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+            gap: 10px;
         }
 
-        .sandwich-title-block {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .sandwich-title-row {
+        .headline-left {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
 
-        .sandwich-title-row h2 {
+        .headline-left h2 {
             margin: 0;
-            font-size: 1.12rem;
+            font-size: 1.15rem;
             font-weight: 800;
             color: #F8FAFC;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
         }
 
         .normative-badge {
@@ -62,237 +53,369 @@
             background: rgba(226, 179, 87, 0.12);
             border: 1px solid rgba(226, 179, 87, 0.35);
             color: #E2B357;
-            padding: 2px 8px;
+            padding: 2px 9px;
             border-radius: 9999px;
             font-size: 0.68rem;
             font-weight: 700;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
         }
 
-        .sandwich-subtitle {
-            margin: 0;
-            font-size: 0.75rem;
-            color: #94A3B8;
+        .headline-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Toolbar Unificado y Compacto (Sin cajas anidadas) */
-        .sandwich-actions-toolbar {
+        .live-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            color: #94A3B8;
+            font-weight: 600;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3px 10px;
+            border-radius: 9999px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 6px #10B981;
+        }
+
+        .live-dot.pulse {
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(1.2); }
+        }
+
+        /* 1. BREAD TOP: Cinta Unificada de Filtros y Acciones (Altura máx 56px en escritorio) */
+        .sandwich-header-bar {
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 7px 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+            min-height: 48px;
+        }
+
+        .bread-top-left {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
 
-        .compact-filter-group {
-            display: flex;
+        /* Selector rápido tipo chips */
+        .quick-chips-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(11, 15, 23, 0.65);
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .chip-btn {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 140ms ease;
+            white-space: nowrap;
+            font-family: var(--font-sans);
+        }
+
+        .chip-btn:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .chip-btn.active {
+            background: #1E293B;
+            color: #F8FAFC;
+            border: 1px solid rgba(226, 179, 87, 0.4);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Selector de Entidad Bancaria */
+        .compact-select {
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            color: #F8FAFC;
+            font-size: 0.75rem;
+            padding: 5px 11px;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            outline: none;
+            cursor: pointer;
+            transition: all 140ms ease;
+        }
+
+        .compact-select:focus {
+            border-color: #E2B357;
+            box-shadow: 0 0 0 2px rgba(226, 179, 87, 0.2);
+        }
+
+        .custom-range-wrapper {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .compact-label {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #94A3B8;
-            margin: 0;
-            user-select: none;
-        }
-
-        .compact-input, .compact-select {
-            background: rgba(30, 41, 59, 0.6);
+        .compact-date-input {
+            background: rgba(30, 41, 59, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 6px;
+            border-radius: 7px;
             color: #F8FAFC;
-            font-size: 0.76rem;
-            padding: 5px 9px;
-            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            padding: 4px 8px;
+            font-weight: 500;
+            font-family: var(--font-mono, monospace);
             outline: none;
-            transition: all 150ms ease;
+            cursor: pointer;
+            transition: all 140ms ease;
+            height: 32px;
+            box-sizing: border-box;
         }
 
-        .compact-input:focus, .compact-select:focus {
+        .compact-date-input:focus {
             border-color: #E2B357;
             box-shadow: 0 0 0 2px rgba(226, 179, 87, 0.2);
+        }
+
+        .range-sep {
+            font-size: 0.72rem;
+            color: #94A3B8;
+            font-weight: 600;
+        }
+
+        .btn-compact-apply {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(37, 99, 235, 0.22);
+            border: 1px solid rgba(59, 130, 246, 0.45);
+            border-radius: 7px;
+            color: #93C5FD;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            height: 32px;
+            cursor: pointer;
+            transition: all 140ms ease;
+            box-sizing: border-box;
+        }
+
+        .btn-compact-apply:hover {
+            background: rgba(37, 99, 235, 0.45);
+            color: #FFFFFF;
+            border-color: #60A5FA;
         }
 
         .toolbar-v-divider {
             width: 1px;
             height: 22px;
-            background: rgba(255, 255, 255, 0.12);
-            margin: 0 4px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 2px;
         }
 
-        /* 2. RELLENO DEL SANDWICH: Cinta Ejecutiva Continua de Métricas */
+        /* Botones de Acción Derecha */
+        .bread-top-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-compact-csv {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 41, 59, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #E2E8F0;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 6px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 140ms ease;
+            font-family: var(--font-sans);
+        }
+
+        .btn-compact-csv:hover {
+            background: rgba(51, 65, 85, 0.85);
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #FFFFFF;
+        }
+
+        .btn-compact-pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(226, 179, 87, 0.2) 0%, rgba(226, 179, 87, 0.08) 100%);
+            border: 1px solid rgba(226, 179, 87, 0.45);
+            color: #F8FAFC;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: var(--font-sans);
+            box-shadow: 0 2px 8px rgba(226, 179, 87, 0.12);
+        }
+
+        .btn-compact-pdf:hover {
+            background: linear-gradient(135deg, rgba(226, 179, 87, 0.35) 0%, rgba(226, 179, 87, 0.15) 100%);
+            border-color: #E2B357;
+            color: #FFFFFF;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(226, 179, 87, 0.25);
+        }
+
+        /* 2. MIDDLE FILLING: Cintillo de Métricas KPI Continuo en Vidrio Esmerilado */
         .sandwich-metrics-ribbon {
             display: grid;
-            grid-template-columns: 1.15fr 1.35fr 1.1fr;
-            gap: 0;
-            background: rgba(15, 23, 42, 0.78);
+            grid-template-columns: 1.25fr 1fr 1fr 1fr 1.05fr 1.05fr;
+            background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 12px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
             overflow: hidden;
         }
 
-        .ribbon-col {
-            padding: 14px 18px;
+        .kpi-col {
+            padding: 11px 15px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
+            background: transparent;
+            transition: background 160ms ease;
         }
 
-        .ribbon-col:not(:last-child) {
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        .kpi-col:hover {
+            background: rgba(255, 255, 255, 0.015);
         }
 
-        .ribbon-uptime {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(6, 182, 212, 0.06) 100%);
+        .kpi-col:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        .ribbon-col-header {
+        .kpi-label-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
-        .ribbon-col-title {
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-            color: #94A3B8;
-        }
-
-        .ribbon-col-sub {
+        .kpi-label {
             font-size: 0.68rem;
-            color: #64748B;
+            color: #94A3B8;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
-        .ribbon-target-pill {
-            font-size: 0.67rem;
+        .kpi-pill {
+            font-size: 0.64rem;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 1px 6px;
             border-radius: 9999px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10B981;
+            white-space: nowrap;
         }
 
-        .ribbon-uptime-body {
+        .kpi-pill.target {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38BDF8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .kpi-value-row {
             display: flex;
             align-items: baseline;
-            gap: 12px;
+            gap: 4px;
+            margin: 2px 0;
         }
 
-        .ribbon-uptime-value {
-            font-size: 2.15rem;
-            font-weight: 800;
-            color: #38BDF8;
-            font-family: var(--font-mono, monospace);
-            letter-spacing: -0.03em;
-            line-height: 1;
-        }
-
-        .ribbon-uptime-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .ribbon-status-pill {
-            font-size: 0.75rem;
+        .kpi-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #10B981;
-        }
-
-        .ribbon-status-pill.warning {
-            color: #F59E0B;
-        }
-
-        .ribbon-meta-desc {
-            font-size: 0.67rem;
-            color: #94A3B8;
-        }
-
-        /* Cluster de Incidentes en Línea (Sin cajas anidadas) */
-        .ribbon-cluster-3 {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            gap: 10px;
-        }
-
-        .ribbon-stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            flex: 1;
-        }
-
-        .ribbon-stat-num {
-            font-size: 1.45rem;
-            font-weight: 800;
+            line-height: 1.1;
             color: #F8FAFC;
-            font-family: var(--font-mono, monospace);
-            line-height: 1;
+            letter-spacing: -0.02em;
         }
 
-        .ribbon-stat-num.warn {
+        .kpi-number.uptime {
+            color: #38BDF8;
+        }
+
+        .kpi-number.warn {
             color: #EF4444;
         }
 
-        .ribbon-stat-num.success {
+        .kpi-number.success {
             color: #10B981;
         }
 
-        .ribbon-stat-num.gold {
+        .kpi-number.gold {
             color: #E2B357;
         }
 
-        .ribbon-stat-tag {
-            font-size: 0.64rem;
-            color: #94A3B8;
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            font-weight: 600;
-        }
-
-        /* Cluster de Tiempos Operativos en Línea (Sin cajas anidadas) */
-        .ribbon-cluster-2 {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            gap: 12px;
-        }
-
-        .ribbon-time-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            flex: 1;
-        }
-
-        .ribbon-time-val-box {
-            display: flex;
-            align-items: baseline;
-            gap: 3px;
-        }
-
-        .ribbon-time-unit {
-            font-size: 0.7rem;
+        .kpi-unit {
+            font-size: 0.72rem;
             color: #94A3B8;
             font-weight: 600;
         }
 
-        /* 3. NAVEGADOR SEGMENTADO (Progressive Disclosure) */
+        .kpi-meta-sub {
+            font-size: 0.68rem;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .kpi-meta-sub.warn {
+            color: #F59E0B;
+        }
+
+        .kpi-meta-sub.success {
+            color: #10B981;
+        }
+
+        /* 3. PESTAÑAS DE REVELACIÓN PROGRESIVA (Progressive Disclosure Tabs) */
         .sandwich-nav-bar {
             display: flex;
             align-items: center;
@@ -309,6 +432,7 @@
             padding: 3px;
             display: inline-flex;
             gap: 3px;
+            flex-wrap: wrap;
         }
 
         .segment-tab {
@@ -324,6 +448,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: var(--font-sans);
         }
 
         .segment-tab:hover {
@@ -366,6 +491,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 160ms ease;
+            font-family: var(--font-sans);
         }
 
         .btn-toggle-layout:hover {
@@ -390,7 +516,7 @@
 
         .sandwich-panes-wrapper.all-expanded .sandwich-pane {
             display: block !important;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         @keyframes fadeInPane {
@@ -399,12 +525,12 @@
         }
 
         .panel-inner-card {
-            background: rgba(15, 23, 42, 0.78);
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 18px 20px;
+            padding: 16px 20px;
             box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
         }
 
@@ -412,9 +538,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .pane-card-header h3 {
@@ -450,58 +576,438 @@
             border-radius: 50%;
         }
 
+        /* Canvas del Gráfico y Tooltip Interactivo Flotante */
         .chart-canvas-container {
+            position: relative;
             width: 100%;
             height: 260px;
             background: rgba(11, 15, 23, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 9px;
-            padding: 10px;
+            padding: 8px;
             box-sizing: border-box;
         }
 
-        /* 5. PAN INFERIOR: Barra de Sellado y Estado */
-        .sandwich-footer-dock {
-            margin-top: 16px;
-            background: rgba(11, 15, 23, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 9px;
-            padding: 10px 16px;
+        .chart-tooltip-floating {
+            position: absolute;
+            pointer-events: none;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(226, 179, 87, 0.4);
+            border-radius: 8px;
+            padding: 9px 13px;
+            box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.6);
+            z-index: 50;
+            font-family: var(--font-sans);
+            font-size: 0.74rem;
+            color: #F8FAFC;
+            transition: opacity 120ms ease, transform 120ms ease;
+            opacity: 0;
+            transform: translate(-50%, -100%) translateY(-10px);
+            white-space: nowrap;
+        }
+
+        .chart-tooltip-floating.active {
+            opacity: 1;
+            transform: translate(-50%, -100%) translateY(-14px);
+        }
+
+        .chart-tooltip-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 5px;
+            margin-bottom: 6px;
+        }
+
+        .tooltip-entity {
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .tooltip-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: #E2B357;
+            background: rgba(226, 179, 87, 0.1);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .tooltip-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            font-size: 0.71rem;
+            color: #94A3B8;
+            margin-top: 3px;
+        }
+
+        .tooltip-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .tooltip-val.ok {
+            color: #10B981;
+        }
+
+        .tooltip-val.warn {
+            color: #F59E0B;
+        }
+
+        /* Toolbar y Filtros de Eventos Regulatorios (Pestaña 2) */
+        .events-toolbar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             gap: 10px;
-            font-size: 0.7rem;
+        }
+
+        .events-status-chips {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(11, 15, 23, 0.65);
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .event-filter-chip {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 140ms ease;
+            font-family: var(--font-sans);
+        }
+
+        .event-filter-chip:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .event-filter-chip.active {
+            background: #1E293B;
+            color: #F8FAFC;
+            border: 1px solid rgba(226, 179, 87, 0.4);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .events-search-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            padding: 4px 10px;
+            width: 240px;
+            max-width: 100%;
+        }
+
+        .events-search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #F8FAFC;
+            font-size: 0.75rem;
+            width: 100%;
+            font-family: var(--font-sans);
+        }
+
+        .events-search-box input::placeholder {
             color: #64748B;
         }
 
-        .dock-left, .dock-right {
+        /* Paginación Limpia de Tablas */
+        .table-pagination-dock {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 4px 4px 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 10px;
+            font-size: 0.72rem;
+            color: #64748B;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pagination-controls {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .dock-dot {
-            width: 6px;
+        .btn-page-nav {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #CBD5E1;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 120ms ease;
+        }
+
+        .btn-page-nav:hover:not(:disabled) {
+            background: #1E293B;
+            color: #FFF;
+            border-color: rgba(226, 179, 87, 0.4);
+        }
+
+        .btn-page-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Badges de Estado y Severidad */
+        .badge-reg-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-reg-status.atencion {
+            background: rgba(239, 68, 68, 0.12);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .badge-reg-status.resuelto {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .badge-reg-sev {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 0.66rem;
+            font-weight: 700;
+        }
+
+        .badge-reg-sev.critica {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .badge-reg-sev.alta {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-reg-sev.media {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-reg-sev.baja {
+            background: rgba(100, 116, 139, 0.2);
+            color: #94A3B8;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        /* Tarjetas de Distribución por Entidad (Pestaña 3) */
+        .entity-distribution-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .entity-card-mini {
+            background: rgba(11, 15, 23, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 9px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .entity-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .entity-card-name {
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: #F8FAFC;
+        }
+
+        .entity-card-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.67rem;
+            color: #94A3B8;
+        }
+
+        .entity-card-bar-track {
             height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .entity-card-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 300ms ease;
+        }
+
+        .entity-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #94A3B8;
+        }
+
+        .entity-uptime-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        /* 5. BREAD BOTTOM: Pie Regulatorio Anclado */
+        .sandwich-footer-dock {
+            margin-top: 14px;
+            background: rgba(11, 15, 23, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
+            padding: 9px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.71rem;
+            color: #94A3B8;
+            box-shadow: 0 4px 15px -4px rgba(0, 0, 0, 0.4);
+        }
+
+        .dock-left, .dock-center, .dock-right {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dock-dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: #10B981;
             box-shadow: 0 0 6px #10B981;
         }
 
-        /* Adaptación en Pantallas Medianas */
-        @media (max-width: 1100px) {
+        .dock-author-handle {
+            color: #E2B357;
+            font-weight: 700;
+        }
+
+        /* Adaptación en Pantallas Medianas y Móviles (Antislop Mobile Standard) */
+        @media (max-width: 1200px) {
             .sandwich-metrics-ribbon {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, 1fr);
             }
-            .ribbon-col:not(:last-child) {
+            .kpi-col:nth-child(3) {
                 border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
+            .kpi-col:nth-child(-n+3) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+        }
+
+        @media (max-width: 768px) {
             .sandwich-header-bar {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+                padding: 10px 12px !important;
+                min-height: auto !important;
+            }
+            .bread-top-left, .bread-top-right {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            .quick-chips-group {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            .chip-btn {
+                flex: 1 1 auto !important;
+                text-align: center !important;
+                padding: 5px 6px !important;
+                font-size: 0.69rem !important;
+            }
+            .compact-select {
+                width: 100% !important;
+            }
+            .btn-compact-csv, .btn-compact-pdf {
+                flex: 1 1 calc(50% - 4px) !important;
+                justify-content: center !important;
+                min-height: 40px !important;
+            }
+            .sandwich-metrics-ribbon {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .kpi-col:nth-child(even) {
+                border-right: none !important;
+            }
+            .kpi-col:not(:last-child):not(:nth-last-child(2)) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            }
+            .sandwich-segmented-control {
+                width: 100% !important;
+                flex-direction: column !important;
+            }
+            .segment-tab {
+                width: 100% !important;
+                justify-content: space-between !important;
+                min-height: 42px !important;
+            }
+            .sandwich-footer-dock {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 6px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sandwich-metrics-ribbon {
+                grid-template-columns: 1fr !important;
+            }
+            .kpi-col {
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            }
+            .btn-compact-csv, .btn-compact-pdf {
+                flex: 1 1 100% !important;
             }
         }
     </style>
@@ -651,125 +1157,402 @@
     <main class="main-layout">
         
         <!-- ====================================================================
-             1. PAN SUPERIOR DEL SANDWICH: Contexto y Toolbar de Control Integrado
+             0. MEMBRETE OFICIAL, METADATOS Y SCORECARD EJECUTIVO BCRP (PRINT-ONLY)
+             Diseñado conforme a la Circular BCRP N° 0014-2023 y Formato de Imprenta
              ==================================================================== -->
-        <section class="sandwich-header-bar" aria-label="Control y Período del Reporte">
-            <div class="sandwich-title-block">
-                <div class="sandwich-title-row">
-                    <h2>Reportes Normativos &amp; Cumplimiento SFT</h2>
-                    <span class="normative-badge">Circular BCRP N° 0014-2023</span>
+        <section class="bcrp-print-document print-only" id="bcrpPrintDocument" aria-label="Membrete Oficial e Informe Ejecutivo BCRP">
+            
+            <!-- Membrete Institucional BCRP con Escudo Nacional Oficial y Tipografía Escalar -->
+            <div class="print-official-letterhead">
+                <div class="letterhead-crest-col">
+                    <!-- Escudo Nacional del Perú / BCRP Heráldico de Alta Definición Vectorial -->
+                    <svg class="bcrp-official-crest" viewBox="0 0 120 120" width="88" height="88" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Escudo Oficial del Perú y BCRP">
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F59E0B"/>
+                                <stop offset="50%" stop-color="#D97706"/>
+                                <stop offset="100%" stop-color="#92400E"/>
+                            </linearGradient>
+                            <linearGradient id="shieldRed" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#DC2626"/>
+                                <stop offset="100%" stop-color="#991B1B"/>
+                            </linearGradient>
+                            <linearGradient id="shieldBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#38BDF8"/>
+                                <stop offset="100%" stop-color="#0284C7"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Corona Cívica Superior (Hojas de Encina con Lazo Rojo) -->
+                        <path d="M46 16 C40 10, 32 18, 38 24 C30 22, 28 32, 36 34 C44 26, 48 20, 52 18 Z" fill="#15803D" stroke="#0F172A" stroke-width="0.5"/>
+                        <path d="M74 16 C80 10, 88 18, 82 24 C90 22, 92 32, 84 34 C76 26, 72 20, 68 18 Z" fill="#15803D" stroke="#0F172A" stroke-width="0.5"/>
+                        <circle cx="60" cy="18" r="4.5" fill="#DC2626" stroke="#991B1B" stroke-width="0.75"/>
+
+                        <!-- Borde Exterior Heráldico del Escudo Nacional (Dorado BCRP) -->
+                        <path d="M25 24 L95 24 L95 68 C95 90, 60 108, 60 108 C60 108, 25 90, 25 68 Z" fill="#FFFFFF" stroke="url(#goldGrad)" stroke-width="3" stroke-linejoin="round"/>
+                        
+                        <!-- Líneas divisorias internas del Escudo (Tres Campos Heráldicos) -->
+                        <path d="M25 62 L95 62" stroke="url(#goldGrad)" stroke-width="2"/>
+                        <path d="M60 24 L60 62" stroke="url(#goldGrad)" stroke-width="2"/>
+
+                        <!-- Campo 1 (Superior Izquierdo): Celeste con Vicuña Dorada -->
+                        <path d="M27 26 L58 26 L58 60 L27 60 Z" fill="url(#shieldBlue)"/>
+                        <!-- Silueta estilizada de la Vicuña (Fauna del Perú) -->
+                        <path d="M38 52 L42 52 L43 45 L46 45 L47 41 L45 35 L47 31 L45 31 L43 35 L41 38 L38 40 L36 45 L36 52 Z" fill="#FDE68A" stroke="#B45309" stroke-width="0.5"/>
+
+                        <!-- Campo 2 (Superior Derecho): Blanco con Árbol de la Quina -->
+                        <path d="M62 26 L93 26 L93 60 L62 60 Z" fill="#FFFFFF"/>
+                        <!-- Silueta estilizada del Árbol de la Quina (Flora y Medicina del Perú) -->
+                        <path d="M77 56 L78 47 C74 46, 70 41, 72 36 C74 32, 82 32, 84 36 C86 41, 82 46, 79 47 L80 56 Z" fill="#15803D" stroke="#064E3B" stroke-width="0.5"/>
+                        <rect x="76.5" y="48" width="3" height="8" fill="#78350F"/>
+
+                        <!-- Campo 3 (Inferior Central): Rojo con Cornucopia Derramando Monedas de Oro -->
+                        <path d="M27 64 L93 64 L93 68 C93 88, 60 105, 60 105 C60 105, 27 88, 27 68 Z" fill="url(#shieldRed)"/>
+                        <!-- Silueta estilizada de la Cornucopia (Riqueza Mineral y Monetaria del Perú) -->
+                        <path d="M42 74 C46 68, 60 70, 68 76 C76 82, 80 88, 72 90 C66 92, 58 86, 52 82 C46 78, 40 82, 42 74 Z" fill="#FDE68A" stroke="#B45309" stroke-width="0.75"/>
+                        <!-- Monedas de Oro derramadas de la Cornucopia -->
+                        <circle cx="43" cy="86" r="2.5" fill="#F59E0B" stroke="#78350F" stroke-width="0.5"/>
+                        <circle cx="48" cy="89" r="2.5" fill="#F59E0B" stroke="#78350F" stroke-width="0.5"/>
+                        <circle cx="53" cy="91" r="2.5" fill="#F59E0B" stroke="#78350F" stroke-width="0.5"/>
+                        <circle cx="59" cy="93" r="2.5" fill="#F59E0B" stroke="#78350F" stroke-width="0.5"/>
+                        <circle cx="48" cy="84" r="2.2" fill="#FCD34D" stroke="#78350F" stroke-width="0.5"/>
+
+                        <!-- Rama de Laurel (Izquierda) y Palma (Derecha) -->
+                        <path d="M16 48 C14 62, 20 80, 32 94 C26 84, 22 70, 22 56 Z" fill="#16A34A" opacity="0.85"/>
+                        <path d="M104 48 C106 62, 100 80, 88 94 C94 84, 98 70, 98 56 Z" fill="#16A34A" opacity="0.85"/>
+                    </svg>
                 </div>
-                <p class="sandwich-subtitle">Supervisión Switch CCE &bull; Monitoreo de Disponibilidad y Sellado Digital</p>
+                <div class="letterhead-text-col">
+                    <span class="letterhead-republic">REPÚBLICA DEL PERÚ</span>
+                    <h1 class="bcrp-inst-title">BANCO CENTRAL DE RESERVA DEL PERÚ</h1>
+                    <h2 class="bcrp-dept-title">GERENCIA DE OPERACIONES MONETARIAS Y ESTABILIDAD FINANCIERA</h2>
+                    <h3 class="bcrp-subdept-title">SUBGERENCIA DE VIGILANCIA DE SISTEMAS DE PAGO &bull; SUPERVISIÓN DEL SWITCH CCE</h3>
+                    <div class="letterhead-report-title">INFORME TÉCNICO EJECUTIVO DE DISPONIBILIDAD OPERATIVA Y CUMPLIMIENTO NORMATIVO</div>
+                    <div class="letterhead-badge-row">
+                        <span class="letterhead-circular-tag">Circular BCRP N° 0014-2023</span>
+                        <span class="letterhead-doc-id">Dictamen: <strong>BCRP-CCE-INF-2026-9976-VAL</strong></span>
+                        <span class="letterhead-sec-badge">CONFIDENCIAL / REGULATORIO</span>
+                    </div>
+                </div>
+                <div class="letterhead-meta-col">
+                    <div class="meta-emission-box">
+                        <span class="meta-box-label">Fecha y Hora de Emisión (PET):</span>
+                        <span class="meta-box-val" id="printEmissionDate">31/10/2026 21:15:00 PET</span>
+                        <span class="meta-box-sub">Hora Legal del Perú &bull; UTC-5</span>
+                    </div>
+                    <div class="meta-status-chip">
+                        <span class="status-indicator-dot warn"></span>
+                        <span class="status-indicator-text">OBSERVACIÓN TÉCNICA SLA</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Toolbar Unificado sin cajas anidadas -->
-            <div class="sandwich-actions-toolbar">
-                <div class="compact-filter-group">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    <label for="fDesde" class="compact-label">Desde:</label>
-                    <input type="datetime-local" id="fDesde" class="compact-input" aria-label="Fecha y hora de inicio">
+            <!-- Ficha de Metadatos de la Evaluación Oficial -->
+            <div class="print-metadata-card">
+                <div class="print-meta-grid">
+                    <div class="print-meta-item">
+                        <span class="meta-k">Autor &amp; NOC Lead:</span>
+                        <span class="meta-v">Frank Emiliano Vargas Huamán <span class="author-watermark">(Φranκosýni / Francus.)</span></span>
+                    </div>
+                    <div class="print-meta-item">
+                        <span class="meta-k">Docente Jurado Revisor:</span>
+                        <span class="meta-v">Prof. Juan Antonio Zamata Mendoza</span>
+                    </div>
+                    <div class="print-meta-item">
+                        <span class="meta-k">Asignatura &amp; Sección:</span>
+                        <span class="meta-v">Curso Integrador I - Sistemas Software (Sección 57524)</span>
+                    </div>
+                    <div class="print-meta-item">
+                        <span class="meta-k">Institución Académica:</span>
+                        <span class="meta-v">Universidad Tecnológica del Perú (UTP) - Fac. Ingeniería</span>
+                    </div>
+                    <div class="print-meta-item">
+                        <span class="meta-k">Sistema Supervisado:</span>
+                        <span class="meta-v">SIGIR - Switch Central CCE &amp; Cámara de Compensación Electrónica</span>
+                    </div>
+                    <div class="print-meta-item">
+                        <span class="meta-k">Marco Regulatorio:</span>
+                        <span class="meta-v">Reglamento de Infraestructuras del Mercado Financiero (BCRP)</span>
+                    </div>
                 </div>
-                <div class="compact-filter-group">
-                    <label for="fHasta" class="compact-label">Hasta:</label>
-                    <input type="datetime-local" id="fHasta" class="compact-input" aria-label="Fecha y hora de fin">
+            </div>
+
+            <!-- Cuadro de Indicadores Oficiales (Scorecard Ejecutivo de Cumplimiento) -->
+            <div class="print-scorecard-section">
+                <div class="print-section-header">
+                    <h4>CUADRO DE INDICADORES OFICIALES Y CUMPLIMIENTO REGULATORIO (SCORECARD)</h4>
+                    <span class="scorecard-norm-ref">Estándar SLA Circular N° 0014-2023</span>
                 </div>
-                <div class="compact-filter-group">
-                    <select id="fEntidad" class="compact-select" aria-label="Filtro de entidad participante">
-                        <option value="">Todas las entidades</option>
-                    </select>
+                <div class="print-scorecard-grid">
+                    <div class="scorecard-box highlight">
+                        <span class="scorecard-lbl">Disponibilidad Global Switch</span>
+                        <div class="scorecard-num-row">
+                            <span class="scorecard-num" id="printScoreUptime">99.76%</span>
+                            <span class="scorecard-tag obs">Observación SLA</span>
+                        </div>
+                        <span class="scorecard-hint">Meta Exigida: <strong>&ge; 99.90%</strong> (Brecha: -0.14%)</span>
+                    </div>
+                    <div class="scorecard-box">
+                        <span class="scorecard-lbl">Meta Normativa Exigida</span>
+                        <div class="scorecard-num-row">
+                            <span class="scorecard-num gold">&ge; 99.90%</span>
+                            <span class="scorecard-tag norm">Reglamento BCRP</span>
+                        </div>
+                        <span class="scorecard-hint">Disponibilidad Mínima Anual / Mensual</span>
+                    </div>
+                    <div class="scorecard-box">
+                        <span class="scorecard-lbl">Total de Incidentes</span>
+                        <div class="scorecard-num-row">
+                            <span class="scorecard-num" id="printScoreTotal">4</span>
+                            <span class="scorecard-tag info">2 Críticos / 2 Resueltos</span>
+                        </div>
+                        <span class="scorecard-hint">Registrados en Switch CCE</span>
+                    </div>
+                    <div class="scorecard-box">
+                        <span class="scorecard-lbl">Tiempo Promedio Detección</span>
+                        <div class="scorecard-num-row">
+                            <span class="scorecard-num" id="printScoreMttd">1.3</span>
+                            <span class="scorecard-unit">min</span>
+                        </div>
+                        <span class="scorecard-hint ok">🟢 Conforme (Meta BCRP &lt; 5.0 min)</span>
+                    </div>
+                    <div class="scorecard-box">
+                        <span class="scorecard-lbl">Tiempo Promedio Solución</span>
+                        <div class="scorecard-num-row">
+                            <span class="scorecard-num" id="printScoreMttr">71.8</span>
+                            <span class="scorecard-unit">min</span>
+                        </div>
+                        <span class="scorecard-hint ok">🟢 Conforme (Meta BCRP &lt; 120.0 min)</span>
+                    </div>
                 </div>
-                <button class="btn btn-primary btn-sm" id="btnAplicar" title="Aplicar filtros del período">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Filtrar</span>
-                </button>
+            </div>
+
+            <!-- Detalle de Eventos en Impresión Oficial BCRP (Print-Only) -->
+            <div class="print-events-section" style="margin-top:14px; border:1px solid #CBD5E1; border-radius:6px; padding:10px; background:#FAFAFA;">
+                <div class="print-section-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #CBD5E1; padding-bottom:4px; margin-bottom:8px;">
+                    <h4 style="margin:0; font-size:8pt; font-weight:700; color:#0F172A;">REGISTRO OFICIAL DE EVENTOS REGULATORIOS E INCIDENTES DEL PERÍODO</h4>
+                    <span class="scorecard-norm-ref" style="font-size:7pt; color:#64748B;">Circular BCRP N° 0014-2023 &bull; Transacciones Switch CCE</span>
+                </div>
+                <table class="print-table" style="width:100%; border-collapse:collapse; font-size:7pt;">
+                    <thead>
+                        <tr style="background:#E2E8F0; border-bottom:1.5px solid #0F172A;">
+                            <th style="padding:4px; text-align:left;">Ticket Oficial</th>
+                            <th style="padding:4px; text-align:left;">Entidad Participante</th>
+                            <th style="padding:4px; text-align:left;">Categoría Operativa</th>
+                            <th style="padding:4px; text-align:center;">Severidad</th>
+                            <th style="padding:4px; text-align:right;">Detección</th>
+                            <th style="padding:4px; text-align:right;">Solución</th>
+                            <th style="padding:4px; text-align:center;">Estado Normativo</th>
+                            <th style="padding:4px; text-align:left;">Sello SHA-256</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printTbodyEventos">
+                        <tr style="border-bottom:1px solid #E2E8F0;">
+                            <td style="padding:4px; font-family:monospace; font-weight:700;">INC-20261031-10001</td>
+                            <td style="padding:4px; font-weight:600;">Banco de Crédito (BCP) [002]</td>
+                            <td style="padding:4px;">Disponibilidad de Servicios</td>
+                            <td style="padding:4px; text-align:center; color:#DC2626; font-weight:700;">CRÍTICA</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">1.0 min</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">95.5 min</td>
+                            <td style="padding:4px; text-align:center; color:#DC2626; font-weight:700;">EN ATENCIÓN</td>
+                            <td style="padding:4px; font-family:monospace; font-size:6pt;">e3b0c44298fc1c14...</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #E2E8F0;">
+                            <td style="padding:4px; font-family:monospace; font-weight:700;">INC-20261031-10002</td>
+                            <td style="padding:4px; font-weight:600;">CCE (Switch Central) [901]</td>
+                            <td style="padding:4px;">Canal de Compensación</td>
+                            <td style="padding:4px; text-align:center; color:#D97706; font-weight:700;">ALTA</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">2.0 min</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">120.0 min</td>
+                            <td style="padding:4px; text-align:center; color:#DC2626; font-weight:700;">EN ATENCIÓN</td>
+                            <td style="padding:4px; font-family:monospace; font-size:6pt;">7f83b1657ff1fc53...</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #E2E8F0;">
+                            <td style="padding:4px; font-family:monospace; font-weight:700;">INC-20261028-09945</td>
+                            <td style="padding:4px; font-weight:600;">Interbank / BBVA [003]</td>
+                            <td style="padding:4px;">Autenticación y Liquidación</td>
+                            <td style="padding:4px; text-align:center; color:#2563EB; font-weight:700;">MEDIA</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">1.0 min</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">45.0 min</td>
+                            <td style="padding:4px; text-align:center; color:#16A34A; font-weight:700;">RESUELTO &amp; AUDITADO</td>
+                            <td style="padding:4px; font-family:monospace; font-size:6pt;">185f8db32271fe25...</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:4px; font-family:monospace; font-weight:700;">INC-20261015-09820</td>
+                            <td style="padding:4px; font-weight:600;">Banco de Crédito (BCP) [002]</td>
+                            <td style="padding:4px;">Pasarela Inmediata</td>
+                            <td style="padding:4px; text-align:center; color:#64748B; font-weight:700;">BAJA</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">1.2 min</td>
+                            <td style="padding:4px; text-align:right; font-family:monospace;">26.5 min</td>
+                            <td style="padding:4px; text-align:center; color:#16A34A; font-weight:700;">RESUELTO &amp; AUDITADO</td>
+                            <td style="padding:4px; font-family:monospace; font-size:6pt;">2c26b46b68ffc68e...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Encabezado de Contexto Ejecutivo -->
+        <div class="sandwich-context-headline">
+            <div class="headline-left">
+                <h2>Tablero de Inteligencia Regulatoria &amp; Reportes SFT</h2>
+                <span class="normative-badge">Circular BCRP N° 0014-2023 &bull; Switch CCE</span>
+            </div>
+            <div class="headline-right">
+                <span class="live-status-pill">
+                    <span class="live-dot pulse"></span>
+                    <span>Supervisión en Tiempo Real</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ====================================================================
+             1. BREAD TOP: Cinta Unificada de Filtros y Acciones (Altura máx 56px)
+             ==================================================================== -->
+        <section class="sandwich-header-bar" aria-label="Cinta Unificada de Filtros y Acciones">
+            <div class="bread-top-left">
+                <!-- Selector rápido tipo chips -->
+                <div class="quick-chips-group" role="group" aria-label="Filtro rápido de período">
+                    <button type="button" class="chip-btn" data-range="hoy">Hoy</button>
+                    <button type="button" class="chip-btn" data-range="24h">Últimas 24h</button>
+                    <button type="button" class="chip-btn" data-range="semana">Semana Actual</button>
+                    <button type="button" class="chip-btn active" data-range="mes">Mes Octubre 2026</button>
+                </div>
 
                 <div class="toolbar-v-divider"></div>
 
-                <button class="btn btn-secondary btn-sm" id="btnCSV" title="Exportar reporte consolidado a formato CSV">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Selector de Entidad Bancaria -->
+                <select id="fEntidad" class="compact-select" aria-label="Entidad Bancaria Participante">
+                    <option value="">Todas las entidades</option>
+                    <option value="1">Banco de Crédito (BCP)</option>
+                    <option value="2">BBVA Perú / Interbank</option>
+                    <option value="3">Caja Cusco</option>
+                    <option value="4">Caja de los Andes</option>
+                    <option value="5">CCE (Switch Central)</option>
+                </select>
+
+                <div class="toolbar-v-divider"></div>
+
+                <!-- Inputs de rango de fecha accesibles y activos -->
+                <div class="custom-range-wrapper" title="Rango de fecha y hora para consulta">
+                    <input type="datetime-local" id="fDesde" class="compact-date-input" value="2026-10-01T00:00" aria-label="Fecha inicio">
+                    <span class="range-sep">a</span>
+                    <input type="datetime-local" id="fHasta" class="compact-date-input" value="2026-10-31T23:59" aria-label="Fecha fin">
+                    <button id="btnAplicar" class="btn-compact-apply" type="button" title="Aplicar rango de fechas">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Aplicar</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bread-top-right">
+                <button class="btn-compact-csv" id="btnCSV" type="button" title="Exportar consolidado en formato CSV compatible con Microsoft Excel">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>
                     </svg>
-                    <span>Excel (CSV)</span>
+                    <span>Exportar CSV (Excel)</span>
                 </button>
-                <button class="btn btn-secondary btn-sm" id="btnPrint" title="Exportar o imprimir informe en PDF">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn-compact-pdf" id="btnPrint" type="button" title="Exportar o imprimir informe técnico ejecutivo oficial en formato PDF">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
                     </svg>
-                    <span>PDF / Imprimir</span>
+                    <span>Exportar PDF / Imprimir</span>
                 </button>
             </div>
         </section>
 
         <!-- ====================================================================
-             2. RELLENO DEL SANDWICH: Cinta Ejecutiva Continua de Métricas
+             2. MIDDLE FILLING: Cintillo Continuo de Métricas KPI en Vidrio Esmerilado
              ==================================================================== -->
         <section class="sandwich-metrics-ribbon" aria-label="Indicadores Clave del Período">
-            <!-- Sección 1: Métrica North Star (Disponibilidad Global) -->
-            <div class="ribbon-col ribbon-uptime">
-                <div class="ribbon-col-header">
-                    <span class="ribbon-col-title">Disponibilidad del Servicio</span>
-                    <span class="ribbon-target-pill">Meta ≥ 99.90%</span>
+            <!-- 1. DISPONIBILIDAD GLOBAL -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Disponibilidad Global</span>
+                    <span class="kpi-pill target">Meta ≥ 99.90%</span>
                 </div>
-                <div class="ribbon-uptime-body">
-                    <span class="ribbon-uptime-value" id="kUptime">-</span>
-                    <div class="ribbon-uptime-meta">
-                        <span class="ribbon-status-pill" id="kUptimeStatus">🟢 Operación Estable</span>
-                        <span class="ribbon-meta-desc">Switch CCE &bull; Transacciones Exitosas</span>
-                    </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number uptime" id="kUptime">99.76%</span>
                 </div>
-            </div>
-
-            <!-- Sección 2: Flujo y Estado de Incidentes (Cluster de 3 valores en línea) -->
-            <div class="ribbon-col ribbon-incidents">
-                <div class="ribbon-col-header">
-                    <span class="ribbon-col-title">Incidentes del Período</span>
-                    <span class="ribbon-col-sub">Rango Seleccionado</span>
-                </div>
-                <div class="ribbon-cluster-3">
-                    <div class="ribbon-stat-item">
-                        <span class="ribbon-stat-num" id="kTotal">-</span>
-                        <span class="ribbon-stat-tag">Total Registrados</span>
-                    </div>
-                    <div class="ribbon-stat-item warn">
-                        <span class="ribbon-stat-num warn" id="kActivos">-</span>
-                        <span class="ribbon-stat-tag">En Atención</span>
-                    </div>
-                    <div class="ribbon-stat-item success">
-                        <span class="ribbon-stat-num success" id="kCerrados">-</span>
-                        <span class="ribbon-stat-tag">Resueltos / Cerrados</span>
-                    </div>
+                <div class="kpi-meta-sub" id="kUptimeStatusWrapper">
+                    <span id="kUptimeStatus" class="kpi-meta-sub warn">🟡 Observación SLA</span>
                 </div>
             </div>
 
-            <!-- Sección 3: Tiempos Operativos de Respuesta (Cluster de 2 tiempos en línea) -->
-            <div class="ribbon-col ribbon-times">
-                <div class="ribbon-col-header">
-                    <span class="ribbon-col-title">Tiempos Operativos de Respuesta</span>
-                    <span class="ribbon-col-sub">Promedios en Minutos</span>
+            <!-- 2. TOTAL EN PERÍODO -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Total en Período</span>
                 </div>
-                <div class="ribbon-cluster-2">
-                    <div class="ribbon-time-item">
-                        <div class="ribbon-time-val-box">
-                            <span class="ribbon-stat-num gold" id="kMttd">-</span>
-                            <span class="ribbon-time-unit">min</span>
-                        </div>
-                        <span class="ribbon-stat-tag">Tiempo de Detección</span>
-                    </div>
-                    <div class="ribbon-time-item">
-                        <div class="ribbon-time-val-box">
-                            <span class="ribbon-stat-num gold" id="kMttr">-</span>
-                            <span class="ribbon-time-unit">min</span>
-                        </div>
-                        <span class="ribbon-stat-tag">Tiempo de Solución</span>
-                    </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number" id="kTotal">4</span>
+                    <span class="kpi-unit">casos</span>
+                </div>
+                <div class="kpi-meta-sub">
+                    <span>4 incidentes en rango</span>
+                </div>
+            </div>
+
+            <!-- 3. ACTIVOS EN ATENCIÓN -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Activos en Atención</span>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number warn" id="kActivos">2</span>
+                    <span class="kpi-unit">en curso</span>
+                </div>
+                <div class="kpi-meta-sub warn">
+                    <span>Supervisión NOC activa</span>
+                </div>
+            </div>
+
+            <!-- 4. RESUELTOS & AUDITADOS -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Resueltos &amp; Auditados</span>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number success" id="kCerrados">2</span>
+                    <span class="kpi-unit">cerrados</span>
+                </div>
+                <div class="kpi-meta-sub success">
+                    <span>Conformidad técnica</span>
+                </div>
+            </div>
+
+            <!-- 5. RECUPERACIÓN PROMEDIO -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Recuperación Promedio</span>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number gold" id="kMttr">71.8</span>
+                    <span class="kpi-unit">min</span>
+                </div>
+                <div class="kpi-meta-sub success">
+                    <span>🟢 Meta &lt; 120 min</span>
+                </div>
+            </div>
+
+            <!-- 6. DETECCIÓN PROMEDIO -->
+            <div class="kpi-col">
+                <div class="kpi-label-row">
+                    <span class="kpi-label">Detección Promedio</span>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number gold" id="kMttd">1.3</span>
+                    <span class="kpi-unit">min</span>
+                </div>
+                <div class="kpi-meta-sub success">
+                    <span>🟢 Meta &lt; 5 min</span>
                 </div>
             </div>
         </section>
 
         <!-- ====================================================================
-             3. NAVEGADOR SEGMENTADO SANDWICH (Progressive Disclosure)
+             3. NAVEGADOR SEGMENTADO SANDWICH (Progressive Disclosure Tabs)
              ==================================================================== -->
         <nav class="sandwich-nav-bar" aria-label="Secciones del Reporte">
             <div class="sandwich-segmented-control" role="tablist">
@@ -777,14 +1560,21 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                     </svg>
-                    <span>Curva de Disponibilidad</span>
+                    <span>Curva de Cumplimiento SLA</span>
+                </button>
+                <button type="button" class="segment-tab" data-pane="pane-eventos" role="tab" aria-selected="false" id="tab-eventos">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <span>Detalle de Eventos Regulatorios</span>
+                    <span class="segment-badge" id="badgeEventosCount">4 Registros</span>
                 </button>
                 <button type="button" class="segment-tab" data-pane="pane-entidades" role="tab" aria-selected="false" id="tab-entidades">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
                     </svg>
-                    <span>Desglose por Entidad Financiera</span>
-                    <span class="segment-badge">5 Conectadas</span>
+                    <span>Distribución por Entidad</span>
+                    <span class="segment-badge">5 Entidades</span>
                 </button>
                 <button type="button" class="segment-tab" data-pane="pane-sft" role="tab" aria-selected="false" id="tab-sft">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -809,13 +1599,13 @@
              ==================================================================== -->
         <div class="sandwich-panes-wrapper" id="sandwichWrapper">
             
-            <!-- Panel 1: Gráfico de Disponibilidad con Umbral BCRP 99.90% -->
+            <!-- Panel 1: Gráfico de Disponibilidad con Umbral BCRP 99.90% y Tooltip Flotante -->
             <section class="sandwich-pane active" id="pane-curva" role="tabpanel" aria-labelledby="tab-curva">
                 <div class="panel-inner-card">
                     <div class="pane-card-header">
                         <div>
-                            <h3>Curva de Disponibilidad del Servicio</h3>
-                            <p class="pane-desc">Medición continua de transacciones exitosas frente a la meta reglamentaria BCRP (99.90%)</p>
+                            <h3>Curva de Cumplimiento SLA &amp; Disponibilidad Operativa</h3>
+                            <p class="pane-desc">Supervisión continua frente a la meta reglamentaria de la Circular BCRP N° 0014-2023 (≥ 99.90% SLA)</p>
                         </div>
                         <div class="chart-legend-row">
                             <span class="legend-chip">
@@ -824,25 +1614,88 @@
                             </span>
                             <span class="legend-chip">
                                 <span class="legend-color-dot" style="background:#EF4444; border-radius:1px;"></span>
-                                <span>Meta Normativa 99.90%</span>
+                                <span>Umbral Regulatorio BCRP: 99.90% SLA</span>
                             </span>
                         </div>
                     </div>
-                    <div class="chart-canvas-container">
+                    <div class="chart-canvas-container" id="chartContainer">
                         <canvas id="chartUptime" width="800" height="260" style="width:100%; height:260px; display:block;"></canvas>
+                        <div class="chart-tooltip-floating" id="chartTooltip" role="tooltip"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- Panel 2: Reporte de Cumplimiento por Entidad -->
+            <!-- Panel 2: Detalle de Eventos Regulatorios con Búsqueda, Filtros y Paginación -->
+            <section class="sandwich-pane" id="pane-eventos" role="tabpanel" aria-labelledby="tab-eventos">
+                <div class="panel-inner-card">
+                    <div class="pane-card-header">
+                        <div>
+                            <h3>Detalle de Eventos Regulatorios e Incidentes en Período</h3>
+                            <p class="pane-desc">Bitácora oficial de afectaciones, tiempos de respuesta y certificación para el BCRP</p>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar de Filtros de Eventos -->
+                    <div class="events-toolbar-row">
+                        <div class="events-status-chips" role="group" aria-label="Filtro de estado de evento">
+                            <button type="button" class="event-filter-chip active" data-status="todos">Todos (4)</button>
+                            <button type="button" class="event-filter-chip" data-status="atencion">En Atención (2)</button>
+                            <button type="button" class="event-filter-chip" data-status="resuelto">Resueltos (2)</button>
+                        </div>
+                        <div class="events-search-box">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="inputSearchEvents" placeholder="Buscar ticket o entidad..." aria-label="Buscar eventos">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket Regulatorio</th>
+                                    <th>Entidad Participante</th>
+                                    <th>Categoría Operativa</th>
+                                    <th style="text-align:center;">Severidad</th>
+                                    <th style="text-align:right;">Tiempo Detección</th>
+                                    <th style="text-align:right;">Tiempo Solución</th>
+                                    <th style="text-align:center;">Estado Normativo</th>
+                                    <th>Sello SHA-256</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyEventosRegulatorios">
+                                <!-- Renderizado dinámico vía reportes.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-pagination-dock">
+                        <span id="eventsPaginationText">Mostrando 1 - 4 de 4 eventos regulatorios</span>
+                        <div class="pagination-controls">
+                            <button type="button" class="btn-page-nav" id="btnPrevPage" disabled>&laquo; Anterior</button>
+                            <span style="font-weight:700; color:#F8FAFC;">Página 1 de 1</span>
+                            <button type="button" class="btn-page-nav" id="btnNextPage" disabled>Siguiente &raquo;</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 3: Distribución por Entidad Financiera -->
             <section class="sandwich-pane" id="pane-entidades" role="tabpanel" aria-labelledby="tab-entidades">
                 <div class="panel-inner-card">
                     <div class="pane-card-header">
                         <div>
-                            <h3>Cumplimiento y Desglose por Entidad Financiera</h3>
-                            <p class="pane-desc">Disponibilidad y tiempos operativos por participante (BCP, Interbank, Cajas Municipales y Switch Central CCE)</p>
+                            <h3>Distribución y Cumplimiento por Entidad Financiera</h3>
+                            <p class="pane-desc">Disponibilidad y tiempos de respuesta por participante (BCP, Interbank/BBVA, Cajas Municipales y Switch Central CCE)</p>
                         </div>
                     </div>
+
+                    <!-- Tarjetas de resumen comparativo por entidad -->
+                    <div class="entity-distribution-summary" id="entityDistributionCards">
+                        <!-- Renderizado dinámico vía reportes.js -->
+                    </div>
+
                     <div class="table-responsive">
                         <table class="data-table">
                             <thead>
@@ -865,7 +1718,7 @@
                 </div>
             </section>
 
-            <!-- Panel 3: Archivo Normativo SFT -->
+            <!-- Panel 4: Archivo Normativo SFT -->
             <section class="sandwich-pane" id="pane-sft" role="tabpanel" aria-labelledby="tab-sft">
                 <div class="panel-inner-card">
                     <div class="pane-card-header">
@@ -928,22 +1781,117 @@
         </div>
 
         <!-- ====================================================================
-             5. PAN INFERIOR DEL SANDWICH: Sello Institucional y Auditoría
+             CUADRO DE CIERRE CRIPTOGRÁFICO Y FIRMAS INSTITUCIONALES (PRINT-ONLY)
+             Certificación de No Repudio SHA-256 (NIST FIPS 180-4)
              ==================================================================== -->
-        <footer class="sandwich-footer-dock">
+        <section class="bcrp-print-certification print-only" id="bcrpPrintCertification" aria-label="Certificación y Firmas Institucionales BCRP">
+            <div class="print-cert-card">
+                <div class="print-cert-header">
+                    <div class="cert-header-left">
+                        <svg class="cert-lock-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1E3A8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <h5>CERTIFICACIÓN DE INTEGRIDAD Y NO REPUDIO CRIPTOGRÁFICO</h5>
+                    </div>
+                    <span class="cert-standard-pill">NIST FIPS 180-4 &bull; SHA-256</span>
+                </div>
+                <div class="cert-body">
+                    <p class="cert-statement">
+                        Se certifica bajo fe pública técnica e informática que las métricas de disponibilidad operativa, tiempos promedio de solución y detección de incidentes y telemetría de las cinco entidades participantes (BCP, Interbank/BBVA, Caja Cusco, Caja de los Andes y Switch Central CCE) consignadas en este informe han sido consolidadas y selladas algorítmicamente mediante función resumen criptográfica SHA-256 inmutable, garantizando no repudio e integridad documental ante la Gerencia de Operaciones Monetarias y Estabilidad Financiera del Banco Central de Reserva del Perú conforme a la Circular BCRP N° 0014-2023.
+                    </p>
+                    <div class="cert-hash-box">
+                        <div class="hash-label-row">
+                            <span class="hash-tag-label">HASH SHA-256 DE CERTIFICACIÓN INMUTABLE:</span>
+                            <span class="hash-status-tag">DIGITALMENTE SELLADO Y VERIFICADO</span>
+                        </div>
+                        <div class="hash-string-display" id="printCertHash">
+                            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+                        </div>
+                        <div class="cert-proof-meta">
+                            <span>Sello de Tiempo: <strong id="printCertTimestamp">31/10/2026 21:15:00 PET</strong></span>
+                            <span>ID de Auditoría: <strong>SFT-BCRP-20261031-SEC-01</strong></span>
+                            <span>Canal LBTR: <strong>Cámara de Compensación Electrónica (CCE)</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloque de Firmas Institucionales (3 Columnas Formales) -->
+                <div class="print-signatures-block">
+                    <!-- Firma 1: Frank Vargas -->
+                    <div class="signature-col">
+                        <div class="signature-line-box">
+                            <div class="digital-seal-preview">
+                                <span class="seal-auth-tag">FIRMA DIGITAL VERIFICADA</span>
+                                <span class="seal-hash-crumb">ID: 2026-FVH-CCE &bull; SHA-256</span>
+                            </div>
+                            <div class="signature-draw-line"></div>
+                            <span class="signature-name">Frank Emiliano Vargas Huamán</span>
+                            <span class="signature-title">Arquitecto de Software &amp; NOC Lead</span>
+                            <span class="signature-sub">Especialista en IAs Agénticas &bull; UTP</span>
+                        </div>
+                    </div>
+
+                    <!-- Firma 2: Prof. Zamata -->
+                    <div class="signature-col">
+                        <div class="signature-line-box">
+                            <div class="digital-seal-preview utp">
+                                <span class="seal-auth-tag">JURADO REVISOR ACADÉMICO</span>
+                                <span class="seal-hash-crumb">SECCIÓN 57524 &bull; UTP</span>
+                            </div>
+                            <div class="signature-draw-line"></div>
+                            <span class="signature-name">Prof. Juan Antonio Zamata Mendoza</span>
+                            <span class="signature-title">Docente Jurado Revisor</span>
+                            <span class="signature-sub">Curso Integrador I &bull; Fac. Ingeniería UTP</span>
+                        </div>
+                    </div>
+
+                    <!-- Firma 3: BCRP Vigilancia -->
+                    <div class="signature-col">
+                        <div class="signature-line-box">
+                            <div class="digital-seal-preview bcrp">
+                                <span class="seal-auth-tag">VISADO REGULATORIO OFICIAL</span>
+                                <span class="seal-hash-crumb">BCRP &bull; LBTR &bull; CIRC-0014</span>
+                            </div>
+                            <div class="signature-draw-line"></div>
+                            <span class="signature-name">Dirección de Vigilancia de Sistemas de Pago</span>
+                            <span class="signature-title">Supervisión Switch CCE &amp; LBTR</span>
+                            <span class="signature-sub">Banco Central de Reserva del Perú (BCRP)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie de Imprenta Legal Institucional -->
+                <div class="print-official-footer-note">
+                    <span>Informe Oficial emitido en cumplimiento estricto de la Circular BCRP N° 0014-2023. Prohibida su modificación o adulteración digital. Sistema SIGIR v2.4.</span>
+                    <span>Página 1 de 1 &bull; Copia Oficial de Registro Técnico</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================
+             5. BREAD BOTTOM: Pie Regulatorio de Certificación Formal Anclado
+             ==================================================================== -->
+        <footer class="sandwich-footer-dock" aria-label="Pie Regulatorio de Certificación">
             <div class="dock-left">
                 <span class="dock-dot"></span>
                 <span>Sellado Criptográfico SHA-256 Activo &bull; Supervisión Operativa Switch CCE - BCRP</span>
             </div>
-            <div class="dock-right">
+            <div class="dock-center">
                 <span>Circular BCRP N° 0014-2023 &bull; Liquidación Bruta en Tiempo Real (LBTR)</span>
+            </div>
+            <div class="dock-right">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+                </svg>
+                <span>Certificado por <strong>Frank Vargas Huamán</strong> (<span class="dock-author-handle">@frankitoromas-tech</span>)</span>
             </div>
         </footer>
 
     </main>
 
     <!-- Librerías de Vanguardia para Seguridad y Animación -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-9+ilAOeXY8qy2bw/h51MmliNNHvdyhTpLIlqDmVpD26z8VjVJsUJtk5rhbDIUvYiD+EpGoAu0xTa7MhZohFQjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>

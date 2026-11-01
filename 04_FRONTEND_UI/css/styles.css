@@ -10,19 +10,27 @@
    1. VARIABLES DE SISTEMA Y PALETA CORPORATIVA BCRP
    -------------------------------------------------------------------------- */
 :root {
-    /* Superficies y Fondos (Deep Slate Corporativo) */
-    --bg-base: #0B0F17;
-    --bg-surface: #0F172A;
-    --bg-surface-elevated: #111827;
-    --bg-surface-hover: #1E293B;
-    --bg-card: #0F172A;
-    --bg-code: #06090F;
+    /* Superficies y Fondos Institucionales BCRP (Deep Obsidian Midnight & Glassmorphism) */
+    --bg-base: #060A12;                    /* Deep Obsidian Midnight Principal */
+    --bg-surface: rgba(15, 23, 42, 0.75); /* Glassmorphism Sutil con blur(16px) */
+    --bg-surface-elevated: rgba(17, 24, 39, 0.85);
+    --bg-surface-hover: rgba(30, 41, 59, 0.80);
+    --bg-card: rgba(15, 23, 42, 0.75);
+    --bg-card-solid: #0F172A;
+    --bg-code: #030712;
 
-    /* Bordes Nítidos de 1px */
-    --border-dim: #1E293B;
-    --border-subtle: rgba(255, 255, 255, 0.07);
+    /* Bordes Nítidos Ultra-delgados de 1px y Acentos de Vidrio FinTech */
+    --border-dim: rgba(255, 255, 255, 0.08);
+    --border-subtle: rgba(255, 255, 255, 0.08);
     --border-strong: #334155;
     --border-focus: #2563EB;
+    --border-gold-accent: rgba(226, 179, 87, 0.20); /* Acento Dorado BCRP 1px */
+
+    /* Glassmorphism Estándar FinTech BCRP */
+    --glass-bg: rgba(15, 23, 42, 0.75);
+    --glass-blur: blur(16px);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --glass-border-gold: 1px solid rgba(226, 179, 87, 0.20);
 
     /* Tipografía y Jerarquía Textual (WCAG AA & AAA Estricto) */
     --text-primary: #F8FAFC;    /* 17.06:1 AAA */
@@ -35,35 +43,41 @@
     --focus-gold-glow: rgba(226, 179, 87, 0.35);
     --focus-gold-subtle: rgba(226, 179, 87, 0.85);
 
-    /* Paleta Institucional BCRP & Ecosistema Financiero */
-    --bcrp-red: #C8102E;
-    --bcrp-red-hover: #A00C24;
-    --bcrp-red-subtle: rgba(200, 16, 46, 0.12);
-    --bcrp-blue: #1E3A8A;
-    --bcrp-gold: #D97706;
-    --bcrp-gold-subtle: rgba(217, 119, 6, 0.12);
+    /* Paleta Institucional BCRP & Ecosistema Financiero CCE */
+    --bcrp-gold: #E2B357;               /* Oro Institucional BCRP */
+    --bcrp-gold-hover: #F0C46E;
+    --bcrp-gold-subtle: rgba(226, 179, 87, 0.15);
+    --gold: #E2B357;
+
+    --cce-blue: #2563EB;                /* Azul Zafiro CCE */
+    --cce-blue-dark: #1D4ED8;
+    --bcrp-blue: #1D4ED8;
+    --accent-blue: #2563EB;
+    --accent-indigo: #818CF8;
 
     /* Semáforo Operativo NOC */
-    --status-online: #10B981;
+    --status-online: #10B981;           /* Verde Esmeralda Operativo */
     --status-online-subtle: rgba(16, 185, 129, 0.12);
-    --status-online-border: rgba(16, 185, 129, 0.3);
+    --status-online-border: rgba(16, 185, 129, 0.30);
+    --success: #10B981;
 
     --status-warning: #F59E0B;
     --status-warning-subtle: rgba(245, 158, 11, 0.12);
-    --status-warning-border: rgba(245, 158, 11, 0.3);
+    --status-warning-border: rgba(245, 158, 11, 0.30);
+    --warning: #F59E0B;
 
-    --status-critical: #EF4444;
+    --status-critical: #EF4444;         /* Rojo Carmesí Contingencia */
     --status-critical-subtle: rgba(239, 68, 68, 0.12);
     --status-critical-border: rgba(239, 68, 68, 0.35);
-
-    --accent-sky: #38BDF8;
-    --accent-indigo: #818CF8;
-    --accent-blue: #3B82F6;
-    --gold: #F59E0B;
+    --bcrp-red: #EF4444;
+    --bcrp-red-hover: #DC2626;
+    --bcrp-red-subtle: rgba(239, 68, 68, 0.12);
     --danger: #EF4444;
-    --warning: #F59E0B;
-    --success: #10B981;
-    --cyan: #06B6D4;
+
+    --accent-sky: #38BDF8;              /* Cian Telemetría */
+    --cyan: #38BDF8;
+    --telemetry-cyan: #38BDF8;
+    --telemetry-cyan-subtle: rgba(56, 189, 248, 0.12);
     --border-hover: #475569;
 
     /* Fuentes del Sistema y Fallbacks Anti-FOUT / Anti-CLS (Plus Jakarta Sans, Inter, JetBrains Mono) */
@@ -86,8 +100,10 @@
     --shadow-card-hover: 0 16px 36px -4px rgba(0, 0, 0, 0.65), 0 6px 16px -2px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
     --shadow-modal: 0 25px 60px -12px rgba(0, 0, 0, 0.9), 0 10px 25px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
 
-    /* Transición estándar */
+    /* Transición estándar FinTech de alta gama (150ms-200ms cubic-bezier(0.16, 1, 0.3, 1)) */
     --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-spring: 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -172,7 +188,7 @@ textarea:focus-visible {
 
 body {
     position: relative;
-    background-color: var(--bg-base);
+    background-color: var(--bg-base, #060A12);
     color: var(--text-primary);
     font-family: var(--font-sans);
     line-height: 1.5;
@@ -186,8 +202,9 @@ body {
     text-rendering: optimizeLegibility;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
     background-image: 
-        radial-gradient(ellipse at 50% -20%, rgba(30, 58, 138, 0.14) 0%, transparent 70%),
-        radial-gradient(circle at 100% 0%, rgba(200, 16, 46, 0.05) 0%, transparent 50%);
+        radial-gradient(ellipse at 50% -20%, rgba(37, 99, 235, 0.10) 0%, transparent 70%),
+        radial-gradient(circle at 100% 0%, rgba(226, 179, 87, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
     background-attachment: fixed;
 }
 
@@ -196,31 +213,328 @@ body::after {
     display: none;
 }
 
-/* Custom Scrollbar - Fino de 6px con Track #0B0F17 y Thumb #334155 Redondeado */
+/* Custom Scrollbar FinTech - Fino de 6px, pulgar #334155, hover #475569 y fondo transparente */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #0B0F17;
+    background: transparent;
 }
 ::-webkit-scrollbar-thumb {
     background: #334155;
     border-radius: var(--radius-full);
-    border: 1px solid #0B0F17;
+    border: none;
     transition: background var(--transition-fast);
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #475569;
 }
 ::-webkit-scrollbar-corner {
-    background: #0B0F17;
+    background: transparent;
 }
 
 /* Soporte W3C / Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: #334155 #0B0F17;
+    scrollbar-color: #334155 transparent;
+}
+
+/* ==========================================================================
+   2.1 JERARQUÍA TIPOGRÁFICA UNIVERSAL BCRP FINTECH
+   Plus Jakarta Sans (700/800) + JetBrains Mono (tabular-nums) + Micro-labels
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.25;
+}
+
+h1, .h1 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+h2, .h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+h3, .h3 {
+    font-size: 1.0rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+h4, .h4 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+h5, .h5 {
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+h6, .h6 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+/* Métricas Numéricas, Códigos y Timestamps con Alineación Tabular */
+code, kbd, samp, pre,
+.font-mono,
+.crypto-hash,
+.tabular-nums,
+.kpi-value,
+.kpi-val,
+.noc-kpi-val,
+.telemetry-val,
+.metric-number,
+.metric-val,
+.sla-timer,
+.timer-val,
+.col-fecha-iso,
+.iso-timestamp,
+.clock-text {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-feature-settings: "tnum" 1;
+    font-feature-settings: "tnum" 1;
+}
+
+/* Micro-etiquetas Institucionales FinTech (Mayúsculas, 0.68rem, 700, #94A3B8, tracking 0.06em) */
+.micro-label,
+.micro-tag,
+.badge-text,
+.compact-label,
+.noc-kpi-label,
+.metric-label-micro,
+.section-tag-micro,
+.table-col-label,
+.sublabel-caps,
+.kpi-subtext {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #94A3B8;
+}
+
+/* ==========================================================================
+   2.2 SUPERFICIES GLASSMORFHISM FINTECH (BCRP ENTERPRISE STANDARD)
+   Fondo rgba(15, 23, 42, 0.75) con blur(16px) y bordes 1px ultra-delgados
+   ========================================================================== */
+.glass-surface,
+.glass-card,
+.panel-card,
+.telemetry-node,
+.audit-table-card,
+.hero-switch-card,
+.gateway-card {
+    background: var(--bg-surface, rgba(15, 23, 42, 0.75));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-dim, rgba(255, 255, 255, 0.08));
+    transition: transform var(--transition-fast), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.glass-card-gold,
+.panel-card-gold {
+    border-color: var(--border-gold-accent, rgba(226, 179, 87, 0.20));
+}
+
+/* Micro-interacciones y Estados Hover FinTech (150ms-200ms cubic-bezier) */
+button,
+.btn,
+.nav-tab,
+.telemetry-node,
+.kpi-card,
+.cmd-palette-pill,
+.header-user-trigger,
+.user-menu-item,
+.data-table tbody tr,
+.audit-data-table tbody tr,
+.filter-chip,
+.badge-interactive {
+    transition: all var(--transition-fast);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ==========================================================================
+   2.3 ARQUITECTURA DE COMPONENTES SANDWICH (ESTÁNDAR FINTECH ENTERPRISE)
+   Top Ribbon (<=54px) + Body Middle (fluido/scroll suave) + Footer Bottom
+   ========================================================================== */
+.sandwich-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 56px);
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px 24px 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* 1. Pan Superior: Ribbon Sticky de Control y Contexto */
+.sandwich-ribbon-top,
+.sandwich-header-bar {
+    max-height: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 18px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45), 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    transition: background var(--transition-smooth), border-color var(--transition-smooth);
+}
+
+.sandwich-ribbon-top:hover,
+.sandwich-header-bar:hover {
+    border-color: rgba(226, 179, 87, 0.20);
+}
+
+.sandwich-ribbon-top .ribbon-title,
+.sandwich-header-bar .sandwich-title-row h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sandwich-ribbon-top .ribbon-actions,
+.sandwich-header-bar .sandwich-actions-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+/* 2. Relleno del Sandwich: Cuerpo Central Fluido */
+.sandwich-body-middle,
+.sandwich-panes-wrapper {
+    flex: 1 1 auto;
+    padding: 4px 0 16px 0;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Paneles del Sandwich */
+.sandwich-pane {
+    display: none;
+    width: 100%;
+    animation: fadeInSandwich 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.sandwich-pane.active {
+    display: block;
+}
+
+.sandwich-panes-wrapper.all-expanded .sandwich-pane {
+    display: block !important;
+    margin-bottom: 18px;
+}
+
+@keyframes fadeInSandwich {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 3. Pan Inferior: Barra de Pie Anclada con Metadatos Regulatorios */
+.sandwich-footer-bottom,
+.sandwich-footer-dock {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 18px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: -0.01em;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+.sandwich-footer-bottom .dock-meta-left,
+.sandwich-footer-bottom .dock-left,
+.sandwich-footer-dock .dock-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+}
+
+.sandwich-footer-bottom .dock-meta-right,
+.sandwich-footer-bottom .dock-right,
+.sandwich-footer-dock .dock-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 0.70rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.sandwich-footer-bottom .dock-dot,
+.sandwich-footer-dock .dock-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--status-online, #10B981);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    display: inline-block;
 }
 
 /* --------------------------------------------------------------------------
@@ -1869,7 +2183,7 @@ tr.incident-row:focus-visible {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #0B0F17;
+    background: #060A12;
 }
 
 .modal-header h3 {
@@ -1962,7 +2276,7 @@ tr.incident-row:focus-visible {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    background: #0B0F17;
+    background: #060A12;
 }
 
 /* Visor SFT en Terminal Dark */
@@ -2128,41 +2442,870 @@ input[type="datetime-local"].select-filter {
 }
 
 /* --------------------------------------------------------------------------
-   11. IMPRESIÓN OFICIAL EN BLANCO Y NEGRO NORMATIVO
+   11. IMPRESIÓN OFICIAL INSTITUCIONAL BCRP & GENERACIÓN DE INFORMES PDF
+   Estándar Executive Print & PDF Studio (Circular BCRP N° 0014-2023)
    -------------------------------------------------------------------------- */
+
+/* Ocultar elementos exclusivos de impresión en pantalla regular */
+.print-only {
+    display: none !important;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 10mm 12mm 12mm 12mm;
+}
+
 @media print {
-    body {
-        background: #FFFFFF !important;
-        color: #000000 !important;
-        background-image: none !important;
+    /* 1. Reset Global para Papel Blanco y Tipografía de Imprenta */
+    *, *::before, *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
     }
+
+    html, body {
+        background: #FFFFFF !important;
+        color: #0F172A !important;
+        background-image: none !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-size: 8.5pt !important;
+        line-height: 1.35 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .main-layout {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    /* 2. Ocultar estrictamente todos los elementos interactivos y de navegación web */
     .app-header,
+    .sandwich-header-bar,
+    .sandwich-metrics-ribbon,
+    .sandwich-nav-bar,
+    .sandwich-footer-dock,
+    #pane-sft,
+    button,
+    .btn,
+    .btn-action-table,
     .action-buttons-group,
-    .filters-toolbar,
-    .modal-footer {
+    .sft-actions-bar,
+    .compact-filter-group,
+    .cmd-palette-pill,
+    .btn-audio-toggle,
+    .header-user-trigger,
+    .modal,
+    #commandPaletteModal,
+    .user-popover-menu,
+    .quick-menu,
+    .toolbar-v-divider,
+    .btn-toggle-layout,
+    .screen-only {
         display: none !important;
     }
-    .panel-card,
-    .kpi-group {
-        border: 1px solid #CCCCCC !important;
+
+    /* 3. Mostrar elementos dedicados a la impresión oficial BCRP */
+    .print-only {
+        display: block !important;
+    }
+
+    /* 4. Estructura del Membrete Oficial BCRP */
+    .bcrp-print-document {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        margin-bottom: 12px !important;
+    }
+
+    .print-official-letterhead {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 2.5px solid #1E3A8A !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 10px !important;
+        position: relative !important;
+    }
+
+    .print-official-letterhead::after {
+        content: "" !important;
+        position: absolute !important;
+        bottom: -4px !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 1px !important;
+        background: #D97706 !important; /* Acento dorado heráldico */
+    }
+
+    .letterhead-crest-col {
+        flex-shrink: 0 !important;
+        margin-right: 14px !important;
+    }
+
+    .bcrp-official-crest {
+        display: block !important;
+        width: 76px !important;
+        height: 76px !important;
+    }
+
+    .letterhead-text-col {
+        flex-grow: 1 !important;
+        text-align: left !important;
+    }
+
+    .letterhead-republic {
+        display: block !important;
+        font-size: 7pt !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.15em !important;
+        color: #475569 !important;
+        text-transform: uppercase !important;
+        margin-bottom: 1px !important;
+    }
+
+    .bcrp-inst-title {
+        font-size: 13pt !important;
+        font-weight: 800 !important;
+        color: #1E3A8A !important; /* Azul marino institucional BCRP */
+        letter-spacing: -0.01em !important;
+        margin: 0 0 2px 0 !important;
+        line-height: 1.15 !important;
+    }
+
+    .bcrp-dept-title {
+        font-size: 7.5pt !important;
+        font-weight: 700 !important;
+        color: #334155 !important;
+        margin: 0 0 1px 0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .bcrp-subdept-title {
+        font-size: 7pt !important;
+        font-weight: 600 !important;
+        color: #64748B !important;
+        margin: 0 0 4px 0 !important;
+    }
+
+    .letterhead-report-title {
+        font-size: 8.5pt !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        letter-spacing: 0.02em !important;
+        margin: 2px 0 4px 0 !important;
+        text-transform: uppercase !important;
+    }
+
+    .letterhead-badge-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .letterhead-circular-tag {
+        display: inline-block !important;
+        background: #FEF3C7 !important;
+        color: #92400E !important;
+        border: 1px solid #F59E0B !important;
+        padding: 1px 6px !important;
+        border-radius: 3px !important;
+        font-size: 6.5pt !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+    }
+
+    .letterhead-doc-id {
+        font-size: 6.5pt !important;
+        color: #475569 !important;
+    }
+
+    .letterhead-doc-id strong {
+        color: #1E3A8A !important;
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    .letterhead-sec-badge {
+        display: inline-block !important;
+        background: #F1F5F9 !important;
+        color: #475569 !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 1px 5px !important;
+        border-radius: 3px !important;
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .letterhead-meta-col {
+        flex-shrink: 0 !important;
+        text-align: right !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 4px !important;
+    }
+
+    .meta-emission-box {
+        background: #F8FAFC !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 4px !important;
+        padding: 4px 8px !important;
+        text-align: right !important;
+    }
+
+    .meta-box-label {
+        display: block !important;
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        color: #64748B !important;
+        text-transform: uppercase !important;
+    }
+
+    .meta-box-val {
+        display: block !important;
+        font-size: 7.5pt !important;
+        font-weight: 800 !important;
+        color: #1E3A8A !important;
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    .meta-box-sub {
+        display: block !important;
+        font-size: 5.5pt !important;
+        color: #94A3B8 !important;
+    }
+
+    .meta-status-chip {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        background: #FEF3C7 !important;
+        border: 1px solid #F59E0B !important;
+        border-radius: 3px !important;
+        padding: 1px 6px !important;
+    }
+
+    .meta-status-chip .status-indicator-dot.warn {
+        width: 5px !important;
+        height: 5px !important;
+        border-radius: 50% !important;
+        background: #D97706 !important;
+    }
+
+    .meta-status-chip .status-indicator-text {
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        color: #92400E !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    /* 5. Ficha de Metadatos de la Evaluación */
+    .print-metadata-card {
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-left: 3.5px solid #1E3A8A !important;
+        border-radius: 4px !important;
+        padding: 6px 10px !important;
+        margin-bottom: 10px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .print-meta-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 4px 10px !important;
+    }
+
+    .print-meta-item {
+        display: flex !important;
+        flex-direction: column !important;
+        line-height: 1.2 !important;
+    }
+
+    .print-meta-item .meta-k {
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        color: #64748B !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .print-meta-item .meta-v {
+        font-size: 7.5pt !important;
+        font-weight: 700 !important;
+        color: #0F172A !important;
+    }
+
+    .author-watermark {
+        font-size: 6.5pt !important;
+        font-weight: 600 !important;
+        color: #B45309 !important;
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* 6. Cuadro de Indicadores Oficiales (Scorecard) */
+    .print-scorecard-section {
+        margin-bottom: 10px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .print-section-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1px solid #CBD5E1 !important;
+        padding-bottom: 3px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .print-section-header h4 {
+        margin: 0 !important;
+        font-size: 7.5pt !important;
+        font-weight: 800 !important;
+        color: #1E3A8A !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .scorecard-norm-ref {
+        font-size: 6pt !important;
+        font-weight: 600 !important;
+        color: #64748B !important;
+    }
+
+    .print-scorecard-grid {
+        display: grid !important;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr !important;
+        gap: 6px !important;
+    }
+
+    .scorecard-box {
         background: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 4px !important;
+        padding: 5px 7px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+
+    .scorecard-box.highlight {
+        background: #FFFBEB !important;
+        border: 1.5px solid #F59E0B !important;
+    }
+
+    .scorecard-lbl {
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
+        text-transform: uppercase !important;
+        line-height: 1.15 !important;
+        margin-bottom: 2px !important;
+    }
+
+    .scorecard-num-row {
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 4px !important;
+        margin: 2px 0 !important;
+    }
+
+    .scorecard-num {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 13pt !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        line-height: 1 !important;
+    }
+
+    .scorecard-num.gold {
+        color: #B45309 !important;
+    }
+
+    .scorecard-unit {
+        font-size: 7.5pt !important;
+        font-weight: 600 !important;
+        color: #64748B !important;
+    }
+
+    .scorecard-tag {
+        font-size: 5.5pt !important;
+        font-weight: 700 !important;
+        padding: 1px 4px !important;
+        border-radius: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .scorecard-tag.obs {
+        background: #FEE2E2 !important;
+        color: #991B1B !important;
+        border: 1px solid #F87171 !important;
+    }
+
+    .scorecard-tag.norm {
+        background: #FEF3C7 !important;
+        color: #92400E !important;
+        border: 1px solid #F59E0B !important;
+    }
+
+    .scorecard-tag.info {
+        background: #EFF6FF !important;
+        color: #1E40AF !important;
+        border: 1px solid #93C5FD !important;
+    }
+
+    .scorecard-hint {
+        font-size: 5.5pt !important;
+        color: #64748B !important;
+        line-height: 1.15 !important;
+    }
+
+    .scorecard-hint.ok {
+        color: #065F46 !important;
+        font-weight: 600 !important;
+    }
+
+    /* 7. Despliegue Continuo de los Paneles de Contenido */
+    .sandwich-panes-wrapper {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .sandwich-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin-bottom: 12px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .panel-inner-card {
+        background: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 4px !important;
+        padding: 8px 10px !important;
         box-shadow: none !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
-    .data-table th,
-    .data-table td {
-        color: #000000 !important;
-        border-bottom: 1px solid #DDDDDD !important;
+
+    .pane-card-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+        padding-bottom: 5px !important;
+        margin-bottom: 8px !important;
     }
+
+    .pane-card-header h3 {
+        color: #1E3A8A !important;
+        font-size: 8.5pt !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.02em !important;
+        margin: 0 0 1px 0 !important;
+    }
+
+    .pane-desc {
+        color: #64748B !important;
+        font-size: 6.5pt !important;
+        margin: 0 !important;
+    }
+
+    .chart-legend-row {
+        display: flex !important;
+        gap: 10px !important;
+    }
+
+    .legend-chip {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        font-size: 6.5pt !important;
+        font-weight: 600 !important;
+        color: #334155 !important;
+    }
+
+    /* Gráfico Canvas Adaptado para Impresión */
+    .chart-canvas-container {
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 4px !important;
+        padding: 4px !important;
+    }
+
+    #chartUptime {
+        width: 100% !important;
+        height: 180px !important;
+        display: block !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* 8. Tabla de Entidades Participantes en Impresión */
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .data-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 7pt !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .data-table thead th {
+        background: #1E3A8A !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 6.5pt !important;
+        letter-spacing: 0.02em !important;
+        padding: 5px 6px !important;
+        border: 1px solid #1E3A8A !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .data-table tbody tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .data-table tbody tr:nth-child(even) {
+        background-color: #F8FAFC !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .data-table tbody td {
+        color: #0F172A !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 4px 6px !important;
+        vertical-align: middle !important;
+        line-height: 1.2 !important;
+    }
+
+    .data-table .ticket-mono {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-weight: 700 !important;
+        color: #1E3A8A !important;
+    }
+
+    /* Badges de Severidad y SLA en Impresión */
+    .badge-severidad.critica {
+        background: #FEE2E2 !important;
+        color: #991B1B !important;
+        border: 1px solid #F87171 !important;
+        font-weight: 800 !important;
+        font-size: 6.5pt !important;
+        padding: 1px 4px !important;
+        border-radius: 3px !important;
+    }
+
+    .badge-severidad.baja {
+        background: #F1F5F9 !important;
+        color: #475569 !important;
+        border: 1px solid #CBD5E1 !important;
+        font-size: 6.5pt !important;
+        padding: 1px 4px !important;
+        border-radius: 3px !important;
+    }
+
+    .badge-sla {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        font-size: 6pt !important;
+        font-weight: 700 !important;
+        padding: 1px 4px !important;
+        border-radius: 2px !important;
+        text-transform: uppercase !important;
+    }
+
+    .badge-sla.badge-sla-ok {
+        background: #ECFDF5 !important;
+        color: #065F46 !important;
+        border: 1px solid #10B981 !important;
+    }
+
+    .badge-sla.badge-sla-warn {
+        background: #FFFBEB !important;
+        color: #92400E !important;
+        border: 1px solid #F59E0B !important;
+    }
+
+    .sla-progress-cell {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2px !important;
+    }
+
+    .sla-progress-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .sla-progress-val {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-weight: 800 !important;
+        font-size: 7pt !important;
+        color: #0F172A !important;
+    }
+
     .sla-progress-track {
         background: #E2E8F0 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        height: 5px !important;
+        border-radius: 2.5px !important;
+        border: 1px solid #CBD5E1 !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
+
     .sla-progress-fill {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        height: 100% !important;
+        border-radius: 2px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 9. Cuadro de Cierre Criptográfico y Firmas Institucionales */
+    .bcrp-print-certification {
+        margin-top: 10px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .print-cert-card {
+        background: #FFFFFF !important;
+        border: 1.5px solid #1E3A8A !important;
+        border-radius: 5px !important;
+        padding: 8px 12px !important;
+        position: relative !important;
+    }
+
+    .print-cert-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1.5px solid #1E3A8A !important;
+        padding-bottom: 4px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .cert-header-left {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    .cert-lock-icon {
+        width: 14px !important;
+        height: 14px !important;
+        stroke: #1E3A8A !important;
+    }
+
+    .cert-header-left h5 {
+        margin: 0 !important;
+        font-size: 7.5pt !important;
+        font-weight: 800 !important;
+        color: #1E3A8A !important;
+        letter-spacing: 0.04em !important;
+        text-transform: uppercase !important;
+    }
+
+    .cert-standard-pill {
+        display: inline-block !important;
+        background: #FEF3C7 !important;
+        color: #92400E !important;
+        border: 1px solid #F59E0B !important;
+        padding: 1px 6px !important;
+        border-radius: 3px !important;
+        font-size: 6pt !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .cert-body {
+        margin-bottom: 8px !important;
+    }
+
+    .cert-statement {
+        font-size: 6.5pt !important;
+        color: #334155 !important;
+        line-height: 1.3 !important;
+        text-align: justify !important;
+        margin: 0 0 6px 0 !important;
+    }
+
+    .cert-hash-box {
+        background: #F8FAFC !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 3px !important;
+        padding: 5px 8px !important;
+    }
+
+    .hash-label-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 2px !important;
+    }
+
+    .hash-tag-label {
+        font-size: 5.5pt !important;
+        font-weight: 800 !important;
+        color: #1E3A8A !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    .hash-status-tag {
+        font-size: 5.5pt !important;
+        font-weight: 700 !important;
+        color: #065F46 !important;
+    }
+
+    .hash-string-display {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 7.5pt !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        letter-spacing: 0.06em !important;
+        word-break: break-all !important;
+        background: #FFFFFF !important;
+        border: 1px dashed #CBD5E1 !important;
+        padding: 3px 6px !important;
+        border-radius: 2px !important;
+    }
+
+    .cert-proof-meta {
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-top: 3px !important;
+        font-size: 5.5pt !important;
+        color: #64748B !important;
+    }
+
+    .cert-proof-meta strong {
+        color: #1E3A8A !important;
+    }
+
+    /* Bloque de Firmas Institucionales (3 Columnas) */
+    .print-signatures-block {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 12px !important;
+        margin: 10px 0 6px 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .signature-col {
+        text-align: center !important;
+    }
+
+    .signature-line-box {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .digital-seal-preview {
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        border: 1px dashed #10B981 !important;
+        background: #ECFDF5 !important;
+        border-radius: 3px !important;
+        padding: 2px 6px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .digital-seal-preview.utp {
+        border-color: #3B82F6 !important;
+        background: #EFF6FF !important;
+    }
+
+    .digital-seal-preview.bcrp {
+        border-color: #D97706 !important;
+        background: #FEF3C7 !important;
+    }
+
+    .seal-auth-tag {
+        font-size: 5pt !important;
+        font-weight: 800 !important;
+        color: #065F46 !important;
+        letter-spacing: 0.04em !important;
+    }
+
+    .digital-seal-preview.utp .seal-auth-tag {
+        color: #1E40AF !important;
+    }
+
+    .digital-seal-preview.bcrp .seal-auth-tag {
+        color: #92400E !important;
+    }
+
+    .seal-hash-crumb {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 4.5pt !important;
+        color: #475569 !important;
+    }
+
+    .signature-draw-line {
+        width: 80% !important;
+        border-bottom: 1.5px solid #0F172A !important;
+        margin: 18px auto 4px auto !important;
+    }
+
+    .signature-name {
+        display: block !important;
+        font-size: 7pt !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        line-height: 1.15 !important;
+    }
+
+    .signature-title {
+        display: block !important;
+        font-size: 6pt !important;
+        font-weight: 600 !important;
+        color: #334155 !important;
+        line-height: 1.15 !important;
+    }
+
+    .signature-sub {
+        display: block !important;
+        font-size: 5.5pt !important;
+        color: #64748B !important;
+    }
+
+    .print-official-footer-note {
+        display: flex !important;
+        justify-content: space-between !important;
+        border-top: 1px solid #E2E8F0 !important;
+        padding-top: 4px !important;
+        margin-top: 6px !important;
+        font-size: 5.5pt !important;
+        color: #64748B !important;
     }
 }
+
 
 /* --------------------------------------------------------------------------
    12. MEJORAS EJECUTIVAS NOC & SISTEMA DE NAVEGACIÓN BCRP
@@ -2453,7 +3596,7 @@ a.nav-tab:focus-visible {
 .toolbar-unified select {
     height: 38px;
     box-sizing: border-box;
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #F8FAFC;
     border-radius: 6px;
@@ -2483,11 +3626,11 @@ a.nav-tab:focus-visible {
     border-color: #E2B357 !important;
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.2) !important;
-    background: #0B0F17;
+    background: #060A12;
 }
 
 .toolbar-unified select option {
-    background: #0B0F17;
+    background: #060A12;
     color: #F8FAFC;
     padding: 8px 12px;
 }
@@ -2513,7 +3656,7 @@ a.nav-tab:focus-visible {
     padding-left: 36px;
     height: 38px;
     box-sizing: border-box;
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #F8FAFC;
     border-radius: 6px;
@@ -2632,7 +3775,7 @@ a.nav-tab:focus-visible {
     max-height: 88vh;
     display: flex;
     flex-direction: column;
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(226, 179, 87, 0.35);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(226, 179, 87, 0.15);
 }
@@ -3114,7 +4257,7 @@ a.nav-tab:focus-visible {
    ========================================================================== */
 .topology-panel-section {
     position: relative;
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(56, 189, 248, 0.22);
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.04);
     margin-bottom: 24px;
@@ -3171,9 +4314,22 @@ a.nav-tab:focus-visible {
 }
 
 .topology-status-pill.contingency {
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.35);
-    color: #F87171;
+    background: rgba(239, 68, 68, 0.14);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    color: #EF4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+    animation: pulseContingencyBadge 2s infinite ease-in-out;
+}
+
+@keyframes pulseContingencyBadge {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(239, 68, 68, 0.45);
+        border-color: rgba(239, 68, 68, 0.85);
+    }
 }
 
 .topology-tps-pill {
@@ -3259,7 +4415,7 @@ a.nav-tab:focus-visible {
     width: 100%;
     max-width: 100%;
     height: 380px;
-    background: #0B0F17;
+    background: #060A12;
     overflow: hidden;
     cursor: default;
     user-select: none;
@@ -3273,6 +4429,12 @@ a.nav-tab:focus-visible {
     max-width: 100%;
     height: 100%;
     box-sizing: border-box;
+    image-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 /* HUD Overlays en Esquinas */
@@ -5098,7 +6260,7 @@ a.nav-tab:focus-visible {
 
 .audit-filters-toolbar .audit-input,
 .audit-filters-toolbar .audit-select {
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #F8FAFC;
     font-family: 'Plus Jakarta Sans', var(--font-sans);
@@ -5116,7 +6278,7 @@ a.nav-tab:focus-visible {
 }
 
 .audit-filters-toolbar .audit-select option {
-    background: #0B0F17;
+    background: #060A12;
     color: #F8FAFC;
     padding: 8px 12px;
 }
@@ -5135,7 +6297,7 @@ a.nav-tab:focus-visible {
     border-color: #E2B357 !important;
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.25) !important;
-    background: #0B0F17 !important;
+    background: #060A12 !important;
 }
 
 .audit-filters-toolbar .search-input-wrapper {
@@ -5506,7 +6668,7 @@ a.nav-tab:focus-visible {
     bottom: calc(100% + 6px);
     left: 50%;
     transform: translateX(-50%) scale(0.90);
-    background: #0B0F17;
+    background: #060A12;
     border: 1px solid rgba(16, 185, 129, 0.4);
     color: #34D399;
     font-size: 0.68rem;
@@ -5530,7 +6692,7 @@ a.nav-tab:focus-visible {
     transform: translateX(-50%);
     border-width: 4px;
     border-style: solid;
-    border-color: #0B0F17 transparent transparent transparent;
+    border-color: #060A12 transparent transparent transparent;
 }
 
 .btn-copy-hash.copied .copy-tooltip {
@@ -5594,3 +6756,371 @@ a.nav-tab:focus-visible {
     }
 }
 
+
+
+/* ==========================================================================
+   ESTÁNDAR MASTER RESPONSIVE & ERGONOMÍA TÁCTIL (ANTISLOP MOBILE - FRANK VARGAS)
+   Zero Horizontal Overflow (scrollWidth <= innerWidth) · Touch Targets >= 44x44px
+   Soporte Multi-Dispositivo: iPhone SE (375px), iPhone XR/14 (414px), iPad (768px), iPad Pro (1024px)
+   Digitalización, Maquetación & Traducción: Frankosyni (Φρανκοσύνη/Francus. @frankitoromas-tech)
+   ========================================================================== */
+
+/* 1. Invariante de Raíz y Protección de Desbordamiento */
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* 2. Contenedor de Tablas con Desplazamiento Táctil Inercial Fluido */
+.table-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    position: relative;
+    border-radius: var(--radius-md, 8px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(226, 179, 87, 0.35) rgba(15, 23, 42, 0.6);
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 9999px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: rgba(226, 179, 87, 0.35);
+    border-radius: 9999px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: rgba(226, 179, 87, 0.65);
+}
+
+/* 3. Ergonomía Táctil Global (Touch Targets >= 44x44px) */
+.btn,
+.btn-sm,
+.btn-bcrp,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-logout-header,
+.btn-cockpit-layout,
+.cockpit-tab,
+.segment-tab,
+.cmd-palette-pill,
+.header-user-trigger,
+.btn-audio-toggle {
+    touch-action: manipulation;
+}
+
+/* 4. Adaptaciones para Tablets y Laptops Compactas (<= 1024px) */
+@media (max-width: 1024px) {
+    .app-header {
+        padding: 8px 16px !important;
+        gap: 10px !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    .header-nav {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+
+    .header-nav::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .main-layout,
+    .auditoria-layout,
+    .reportes-layout,
+    .sandwich-layout {
+        padding: 0 16px !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* 5. Adaptaciones para Tablets Verticales y Smartphones Grandes (<= 768px) */
+@media (max-width: 768px) {
+    .app-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 10px 14px !important;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    .header-left {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+    }
+
+    .brand-title p {
+        display: none !important;
+    }
+
+    .header-right {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .header-clock-box {
+        display: none !important; /* Optimización de espacio táctil en móviles */
+    }
+
+    .header-nav {
+        order: 3 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        padding: 4px !important;
+        box-sizing: border-box !important;
+        background: rgba(11, 15, 23, 0.75) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: var(--radius-sm, 6px) !important;
+    }
+
+    .header-nav::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .nav-tab {
+        min-height: 44px !important;
+        padding: 8px 14px !important;
+        font-size: 0.78rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        touch-action: manipulation !important;
+        border-radius: 6px !important;
+    }
+
+    .header-user-trigger {
+        min-height: 44px !important;
+        padding: 6px 12px !important;
+        touch-action: manipulation !important;
+    }
+
+    .cmd-palette-pill {
+        min-height: 44px !important;
+        padding: 0 12px !important;
+        touch-action: manipulation !important;
+    }
+
+    .btn-audio-toggle {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        touch-action: manipulation !important;
+    }
+
+    .user-menu-popover {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 12px !important;
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-width: calc(100vw - 24px) !important;
+        box-sizing: border-box !important;
+        border-radius: 14px !important;
+    }
+
+    .btn,
+    .btn-sm,
+    .btn-bcrp,
+    .btn-logout-header {
+        min-height: 44px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 10px 16px !important;
+    }
+
+    .form-control,
+    .search-input,
+    .audit-select,
+    .compact-select,
+    .compact-input {
+        min-height: 44px !important;
+        font-size: 16px !important; /* Previene el zoom automático al enfocar en Safari iOS */
+        box-sizing: border-box !important;
+    }
+
+    .main-layout,
+    .auditoria-layout,
+    .reportes-layout,
+    .sandwich-layout {
+        padding: 0 12px !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Adaptación Sandwich para Tablets y Móviles (<= 768px) */
+    .sandwich-ribbon-top,
+    .sandwich-header-bar {
+        max-height: none !important;
+        height: auto !important;
+        min-height: 48px !important;
+        padding: 10px 12px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        position: relative !important;
+    }
+
+    .sandwich-ribbon-top .ribbon-actions,
+    .sandwich-header-bar .sandwich-actions-toolbar {
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+
+    .sandwich-body-middle,
+    .sandwich-panes-wrapper {
+        padding: 8px 0 12px 0 !important;
+        gap: 12px !important;
+    }
+
+    .sandwich-footer-bottom,
+    .sandwich-footer-dock {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 10px 12px !important;
+    }
+}
+
+/* 6. Adaptaciones Extremas para Smartphones Compactos (<= 480px / iPhone SE 375px) */
+@media (max-width: 480px) {
+    .app-header {
+        padding: 8px 10px !important;
+    }
+
+    .brand-badge .badge-text {
+        font-size: 0.70rem !important;
+    }
+
+    .cmd-palette-pill span:not(.cmd-key-hint) {
+        display: none !important; /* Muestra solo el atajo ⌘K para máxima compacidad */
+    }
+
+    .cmd-palette-pill {
+        padding: 0 8px !important;
+    }
+
+    .user-name-compact {
+        max-width: 75px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .main-layout,
+    .auditoria-layout,
+    .reportes-layout,
+    .sandwich-layout {
+        padding: 0 8px !important;
+    }
+
+    /* Refinamiento Sandwich para Pantallas Ultra-compactas (375px) */
+    .sandwich-ribbon-top,
+    .sandwich-header-bar {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+    }
+
+    .sandwich-ribbon-top .ribbon-title,
+    .sandwich-header-bar .sandwich-title-row h2 {
+        font-size: 0.95rem !important;
+    }
+
+    .sandwich-body-middle,
+    .sandwich-panes-wrapper {
+        padding: 6px 0 10px 0 !important;
+        gap: 10px !important;
+    }
+
+    .sandwich-footer-bottom,
+    .sandwich-footer-dock {
+        padding: 8px 10px !important;
+        font-size: 0.68rem !important;
+    }
+
+    .audit-table-top h3 {
+        font-size: 0.88rem !important;
+    }
+}
+
+
+/* 7. Refinamiento de Áreas Táctiles Específicas (Touch Target Perfection >= 44x44px) */
+.user-menu-item {
+    min-height: 44px !important;
+    padding: 10px 14px !important;
+    touch-action: manipulation;
+}
+
+.drawer-btn-icon {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    touch-action: manipulation;
+}
+
+.nav-tab {
+    min-height: 42px !important;
+    padding: 8px 14px !important;
+    touch-action: manipulation;
+}
+
+.btn-copy-hash {
+    min-width: 40px !important;
+    min-height: 40px !important;
+    touch-action: manipulation;
+}
+
+
+.noc-btn-icon {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    touch-action: manipulation;
+}

@@ -8,9 +8,9 @@ const BASE = 'http://localhost:8080/api/v1';
 const AUTH = 'Basic ' + btoa('operador.noc:Bcrp2026!');
 
 const MOCK = [
-  { idEntidad: 1, codigoBcrp: '002', nombreEntidad: 'BCP (Yape)', totalIncidentes: 2, incidentesCriticos: 2, mttrMinutos: 95.5, mttdMinutos: 1.0, minutosIndisponibles: 191, uptimePct: 99.56 },
-  { idEntidad: 2, codigoBcrp: '003', nombreEntidad: 'Interbank (Plim)', totalIncidentes: 1, incidentesCriticos: 1, mttrMinutos: 45.0, mttdMinutos: 1.0, minutosIndisponibles: 45, uptimePct: 99.90 },
-  { idEntidad: 3, codigoBcrp: '801', nombreEntidad: 'Caja Cusco (Tunki)', totalIncidentes: 0, incidentesCriticos: 0, mttrMinutos: 0.0, mttdMinutos: 0.0, minutosIndisponibles: 0, uptimePct: 100.00 },
+  { idEntidad: 1, codigoBcrp: '002', nombreEntidad: 'Banco de Crédito (BCP)', totalIncidentes: 2, incidentesCriticos: 2, mttrMinutos: 95.5, mttdMinutos: 1.0, minutosIndisponibles: 191, uptimePct: 99.56 },
+  { idEntidad: 2, codigoBcrp: '003', nombreEntidad: 'BBVA Perú / Interbank', totalIncidentes: 1, incidentesCriticos: 1, mttrMinutos: 45.0, mttdMinutos: 1.0, minutosIndisponibles: 45, uptimePct: 99.90 },
+  { idEntidad: 3, codigoBcrp: '801', nombreEntidad: 'Caja Cusco', totalIncidentes: 0, incidentesCriticos: 0, mttrMinutos: 0.0, mttdMinutos: 0.0, minutosIndisponibles: 0, uptimePct: 100.00 },
   { idEntidad: 4, codigoBcrp: '812', nombreEntidad: 'Caja de los Andes', totalIncidentes: 0, incidentesCriticos: 0, mttrMinutos: 0.0, mttdMinutos: 0.0, minutosIndisponibles: 0, uptimePct: 100.00 },
   { idEntidad: 5, codigoBcrp: '901', nombreEntidad: 'CCE (Switch Central)', totalIncidentes: 1, incidentesCriticos: 1, mttrMinutos: 120.0, mttdMinutos: 2.0, minutosIndisponibles: 120, uptimePct: 99.72 }
 ];
@@ -28,9 +28,20 @@ function qp() {
 }
 
 async function getJSON(path) {
-  const r = await fetch(BASE + path + qp(), { headers: { Authorization: AUTH } });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return r.json();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 800);
+  try {
+    const r = await fetch(BASE + path + qp(), { 
+      headers: { Authorization: AUTH },
+      signal: controller.signal 
+    });
+    clearTimeout(timeoutId);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
 }
 
 /**
@@ -48,6 +59,20 @@ function escapeHTML(str) {
 
 if (typeof window !== 'undefined' && !window.escapeHTML) {
   window.escapeHTML = escapeHTML;
+}
+
+/**
+ * Sanitización de filas de tabla (tr/td) compatible con DOMParser de DOMPurify
+ */
+function sanitizeTableHtml(htmlRows) {
+  if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+    const wrapped = `<table><tbody>${htmlRows}</tbody></table>`;
+    const clean = window.DOMPurify.sanitize(wrapped, { ADD_ATTR: ['style', 'title', 'data-filename', 'target'] });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(clean, 'text/html');
+    return doc.querySelector('tbody')?.innerHTML || htmlRows;
+  }
+  return htmlRows;
 }
 
 /**
@@ -140,19 +165,20 @@ async function calcularSha256(str) {
  * Renderizado de gráfico de líneas ejecutiva moderna de disponibilidad Uptime con umbral SLA 99.90%
  * Soporte Retina / High-DPI, curvas Bézier suaves, gradiente sutil y badge flotante de meta SLA.
  */
-function drawChart(rows) {
+function drawChart(rows, isPrintMode = false) {
   const c = document.getElementById('chartUptime');
   if (!c) return;
   const ctx = c.getContext('2d');
   if (!ctx) return;
 
+  const isPrint = isPrintMode || (typeof window !== 'undefined' && Boolean(window.__isPrinting));
   currentViewRows = rows || [];
 
   // Adaptación de resolución para pantallas Retina / High-DPI con window.devicePixelRatio
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const rect = c.getBoundingClientRect();
   const displayWidth = rect.width > 0 ? Math.floor(rect.width) : (c.parentElement ? c.parentElement.clientWidth : 800);
-  const displayHeight = 260; // 260px proporciona amplio espacio para etiquetas superiores e inferiores
+  const displayHeight = isPrint ? 200 : 260;
 
   // Dimensiones físicas de buffer vs estilo CSS
   c.width = Math.floor(displayWidth * dpr);
@@ -162,10 +188,16 @@ function drawChart(rows) {
 
   ctx.save();
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, displayWidth, displayHeight);
+  
+  if (isPrint) {
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, displayWidth, displayHeight);
+  } else {
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
+  }
 
   if (!rows || rows.length === 0) {
-    ctx.fillStyle = '#64748B';
+    ctx.fillStyle = isPrint ? '#475569' : '#64748B';
     ctx.font = '500 12px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -177,8 +209,8 @@ function drawChart(rows) {
   // Márgenes internos calibrados para evitar cualquier recorte en bordes
   const paddingLeft = 70;
   const paddingRight = 60;
-  const paddingTop = 44;
-  const paddingBottom = 54;
+  const paddingTop = isPrint ? 36 : 44;
+  const paddingBottom = isPrint ? 46 : 54;
   const chartWidth = Math.max(10, displayWidth - paddingLeft - paddingRight);
   const chartHeight = Math.max(10, displayHeight - paddingTop - paddingBottom);
 
@@ -201,9 +233,9 @@ function drawChart(rows) {
   ];
 
   ctx.save();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.strokeStyle = isPrint ? '#E2E8F0' : 'rgba(255, 255, 255, 0.05)';
   ctx.lineWidth = 1;
-  ctx.fillStyle = '#64748B';
+  ctx.fillStyle = isPrint ? '#475569' : '#64748B';
   ctx.font = '500 10px JetBrains Mono, monospace';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
@@ -226,7 +258,7 @@ function drawChart(rows) {
   const slaY = getY(slaTarget);
 
   ctx.save();
-  ctx.strokeStyle = 'rgba(239, 68, 68, 0.75)';
+  ctx.strokeStyle = isPrint ? '#DC2626' : 'rgba(239, 68, 68, 0.75)';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([5, 4]);
   ctx.beginPath();
@@ -244,8 +276,8 @@ function drawChart(rows) {
   const pillY = slaY - pillH / 2;
 
   ctx.setLineDash([]);
-  ctx.fillStyle = '#0B132B';
-  ctx.strokeStyle = 'rgba(239, 68, 68, 0.65)';
+  ctx.fillStyle = isPrint ? '#FEF2F2' : '#0B132B';
+  ctx.strokeStyle = isPrint ? '#DC2626' : 'rgba(239, 68, 68, 0.65)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   if (typeof ctx.roundRect === 'function') {
@@ -263,7 +295,7 @@ function drawChart(rows) {
   ctx.fill();
 
   // Texto del badge
-  ctx.fillStyle = '#FCA5A5';
+  ctx.fillStyle = isPrint ? '#991B1B' : '#FCA5A5';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillText(slaBadgeText, pillX + 16, slaY);
@@ -298,12 +330,18 @@ function drawChart(rows) {
     }
   }
 
-  // 1. Área degradada inferior suave bajo la curva Bézier: rgba(16, 185, 129, 0.12) a transparente
+  // 1. Área degradada inferior suave bajo la curva Bézier
   ctx.save();
   const areaGrad = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + chartHeight);
-  areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)'); // Verde esmeralda suave superior (0.12)
-  areaGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
-  areaGrad.addColorStop(1, 'rgba(16, 185, 129, 0.00)'); // Transparente en base
+  if (isPrint) {
+    areaGrad.addColorStop(0, 'rgba(5, 150, 105, 0.14)');
+    areaGrad.addColorStop(0.7, 'rgba(5, 150, 105, 0.04)');
+    areaGrad.addColorStop(1, 'rgba(5, 150, 105, 0.00)');
+  } else {
+    areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)');
+    areaGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
+    areaGrad.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
+  }
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, paddingTop + chartHeight);
@@ -315,11 +353,13 @@ function drawChart(rows) {
   ctx.fill();
   ctx.restore();
 
-  // 2. Línea ejecutiva verde esmeralda con curva Bézier suave y resplandor sutil
+  // 2. Línea ejecutiva verde esmeralda con curva Bézier suave
   ctx.save();
-  ctx.shadowColor = 'rgba(16, 185, 129, 0.45)';
-  ctx.shadowBlur = 8;
-  ctx.strokeStyle = '#10B981'; // Esmeralda FinTech
+  if (!isPrint) {
+    ctx.shadowColor = 'rgba(16, 185, 129, 0.45)';
+    ctx.shadowBlur = 8;
+  }
+  ctx.strokeStyle = isPrint ? '#059669' : '#10B981';
   ctx.lineWidth = 2.5;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
@@ -332,12 +372,12 @@ function drawChart(rows) {
   // 3. Nodos de datos, guías verticales y etiquetas en JetBrains Mono y Plus Jakarta Sans
   points.forEach(p => {
     const cumpleSla = p.row.uptimePct >= 99.90;
-    const nodeColor = cumpleSla ? '#10B981' : '#F59E0B';
-    const textColor = cumpleSla ? '#34D399' : '#FBBF24';
+    const nodeColor = cumpleSla ? (isPrint ? '#059669' : '#10B981') : (isPrint ? '#D97706' : '#F59E0B');
+    const textColor = isPrint ? '#0F172A' : (cumpleSla ? '#34D399' : '#FBBF24');
 
     // Guía vertical punteada hacia el eje X
     ctx.save();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = isPrint ? '#CBD5E1' : 'rgba(255, 255, 255, 0.08)';
     ctx.setLineDash([2, 3]);
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -350,7 +390,7 @@ function drawChart(rows) {
     ctx.save();
     ctx.beginPath();
     ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#0B132B';
+    ctx.fillStyle = isPrint ? '#FFFFFF' : '#0B132B';
     ctx.fill();
     ctx.strokeStyle = nodeColor;
     ctx.lineWidth = 2;
@@ -363,7 +403,7 @@ function drawChart(rows) {
     ctx.fill();
     ctx.restore();
 
-    // Etiqueta superior nítida en JetBrains Mono (sin recorte superior)
+    // Etiqueta superior nítida en JetBrains Mono
     ctx.save();
     ctx.font = '700 11px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
@@ -372,65 +412,389 @@ function drawChart(rows) {
     ctx.fillText(`${p.row.uptimePct.toFixed(2)}%`, p.x, p.y - 8);
 
     // Etiqueta inferior en el eje X: Nombre de Entidad
-    ctx.font = '600 11px Plus Jakarta Sans, sans-serif';
-    ctx.fillStyle = '#CBD5E1';
+    ctx.font = '700 11px Plus Jakarta Sans, sans-serif';
+    ctx.fillStyle = isPrint ? '#0F172A' : '#CBD5E1';
     ctx.textBaseline = 'top';
     const shortName = p.row.nombreEntidad.split('(')[0].trim();
-    ctx.fillText(shortName, p.x, paddingTop + chartHeight + 12);
+    ctx.fillText(shortName, p.x, paddingTop + chartHeight + 10);
 
-    // Código BCRP en JetBrains Mono (sin recorte inferior)
-    ctx.font = '500 10px JetBrains Mono, monospace';
-    ctx.fillStyle = '#64748B';
-    ctx.fillText(`[${p.row.codigoBcrp}]`, p.x, paddingTop + chartHeight + 26);
+    // Código BCRP en JetBrains Mono
+    ctx.font = '600 10px JetBrains Mono, monospace';
+    ctx.fillStyle = isPrint ? '#475569' : '#64748B';
+    ctx.fillText(`[${p.row.codigoBcrp}]`, p.x, paddingTop + chartHeight + 24);
     ctx.restore();
   });
 
   ctx.restore();
+
+  // Guardar puntos calculados para interactividad y tooltip flotante
+  window.__chartPoints = points;
+  if (!isPrint) {
+    setupChartHoverTooltip(c);
+  }
 }
 
 /**
- * Carga de datos y KPIs
+ * Configuración del Tooltip Interactivo Flotante sobre el Canvas del Gráfico
  */
-async function cargar() {
-  let rows, kpis;
-  try {
-    rows = await getJSON('/reportes/indisponibilidad');
-    kpis = await getJSON('/reportes/kpis');
-    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
-    const dot = document.getElementById('backendStatusDot');
-    const text = document.getElementById('backendStatusText');
-    if (pill) {
-      pill.classList.remove('offline');
-      pill.classList.add('online');
-      if (text) text.innerText = 'Conectado (PostgreSQL)';
-      if (dot) {
-        dot.className = 'status-dot online';
-        dot.style.background = '#10B981';
+function setupChartHoverTooltip(canvas) {
+  if (!canvas || canvas.__hasHoverListener) return;
+  canvas.__hasHoverListener = true;
+
+  const tooltip = document.getElementById('chartTooltip');
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!window.__chartPoints || !window.__chartPoints.length) return;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    let closest = null;
+    let minDist = 48; // Radio de detección en píxeles
+
+    window.__chartPoints.forEach(p => {
+      const dx = p.x - mouseX;
+      const dy = p.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = p;
       }
+    });
+
+    if (closest && tooltip) {
+      const r = closest.row;
+      const cumpleSla = r.uptimePct >= 99.90;
+      const statusPillClass = cumpleSla ? 'badge-reg-status resuelto' : 'badge-reg-status atencion';
+      const statusText = cumpleSla ? '🟢 Conforme BCRP' : '🟡 Observación SLA';
+      const diff = (r.uptimePct - 99.90).toFixed(2);
+      const diffLabel = cumpleSla ? `+${diff}% sobre meta` : `${diff}% bajo meta`;
+
+      tooltip.innerHTML = `
+        <div class="chart-tooltip-header">
+          <span class="tooltip-entity">${escapeHTML(r.nombreEntidad)}</span>
+          <span class="tooltip-code">${escapeHTML(r.codigoBcrp)}</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Disponibilidad:</span>
+          <span class="tooltip-val ${cumpleSla ? 'ok' : 'warn'}">${r.uptimePct.toFixed(2)}%</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Estado Normativo:</span>
+          <span class="${statusPillClass}">${statusText}</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Brecha SLA BCRP:</span>
+          <span style="font-size:0.68rem; font-weight:700; color:${cumpleSla ? '#34D399' : '#FBBF24'};">${diffLabel}</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Tiempo Solución:</span>
+          <span class="tooltip-val">${(Number(r.mttrMinutos) || 0).toFixed(1)} min</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Tiempo Detección:</span>
+          <span class="tooltip-val">${(Number(r.mttdMinutos) || 0).toFixed(1)} min</span>
+        </div>
+      `;
+
+      tooltip.style.left = `${closest.x}px`;
+      tooltip.style.top = `${closest.y}px`;
+      tooltip.classList.add('active');
+    } else if (tooltip) {
+      tooltip.classList.remove('active');
     }
-  } catch (e) {
-    rows = MOCK;
-    kpis = { totalIncidentes: 4, activos: 2, cerrados: 2, mttrGlobalMinutos: 71.8, mttdGlobalMinutos: 1.3, uptimeGlobalPct: 99.76 };
-    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
-    const dot = document.getElementById('backendStatusDot');
-    const text = document.getElementById('backendStatusText');
-    if (pill) {
-      pill.classList.remove('online');
-      pill.classList.add('offline');
-      if (text) text.innerText = 'Modo Simulación (Mock)';
-      if (dot) {
-        dot.className = 'status-dot';
-        dot.style.background = '#F59E0B';
-      }
-    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    if (tooltip) tooltip.classList.remove('active');
+  });
+}
+
+/**
+ * Registro Canónico de Eventos Regulatorios Oficiales (Circular BCRP N° 0014-2023)
+ */
+const EVENTOS_REGULATORIOS = [
+  {
+    ticket: 'INC-20261031-10001',
+    idEntidad: 1,
+    codigoBcrp: '002',
+    entidadNombre: 'Banco de Crédito (BCP)',
+    categoria: 'Disponibilidad de Servicios',
+    severidad: 'CRITICA',
+    tiempoDeteccion: 1.0,
+    tiempoSolucion: 95.5,
+    estado: 'EN_ATENCION',
+    descripcion: 'Interrupción en canal de pagos inmediatos. Contingencia de enrutamiento activada.',
+    hashCert: 'e3b0c44298fc1c14'
+  },
+  {
+    ticket: 'INC-20261031-10002',
+    idEntidad: 5,
+    codigoBcrp: '901',
+    entidadNombre: 'CCE (Switch Central)',
+    categoria: 'Canal de Compensación',
+    severidad: 'ALTA',
+    tiempoDeteccion: 2.0,
+    tiempoSolucion: 120.0,
+    estado: 'EN_ATENCION',
+    descripcion: 'Latencia transitoria en cámara compensatoria; canal secundario operando.',
+    hashCert: '7f83b1657ff1fc53'
+  },
+  {
+    ticket: 'INC-20261028-09945',
+    idEntidad: 2,
+    codigoBcrp: '003',
+    entidadNombre: 'BBVA Perú / Interbank',
+    categoria: 'Autenticación y Liquidación',
+    severidad: 'MEDIA',
+    tiempoDeteccion: 1.0,
+    tiempoSolucion: 45.0,
+    estado: 'RESUELTO',
+    descripcion: 'Restablecido al 100% con conformidad técnica y validación de saldos BCRP.',
+    hashCert: '185f8db32271fe25'
+  },
+  {
+    ticket: 'INC-20261015-09820',
+    idEntidad: 1,
+    codigoBcrp: '002',
+    entidadNombre: 'Banco de Crédito (BCP)',
+    categoria: 'Pasarela Inmediata',
+    severidad: 'BAJA',
+    tiempoDeteccion: 1.2,
+    tiempoSolucion: 26.5,
+    estado: 'RESUELTO',
+    descripcion: 'Cierre auditado sin afectación a saldos de participantes ni reintentos fallidos.',
+    hashCert: '2c26b46b68ffc68e'
+  }
+];
+
+let currentEventFilterStatus = 'todos';
+let currentEventSearchQuery = '';
+
+/**
+ * Renderizado de Tabla de Eventos Regulatorios (Pestaña 2) con Búsqueda y Filtros
+ */
+function renderEventosRegulatorios() {
+  const tbody = document.getElementById('tbodyEventosRegulatorios');
+  if (!tbody) return;
+
+  const ent = document.getElementById('fEntidad')?.value;
+  let filtered = EVENTOS_REGULATORIOS;
+
+  if (ent) {
+    filtered = filtered.filter(e => String(e.idEntidad) === ent);
   }
 
+  if (currentEventFilterStatus === 'atencion') {
+    filtered = filtered.filter(e => e.estado === 'EN_ATENCION');
+  } else if (currentEventFilterStatus === 'resuelto') {
+    filtered = filtered.filter(e => e.estado === 'RESUELTO');
+  }
+
+  if (currentEventSearchQuery.trim()) {
+    const q = currentEventSearchQuery.toLowerCase().trim();
+    filtered = filtered.filter(e => 
+      e.ticket.toLowerCase().includes(q) ||
+      e.entidadNombre.toLowerCase().includes(q) ||
+      e.categoria.toLowerCase().includes(q) ||
+      e.descripcion.toLowerCase().includes(q)
+    );
+  }
+
+  const badgeCount = document.getElementById('badgeEventosCount');
+  if (badgeCount) {
+    badgeCount.textContent = `${filtered.length} Registros`;
+  }
+
+  const paginationText = document.getElementById('eventsPaginationText');
+  if (paginationText) {
+    paginationText.textContent = `Mostrando 1 - ${filtered.length} de ${filtered.length} eventos regulatorios`;
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center; padding:22px; color:#64748B;">
+          No se encontraron eventos regulatorios para el filtro seleccionado.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const html = filtered.map(ev => {
+    const isAtencion = ev.estado === 'EN_ATENCION';
+    const statusBadge = isAtencion
+      ? `<span class="badge-reg-status atencion"><span class="sla-dot" style="background:#EF4444;"></span>EN ATENCIÓN</span>`
+      : `<span class="badge-reg-status resuelto"><span class="sla-dot" style="background:#10B981;"></span>RESUELTO &amp; AUDITADO</span>`;
+
+    let sevBadge = `<span class="badge-reg-sev baja">BAJA</span>`;
+    if (ev.severidad === 'CRITICA') sevBadge = `<span class="badge-reg-sev critica">CRÍTICA</span>`;
+    else if (ev.severidad === 'ALTA') sevBadge = `<span class="badge-reg-sev alta">ALTA</span>`;
+    else if (ev.severidad === 'MEDIA') sevBadge = `<span class="badge-reg-sev media">MEDIA</span>`;
+
+    return `
+      <tr>
+        <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:#38BDF8;">${escapeHTML(ev.ticket)}</td>
+        <td style="font-weight:600; color:var(--text-primary); font-family:var(--font-sans);">
+          ${escapeHTML(ev.entidadNombre)} <span style="font-family:'JetBrains Mono'; font-size:0.68rem; color:#64748B;">[${escapeHTML(ev.codigoBcrp)}]</span>
+        </td>
+        <td>${escapeHTML(ev.categoria)}</td>
+        <td style="text-align:center;">${sevBadge}</td>
+        <td style="font-family:'JetBrains Mono'; font-weight:600; text-align:right;">${ev.tiempoDeteccion.toFixed(1)} min</td>
+        <td style="font-family:'JetBrains Mono'; font-weight:600; text-align:right;">${ev.tiempoSolucion.toFixed(1)} min</td>
+        <td style="text-align:center;">${statusBadge}</td>
+        <td>
+          <span style="font-family:'JetBrains Mono'; font-size:0.68rem; color:#E2B357; background:rgba(226,179,87,0.1); padding:2px 6px; border-radius:4px;" title="Hash SHA-256 verificado: ${ev.hashCert}">
+            ${ev.hashCert}…
+          </span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.innerHTML = sanitizeTableHtml(html);
+}
+
+/**
+ * Renderizado de Tarjetas de Resumen Comparativo por Entidad (Pestaña 3)
+ */
+function renderEntityDistributionCards(rows) {
+  const container = document.getElementById('entityDistributionCards');
+  if (!container || !rows) return;
+
+  const cardsHtml = rows.map(r => {
+    const cumpleSla = r.uptimePct >= 99.90;
+    const barGrad = cumpleSla ? 'linear-gradient(90deg, #059669, #10B981)' : 'linear-gradient(90deg, #D97706, #F59E0B)';
+    const pctColor = cumpleSla ? '#34D399' : '#FBBF24';
+    const clamped = Math.min(100, Math.max(0, Number(r.uptimePct) || 0));
+
+    return `
+      <div class="entity-card-mini">
+        <div class="entity-card-header">
+          <span class="entity-card-name">${escapeHTML(r.nombreEntidad)}</span>
+          <span class="entity-card-code">[${escapeHTML(r.codigoBcrp)}]</span>
+        </div>
+        <div class="entity-card-bar-track" title="${r.uptimePct.toFixed(2)}% de disponibilidad">
+          <div class="entity-card-bar-fill" style="width:${clamped}%; background:${barGrad};"></div>
+        </div>
+        <div class="entity-card-footer">
+          <span style="color:${pctColor}; font-weight:700;" class="entity-uptime-val">${r.uptimePct.toFixed(2)}% SLA</span>
+          <span style="font-size:0.67rem; color:${cumpleSla ? '#10B981' : '#F59E0B'}; font-weight:600;">
+            ${cumpleSla ? '🟢 Conforme' : '🟡 Observado'}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = cardsHtml;
+}
+
+/**
+ * Inicialización de Chips de Rango Rápido de Fechas (Bread Top)
+ */
+function initQuickDateChips() {
+  const chips = document.querySelectorAll('.chip-btn');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const range = chip.getAttribute('data-range');
+      const now = new Date();
+      const toLocalISO = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
+      const fD = document.getElementById('fDesde');
+      const fH = document.getElementById('fHasta');
+
+      if (range === 'hoy') {
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0);
+        if (fD) fD.value = toLocalISO(startOfDay);
+        if (fH) fH.value = toLocalISO(now);
+      } else if (range === '24h') {
+        const h24 = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        if (fD) fD.value = toLocalISO(h24);
+        if (fH) fH.value = toLocalISO(now);
+      } else if (range === 'semana') {
+        const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (fD) fD.value = toLocalISO(weekStart);
+        if (fH) fH.value = toLocalISO(now);
+      } else if (range === 'mes') {
+        if (fD) fD.value = '2026-10-01T00:00';
+        if (fH) fH.value = '2026-10-31T23:59';
+      }
+
+      if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+        window.SoundFX.playClick();
+      }
+      cargar();
+    });
+  });
+}
+
+/**
+ * Inicialización de Filtros y Búsqueda de Eventos Regulatorios (Pestaña 2)
+ */
+function initEventFilters() {
+  const chips = document.querySelectorAll('.event-filter-chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentEventFilterStatus = chip.getAttribute('data-status') || 'todos';
+      renderEventosRegulatorios();
+      if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+        window.SoundFX.playClick();
+      }
+    });
+  });
+
+  const searchInput = document.getElementById('inputSearchEvents');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      currentEventSearchQuery = e.target.value || '';
+      renderEventosRegulatorios();
+    });
+  }
+}
+
+const DEFAULT_KPIS = { totalIncidentes: 4, activos: 2, cerrados: 2, mttrGlobalMinutos: 71.8, mttdGlobalMinutos: 1.3, uptimeGlobalPct: 99.76 };
+let lastLoadedRows = MOCK;
+let lastLoadedKpis = DEFAULT_KPIS;
+
+/**
+ * Aplicación de datos a componentes visuales (Ribbon de KPIs, tablas, cards y gráficos)
+ */
+function aplicarDatos(rows, kpis) {
+  if (!rows || !kpis) return;
+  lastLoadedRows = rows;
+  lastLoadedKpis = kpis;
   const ent = document.getElementById('fEntidad')?.value;
   const view = ent ? rows.filter(r => String(r.idEntidad) === ent) : rows;
 
+  // Cálculo dinámico de KPIs según la entidad seleccionada o vista global
+  let effectiveKpis = { ...kpis };
+  if (ent) {
+    const selectedRow = rows.find(r => String(r.idEntidad) === ent);
+    if (selectedRow) {
+      const entEvents = EVENTOS_REGULATORIOS.filter(ev => String(ev.idEntidad) === ent);
+      const activosCount = entEvents.filter(ev => ev.estado === 'EN_ATENCION').length;
+      const cerradosCount = entEvents.filter(ev => ev.estado === 'RESUELTO').length;
+      effectiveKpis = {
+        totalIncidentes: selectedRow.totalIncidentes,
+        activos: activosCount,
+        cerrados: cerradosCount,
+        mttrGlobalMinutos: selectedRow.mttrMinutos,
+        mttdGlobalMinutos: selectedRow.mttdMinutos,
+        uptimeGlobalPct: selectedRow.uptimePct
+      };
+    }
+  }
+
+  // Renderizar tabla de desglose por entidad en Pestaña 3
   const tbody = document.getElementById('tbodyIndisp');
   if (tbody) {
-    tbody.innerHTML = view.map(r => {
+    const rawRows = view.map(r => {
       const cumpleSla = r.uptimePct >= 99.90;
       const statusClass = cumpleSla ? 'badge-sla-ok' : 'badge-sla-warn';
       const statusLabel = cumpleSla ? 'CUMPLE META' : 'EN ATENCIÓN';
@@ -474,9 +838,10 @@ async function cargar() {
       </tr>
       `;
     }).join('');
+    tbody.innerHTML = sanitizeTableHtml(rawRows);
   }
 
-  // Actualizar KPIs de cabecera
+  // Actualizar los 6 KPIs del Ribbon Continuo de Métricas en Vidrio Esmerilado
   const kTot = document.getElementById('kTotal');
   const kAct = document.getElementById('kActivos');
   const kCer = document.getElementById('kCerrados');
@@ -484,30 +849,42 @@ async function cargar() {
   const kMttd = document.getElementById('kMttd');
   const kUpt = document.getElementById('kUptime');
 
-  if (kTot) kTot.innerText = kpis.totalIncidentes;
-  if (kAct) kAct.innerText = kpis.activos;
-  if (kCer) kCer.innerText = kpis.cerrados;
-  if (kMttr) kMttr.innerText = kpis.mttrGlobalMinutos;
-  if (kMttd) kMttd.innerText = kpis.mttdGlobalMinutos;
+  if (kTot) kTot.innerText = effectiveKpis.totalIncidentes;
+  if (kAct) kAct.innerText = effectiveKpis.activos;
+  if (kCer) kCer.innerText = effectiveKpis.cerrados;
+  if (kMttr) kMttr.innerText = (Number(effectiveKpis.mttrGlobalMinutos) || 0).toFixed(1);
+  if (kMttd) kMttd.innerText = (Number(effectiveKpis.mttdGlobalMinutos) || 0).toFixed(1);
+
+  const uptimeVal = Number(effectiveKpis.uptimeGlobalPct) || 99.76;
   if (kUpt) {
-    kUpt.innerText = kpis.uptimeGlobalPct + '%';
-    kUpt.style.color = kpis.uptimeGlobalPct >= 99.90 ? '#38BDF8' : '#F59E0B';
+    kUpt.innerText = uptimeVal.toFixed(2) + '%';
+    kUpt.style.color = uptimeVal >= 99.90 ? '#38BDF8' : '#F59E0B';
   }
 
   const kUptStatus = document.getElementById('kUptimeStatus');
   if (kUptStatus) {
-    if (kpis.uptimeGlobalPct >= 99.90) {
+    if (uptimeVal >= 99.90) {
       kUptStatus.innerText = '🟢 Operación Estable';
-      kUptStatus.style.color = '#10B981';
+      kUptStatus.className = 'kpi-meta-sub success';
     } else {
-      kUptStatus.innerText = '🟡 Atención Requerida';
-      kUptStatus.style.color = '#F59E0B';
+      kUptStatus.innerText = '🟡 Observación SLA';
+      kUptStatus.className = 'kpi-meta-sub warn';
     }
   }
 
+  // Renderizar tarjetas de resumen por entidad en Pestaña 3
+  renderEntityDistributionCards(rows);
+
+  // Renderizar tabla de eventos regulatorios en Pestaña 2
+  renderEventosRegulatorios();
+
+  // Sincronizar Scorecard de Impresión Oficial BCRP
+  sincronizarMetadatosImpresion(effectiveKpis);
+
+  // Redibujar gráfico de disponibilidad
   drawChart(view);
 
-  // Poblar select si no tiene opciones
+  // Poblar select si no tiene opciones cargadas
   const sel = document.getElementById('fEntidad');
   if (sel && sel.options.length <= 1) {
     rows.forEach(r => {
@@ -516,6 +893,52 @@ async function cargar() {
       o.text = `${r.nombreEntidad} (${r.codigoBcrp})`;
       sel.appendChild(o);
     });
+  }
+}
+
+/**
+ * Carga de datos y Ribbon Continuo de KPIs
+ */
+async function cargar() {
+  // Pre-renderizado inmediato con MOCK para visualización instantánea (Zero UI Latency)
+  if (!window.__hasInitialRender) {
+    aplicarDatos(MOCK, DEFAULT_KPIS);
+    window.__hasInitialRender = true;
+  }
+
+  let rows, kpis;
+  try {
+    rows = await getJSON('/reportes/indisponibilidad');
+    kpis = await getJSON('/reportes/kpis');
+    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
+    const dot = document.getElementById('backendStatusDot');
+    const text = document.getElementById('backendStatusText');
+    if (pill) {
+      pill.classList.remove('offline');
+      pill.classList.add('online');
+      if (text) text.innerText = 'Supervisión Activa (Switch Central CCE)';
+      if (dot) {
+        dot.className = 'status-dot online';
+        dot.style.background = '#10B981';
+      }
+    }
+    aplicarDatos(rows, kpis);
+  } catch (e) {
+    rows = MOCK;
+    kpis = DEFAULT_KPIS;
+    const pill = document.getElementById('backendStatusPill') || document.getElementById('connPill');
+    const dot = document.getElementById('backendStatusDot');
+    const text = document.getElementById('backendStatusText');
+    if (pill) {
+      pill.classList.remove('online');
+      pill.classList.add('offline');
+      if (text) text.innerText = 'Modo Demostración Regulatoria';
+      if (dot) {
+        dot.className = 'status-dot';
+        dot.style.background = '#F59E0B';
+      }
+    }
+    aplicarDatos(rows, kpis);
   }
 }
 
@@ -534,9 +957,38 @@ function inicializarFechas() {
 // Eventos de usuario
 document.getElementById('btnAplicar')?.addEventListener('click', cargar);
 
-document.getElementById('fEntidad')?.addEventListener('change', cargar);
+document.getElementById('fEntidad')?.addEventListener('change', () => {
+  aplicarDatos(lastLoadedRows, lastLoadedKpis);
+  if (window.SoundFX && typeof window.SoundFX.playClick === 'function') {
+    window.SoundFX.playClick();
+  }
+});
 
 document.getElementById('btnCSV')?.addEventListener('click', () => {
+  const activePane = document.querySelector('.sandwich-pane.active');
+  const isEventosActive = activePane && activePane.id === 'pane-eventos';
+
+  if (isEventosActive) {
+    const tableRows = [...document.querySelectorAll('#tbodyEventosRegulatorios tr')];
+    if (!tableRows.length) {
+      alert('No hay eventos regulatorios para exportar.');
+      return;
+    }
+    const rows = tableRows.map(tr => {
+      return [...tr.children].map(td => td.innerText.replace(/[\r\n]+/g, ' ').replace(/;/g, ',').replace(/\s+/g, ' ').trim()).join(';');
+    }).join('\r\n');
+    const headers = 'Ticket;Entidad;Categoria;Severidad;TiempoDeteccion_min;TiempoSolucion_min;Estado;SelloSHA256\r\n';
+    const blob = new Blob(['\uFEFF' + headers + rows], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `EVENTOS_REGULATORIOS_BCRP_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    return;
+  }
+
   const tableRows = [...document.querySelectorAll('#tbodyIndisp tr')];
   if (!tableRows.length) {
     alert('No hay registros de indisponibilidad para exportar.');
@@ -565,12 +1017,173 @@ document.getElementById('btnCSV')?.addEventListener('click', () => {
   URL.revokeObjectURL(a.href);
 });
 
-document.getElementById('btnPrint')?.addEventListener('click', () => {
+/**
+ * Sincronización de indicadores del Scorecard de Impresión Oficial BCRP
+ */
+function sincronizarMetadatosImpresion(kpis) {
+  if (!kpis) return;
+  const scoreUpt = document.getElementById('printScoreUptime');
+  if (scoreUpt) {
+    const val = kpis.uptimeGlobalPct !== undefined ? kpis.uptimeGlobalPct : 99.76;
+    scoreUpt.innerText = (Number(val) || 99.76).toFixed(2) + '%';
+  }
+  const scoreTot = document.getElementById('printScoreTotal');
+  if (scoreTot) scoreTot.innerText = kpis.totalIncidentes !== undefined ? kpis.totalIncidentes : '4';
+
+  const scoreMttd = document.getElementById('printScoreMttd');
+  if (scoreMttd) {
+    const val = kpis.mttdGlobalMinutos !== undefined ? kpis.mttdGlobalMinutos : 1.3;
+    scoreMttd.innerText = (Number(val) || 1.3).toFixed(1);
+  }
+
+  const scoreMttr = document.getElementById('printScoreMttr');
+  if (scoreMttr) {
+    const val = kpis.mttrGlobalMinutos !== undefined ? kpis.mttrGlobalMinutos : 71.8;
+    scoreMttr.innerText = (Number(val) || 71.8).toFixed(1);
+  }
+
+  // Actualizar fecha PET
+  const ahora = new Date();
+  const fechaPet = ahora.toLocaleString('es-PE', {
+    timeZone: 'America/Lima',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+  const elFecha = document.getElementById('printEmissionDate');
+  if (elFecha) elFecha.innerText = `${fechaPet} PET`;
+  const elCertTime = document.getElementById('printCertTimestamp');
+  if (elCertTime) elCertTime.innerText = `${fechaPet} PET`;
+}
+
+/**
+ * Preparación del Documento Formal de Impresión y Certificación BCRP
+ * Sincroniza metadatos oficiales, fecha PET, Scorecard y Sello SHA-256 inmutable
+ */
+async function prepararImpresionOficial() {
+  window.__isPrinting = true;
+
+  // 1. Fecha y hora oficial en PET (Hora Legal del Perú: UTC-5)
+  const ahora = new Date();
+  const fechaPet = ahora.toLocaleString('es-PE', {
+    timeZone: 'America/Lima',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+  const textoFechaPet = `${fechaPet} PET (UTC-5)`;
+
+  const elFecha = document.getElementById('printEmissionDate');
+  if (elFecha) elFecha.innerText = textoFechaPet;
+
+  const elCertTime = document.getElementById('printCertTimestamp');
+  if (elCertTime) elCertTime.innerText = textoFechaPet;
+
+  // 2. Sincronizar Scorecard de Impresión desde los KPIs actuales
+  const kUpt = document.getElementById('kUptime')?.innerText || '99.76%';
+  const kTot = document.getElementById('kTotal')?.innerText || '4';
+  const kMttd = document.getElementById('kMttd')?.innerText || '1.3';
+  const kMttr = document.getElementById('kMttr')?.innerText || '71.8';
+
+  const scoreUpt = document.getElementById('printScoreUptime');
+  if (scoreUpt) scoreUpt.innerText = kUpt.endsWith('%') ? kUpt : kUpt + '%';
+
+  const scoreTot = document.getElementById('printScoreTotal');
+  if (scoreTot) scoreTot.innerText = kTot;
+
+  const scoreMttd = document.getElementById('printScoreMttd');
+  if (scoreMttd) scoreMttd.innerText = kMttd;
+
+  const scoreMttr = document.getElementById('printScoreMttr');
+  if (scoreMttr) scoreMttr.innerText = kMttr;
+
+  // 3. Generar Hash SHA-256 canónico inmutable de certificación
   try {
-    window.print();
+    const fD = document.getElementById('fDesde')?.value || '2026-10-01';
+    const fH = document.getElementById('fHasta')?.value || '2026-10-31';
+    const payloadCert = [
+      'BCRP_CERTIFICACION_OFICIAL_SWITCH_CCE',
+      'CIRCULAR_BCRP_N_0014_2023',
+      `RANGO_EVALUACION:${fD}_A_${fH}`,
+      `UPTIME_GLOBAL:${scoreUpt?.innerText || '99.76%'}`,
+      'META_EXIGIDA:99.90%',
+      `TOTAL_INCIDENTES:${scoreTot?.innerText || '4'}`,
+      `TIEMPO_DETECCION_MIN:${scoreMttd?.innerText || '1.3'}`,
+      `TIEMPO_SOLUCION_MIN:${scoreMttr?.innerText || '71.8'}`,
+      'ENTIDADES:BCP(002)|INTERBANK_BBVA(003)|CAJA_CUSCO(801)|CAJA_DE_LOS_ANDES(812)|CCE_SWITCH(901)',
+      'AUTOR_LEAD:Frank Emiliano Vargas Huaman (Frankosyni / Francus.)',
+      'JURADO_REVISOR:Prof. Juan Antonio Zamata Mendoza',
+      'MARCO_ACADEMICO:Curso Integrador I - Sistemas Software - Seccion 57524 (UTP)',
+      `TIMESTAMP_PET:${textoFechaPet}`
+    ].join('||');
+
+    const shaHash = await calcularSha256(payloadCert);
+    const elCertHash = document.getElementById('printCertHash');
+    if (elCertHash) {
+      elCertHash.innerText = shaHash;
+    }
+
+    // Sincronizar tabla de eventos regulatorios de imprenta
+    const printTbody = document.getElementById('printTbodyEventos');
+    if (printTbody) {
+      const ent = document.getElementById('fEntidad')?.value;
+      let evs = EVENTOS_REGULATORIOS;
+      if (ent) {
+        evs = evs.filter(e => String(e.idEntidad) === ent);
+      }
+      printTbody.innerHTML = evs.map(ev => `
+        <tr style="border-bottom:1px solid #E2E8F0;">
+          <td style="padding:4px; font-family:monospace; font-weight:700;">${escapeHTML(ev.ticket)}</td>
+          <td style="padding:4px; font-weight:600;">${escapeHTML(ev.entidadNombre)} [${escapeHTML(ev.codigoBcrp)}]</td>
+          <td style="padding:4px;">${escapeHTML(ev.categoria)}</td>
+          <td style="padding:4px; text-align:center; color:${ev.severidad === 'CRITICA' ? '#DC2626' : (ev.severidad === 'ALTA' ? '#D97706' : '#2563EB')}; font-weight:700;">${escapeHTML(ev.severidad)}</td>
+          <td style="padding:4px; text-align:right; font-family:monospace;">${ev.tiempoDeteccion.toFixed(1)} min</td>
+          <td style="padding:4px; text-align:right; font-family:monospace;">${ev.tiempoSolucion.toFixed(1)} min</td>
+          <td style="padding:4px; text-align:center; color:${ev.estado === 'EN_ATENCION' ? '#DC2626' : '#16A34A'}; font-weight:700;">${ev.estado === 'EN_ATENCION' ? 'EN ATENCIÓN' : 'RESUELTO & AUDITADO'}</td>
+          <td style="padding:4px; font-family:monospace; font-size:6pt;">${ev.hashCert}…</td>
+        </tr>
+      `).join('');
+    }
+  } catch (err) {
+    console.warn('[Print Studio] Error al calcular hash de certificación:', err);
+  }
+
+  // 4. Redibujar gráfico en modo de alta fidelidad para imprenta
+  if (currentViewRows && currentViewRows.length > 0) {
+    drawChart(currentViewRows, true);
+  }
+}
+
+// Invocación del Diálogo de Impresión y Exportación Oficial en PDF
+document.getElementById('btnPrint')?.addEventListener('click', async () => {
+  try {
+    await prepararImpresionOficial();
+    setTimeout(() => {
+      window.print();
+    }, 120);
   } catch (err) {
     console.error('Error al invocar impresión de PDF:', err);
     alert('No se pudo abrir el diálogo de impresión: ' + err.message);
+  }
+});
+
+// Sincronización con el ciclo de vida nativo de impresión del navegador
+window.addEventListener('beforeprint', async () => {
+  await prepararImpresionOficial();
+});
+
+window.addEventListener('afterprint', () => {
+  window.__isPrinting = false;
+  if (currentViewRows && currentViewRows.length > 0) {
+    drawChart(currentViewRows, false);
   }
 });
 
@@ -647,7 +1260,7 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
     const r = await fetch(BASE + '/reportes', { headers: { Authorization: AUTH } });
     if (r.ok) {
       const list = await r.json();
-      document.getElementById('tbodyHist').innerHTML = list.map(x => {
+      const rawList = list.map(x => {
         const idSafe = parseInt(x.idReporte ?? x.id, 10) || 0;
         const numEnvioSafe = escapeHTML(x.numeroEnvio);
         const nombreArchivoSafe = escapeHTML(x.nombreArchivo);
@@ -674,7 +1287,7 @@ document.getElementById('btnHist')?.addEventListener('click', async () => {
       { idReporte: 2, numeroEnvio: 'SFT-BCRP-20260915-1830', nombreArchivo: 'SFT_BCRP_PAGOS_20260915.txt', totalRegistros: 2, hashSha256: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' },
       { idReporte: 3, numeroEnvio: 'SFT-BCRP-20261001-0900', nombreArchivo: 'SFT_BCRP_PAGOS_20261001.txt', totalRegistros: 4, hashSha256: '4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a' }
     ];
-    document.getElementById('tbodyHist').innerHTML = mockHist.map(x => {
+    const rawMock = mockHist.map(x => {
       const idSafe = parseInt(x.idReporte, 10) || 0;
       const numEnvioSafe = escapeHTML(x.numeroEnvio);
       const nombreArchivoSafe = escapeHTML(x.nombreArchivo);
@@ -713,7 +1326,9 @@ function iniciarRelojUtc() {
     setInterval(actualizar, 1000);
 }
 
-// Inicialización
+// Inicialización del Tablero de Inteligencia Regulatoria
 iniciarRelojUtc();
 inicializarFechas();
+initQuickDateChips();
+initEventFilters();
 cargar();
