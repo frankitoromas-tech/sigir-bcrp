@@ -29,6 +29,23 @@
 (function () {
     'use strict';
 
+    /**
+     * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+     */
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    if (typeof window !== 'undefined' && !window.escapeHTML) {
+        window.escapeHTML = escapeHTML;
+    }
+
     // Constantes del motor gráfico
     const THEME = {
         bgBase: '#0B0F17',
@@ -196,8 +213,8 @@
         }
 
         init() {
-            this.canvas = document.getElementById('networkTopologyCanvas');
-            this.viewport = document.getElementById('topologyCanvasViewport');
+            this.canvas = document.getElementById('networkTopologyCanvas') || document.getElementById('cceTopologyCanvas');
+            this.viewport = document.getElementById('topologyCanvasViewport') || document.getElementById('cceTopologyCanvasViewport');
             this.tooltip = document.getElementById('topologyNodeTooltip');
 
             if (!this.canvas || !this.viewport) {
@@ -480,7 +497,7 @@
                     this.showParticles = !this.showParticles;
                     btnToggle.classList.toggle('active', this.showParticles);
                     const span = btnToggle.querySelector('span');
-                    if (span) span.textContent = this.showParticles ? 'Partículas ON' : 'Partículas OFF';
+                    if (span) span.textContent = this.showParticles ? 'Animar Flujo' : 'Detener Flujo';
                 });
             }
 
@@ -548,33 +565,42 @@
             const estadoLabel = isCaido ? 'CONTINGENCIA ACTIVA' : 'OPERATIVO';
             const estadoColor = isCaido ? THEME.crimson : THEME.emerald;
 
+            const nombreSafe = escapeHTML(node.nombre);
+            const badgeSafe = escapeHTML(node.badge);
+            const isoSafe = escapeHTML(node.codigoIso);
+            const protoSafe = escapeHTML(node.protocolo);
+            const latenciaVal = typeof node.telemetria.latencia === 'number' ? node.telemetria.latencia : escapeHTML(node.telemetria.latencia);
+            const latenciaUnit = typeof node.telemetria.latencia === 'number' ? 'ms' : '';
+            const bandaSafe = escapeHTML(node.anchoBanda);
+            const tpsVal = parseInt(node.telemetria.tps, 10) || 0;
+
             this.tooltip.innerHTML = `
                 <div class="tt-header">
-                    <span class="tt-title">${node.nombre}</span>
+                    <span class="tt-title">${nombreSafe}</span>
                     <span class="tt-badge" style="color: ${estadoColor}; border-color: ${estadoColor}; background: ${isCaido ? THEME.crimsonSubtle : THEME.emeraldSubtle}">
                         ${estadoLabel}
                     </span>
                 </div>
-                <div class="tt-meta-code">${node.badge} · ISO: ${node.codigoIso}</div>
+                <div class="tt-meta-code">${badgeSafe} · ISO: ${isoSafe}</div>
                 <div class="tt-metrics-grid">
                     <div class="tt-metric-item">
                         <span class="tt-metric-k">Protocolo</span>
-                        <span class="tt-metric-v">${node.protocolo}</span>
+                        <span class="tt-metric-v">${protoSafe}</span>
                     </div>
                     <div class="tt-metric-item">
                         <span class="tt-metric-k">Latencia Sonda</span>
-                        <span class="tt-metric-v" style="color: ${estadoColor}">${node.telemetria.latencia} ${typeof node.telemetria.latencia === 'number' ? 'ms' : ''}</span>
+                        <span class="tt-metric-v" style="color: ${estadoColor}">${latenciaVal} ${latenciaUnit}</span>
                     </div>
                     <div class="tt-metric-item">
                         <span class="tt-metric-k">Enlace de Red</span>
-                        <span class="tt-metric-v">${node.anchoBanda}</span>
+                        <span class="tt-metric-v">${bandaSafe}</span>
                     </div>
                     <div class="tt-metric-item">
-                        <span class="tt-metric-k">Tráfico en Tiempo Real</span>
-                        <span class="tt-metric-v">${node.telemetria.tps} TPS</span>
+                        <span class="tt-metric-k">Flujo en Tiempo Real</span>
+                        <span class="tt-metric-v">${tpsVal} pagos/seg</span>
                     </div>
                 </div>
-                ${isCaido ? `<div class="tt-alert-box">FALLA HTTP 503 DETECTADA: Enrutamiento en contingencia sísmica hacia CCE.</div>` : ''}
+                ${isCaido ? `<div class="tt-alert-box">INTERRUPCIÓN DETECTADA: Enrutamiento por canal de emergencia hacia CCE.</div>` : ''}
             `;
 
             this.tooltip.style.display = 'block';
@@ -655,11 +681,11 @@
                 if (hayContingenciaGlobal) {
                     statusPill.className = 'topology-status-pill contingency';
                     statusDot.className = 'status-dot critical';
-                    statusText.textContent = 'ALERTA: ENLACE EN CONTINGENCIA SÍSMICA';
+                    statusText.textContent = 'ALERTA: ENLACE EN CONTINGENCIA DE EMERGENCIA';
                 } else {
                     statusPill.className = 'topology-status-pill online';
                     statusDot.className = 'status-dot online';
-                    statusText.textContent = 'SWITCH CENTRAL NOMINAL · CCE OPERATIVO';
+                    statusText.textContent = 'Canal Central CCE: Operativo y Estable';
                 }
             }
 
@@ -668,7 +694,7 @@
             if (tpsVal) {
                 const targetTps = hayContingenciaGlobal ? 920 : 1480 + Math.floor(Math.sin(this.globalTime * 3) * 80);
                 this.tpsCurrent += (targetTps - this.tpsCurrent) * 0.05;
-                tpsVal.textContent = `${Math.round(this.tpsCurrent).toLocaleString()} TPS`;
+                tpsVal.textContent = `${Math.round(this.tpsCurrent).toLocaleString()} pagos/seg`;
             }
         }
 
@@ -979,7 +1005,7 @@
 
                     // Etiqueta flotante de contingencia en el punto medio del enlace
                     const midPt = this.getPointOnLink(link, 0.5, intensity);
-                    this.renderLinkWarningBadge(ctx, midPt.x, midPt.y, 'CONTINGENCIA · HTTP 503');
+                    this.renderLinkWarningBadge(ctx, midPt.x, midPt.y, 'CONTINGENCIA · ENLACE ALTERNO');
 
                 } else {
                     // ==========================================================

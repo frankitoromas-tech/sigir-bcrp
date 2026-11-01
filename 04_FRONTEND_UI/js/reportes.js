@@ -138,7 +138,7 @@ async function calcularSha256(str) {
 
 /**
  * Renderizado de gráfico de líneas ejecutiva moderna de disponibilidad Uptime con umbral SLA 99.90%
- * Paleta: Fondo oscuro transparente, línea verde esmeralda con área degradada sutil, etiquetas en JetBrains Mono.
+ * Soporte Retina / High-DPI, curvas Bézier suaves, gradiente sutil y badge flotante de meta SLA.
  */
 function drawChart(rows) {
   const c = document.getElementById('chartUptime');
@@ -148,17 +148,17 @@ function drawChart(rows) {
 
   currentViewRows = rows || [];
 
-  // Adaptación de resolución para pantallas Retina / High-DPI
-  const dpr = window.devicePixelRatio || 1;
+  // Adaptación de resolución para pantallas Retina / High-DPI con window.devicePixelRatio
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
   const rect = c.getBoundingClientRect();
   const displayWidth = rect.width > 0 ? Math.floor(rect.width) : (c.parentElement ? c.parentElement.clientWidth : 800);
-  const displayHeight = 220;
+  const displayHeight = 260; // 260px proporciona amplio espacio para etiquetas superiores e inferiores
 
-  // Ajustar dimensiones de buffer canvas
-  if (c.width !== displayWidth * dpr || c.height !== displayHeight * dpr) {
-    c.width = displayWidth * dpr;
-    c.height = displayHeight * dpr;
-  }
+  // Dimensiones físicas de buffer vs estilo CSS
+  c.width = Math.floor(displayWidth * dpr);
+  c.height = Math.floor(displayHeight * dpr);
+  c.style.width = displayWidth + 'px';
+  c.style.height = displayHeight + 'px';
 
   ctx.save();
   ctx.scale(dpr, dpr);
@@ -174,18 +174,19 @@ function drawChart(rows) {
     return;
   }
 
-  const paddingLeft = 65;
-  const paddingRight = 45;
-  const paddingTop = 36;
-  const paddingBottom = 48;
-  const chartWidth = displayWidth - paddingLeft - paddingRight;
-  const chartHeight = displayHeight - paddingTop - paddingBottom;
+  // Márgenes internos calibrados para evitar cualquier recorte en bordes
+  const paddingLeft = 70;
+  const paddingRight = 60;
+  const paddingTop = 44;
+  const paddingBottom = 54;
+  const chartWidth = Math.max(10, displayWidth - paddingLeft - paddingRight);
+  const chartHeight = Math.max(10, displayHeight - paddingTop - paddingBottom);
 
-  // Escala vertical dinámica
+  // Escala vertical dinámica con holgura para etiquetas
   const minVal = Math.min(...rows.map(r => r.uptimePct));
-  const minScale = Math.min(99.0, Math.floor(minVal * 10) / 10);
-  const maxScale = 100.08;
-  const scaleRange = maxScale - minScale;
+  const minScale = Math.min(99.0, Math.floor((minVal - 0.2) * 10) / 10);
+  const maxScale = 100.12; // Headroom superior para que 100.00% no toque el borde superior
+  const scaleRange = Math.max(0.1, maxScale - minScale);
 
   const getY = (val) => {
     const clamped = Math.max(minScale, Math.min(maxScale, val));
@@ -215,12 +216,12 @@ function drawChart(rows) {
       ctx.lineTo(displayWidth - paddingRight, gy);
       ctx.stroke();
 
-      ctx.fillText(g.label, paddingLeft - 8, gy);
+      ctx.fillText(g.label, paddingLeft - 10, gy);
     }
   });
   ctx.restore();
 
-  // Línea de referencia normativa SLA BCRP (99.90%)
+  // Línea de referencia normativa SLA BCRP (99.90%) punteada roja con etiqueta flotante clara
   const slaTarget = 99.90;
   const slaY = getY(slaTarget);
 
@@ -233,12 +234,39 @@ function drawChart(rows) {
   ctx.lineTo(displayWidth - paddingRight, slaY);
   ctx.stroke();
 
-  // Etiqueta SLA normativa
+  // Etiqueta flotante con micro-badge de alta legibilidad
+  const slaBadgeText = 'META SLA BCRP 99.90%';
+  ctx.font = '700 9px JetBrains Mono, monospace';
+  const textMetrics = ctx.measureText(slaBadgeText);
+  const pillW = textMetrics.width + 20;
+  const pillH = 20;
+  const pillX = displayWidth - paddingRight - pillW;
+  const pillY = slaY - pillH / 2;
+
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#0B132B';
+  ctx.strokeStyle = 'rgba(239, 68, 68, 0.65)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (typeof ctx.roundRect === 'function') {
+    ctx.roundRect(pillX, pillY, pillW, pillH, 4);
+  } else {
+    ctx.rect(pillX, pillY, pillW, pillH);
+  }
+  ctx.fill();
+  ctx.stroke();
+
+  // Punto indicador rojo en el badge
+  ctx.beginPath();
+  ctx.arc(pillX + 9, slaY, 2.5, 0, Math.PI * 2);
   ctx.fillStyle = '#EF4444';
-  ctx.font = 'bold 10px JetBrains Mono, monospace';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'bottom';
-  ctx.fillText('Meta SLA BCRP (99.90%)', displayWidth - paddingRight, slaY - 4);
+  ctx.fill();
+
+  // Texto del badge
+  ctx.fillStyle = '#FCA5A5';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(slaBadgeText, pillX + 16, slaY);
   ctx.restore();
 
   // Cálculo de puntos de datos (X, Y)
@@ -250,38 +278,46 @@ function drawChart(rows) {
     return { x, y, row: r };
   });
 
-  // 1. Área degradada sutil bajo la curva
+  // Trazado de curva Bézier suave y armónica (Catmull-Rom spline con tensión controlada 0.18)
+  function traceSmoothPath(pts) {
+    if (!pts || pts.length === 0) return;
+    ctx.moveTo(pts[0].x, pts[0].y);
+    if (pts.length === 1) return;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = i > 0 ? pts[i - 1] : pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = i < pts.length - 2 ? pts[i + 2] : p2;
+
+      const cp1x = p1.x + (p2.x - p0.x) * 0.18;
+      const cp1y = p1.y + (p2.y - p0.y) * 0.18;
+      const cp2x = p2.x - (p3.x - p1.x) * 0.18;
+      const cp2y = p2.y - (p3.y - p1.y) * 0.18;
+
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+  }
+
+  // 1. Área degradada inferior suave bajo la curva Bézier: rgba(16, 185, 129, 0.12) a transparente
   ctx.save();
   const areaGrad = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + chartHeight);
-  areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.32)'); // Verde esmeralda translúcido superior
-  areaGrad.addColorStop(0.6, 'rgba(16, 185, 129, 0.08)');
+  areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)'); // Verde esmeralda suave superior (0.12)
+  areaGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
   areaGrad.addColorStop(1, 'rgba(16, 185, 129, 0.00)'); // Transparente en base
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, paddingTop + chartHeight);
   ctx.lineTo(points[0].x, points[0].y);
-
-  if (points.length > 1) {
-    for (let i = 1; i < points.length; i++) {
-      const prev = points[i - 1];
-      const curr = points[i];
-      const cpX1 = prev.x + (curr.x - prev.x) / 2;
-      const cpY1 = prev.y;
-      const cpX2 = prev.x + (curr.x - prev.x) / 2;
-      const cpY2 = curr.y;
-      ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, curr.x, curr.y);
-    }
-  }
-
+  traceSmoothPath(points);
   ctx.lineTo(points[points.length - 1].x, paddingTop + chartHeight);
   ctx.closePath();
   ctx.fillStyle = areaGrad;
   ctx.fill();
   ctx.restore();
 
-  // 2. Línea ejecutiva verde esmeralda con resplandor sutil
+  // 2. Línea ejecutiva verde esmeralda con curva Bézier suave y resplandor sutil
   ctx.save();
-  ctx.shadowColor = 'rgba(16, 185, 129, 0.5)';
+  ctx.shadowColor = 'rgba(16, 185, 129, 0.45)';
   ctx.shadowBlur = 8;
   ctx.strokeStyle = '#10B981'; // Esmeralda FinTech
   ctx.lineWidth = 2.5;
@@ -289,22 +325,11 @@ function drawChart(rows) {
   ctx.lineJoin = 'round';
 
   ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  if (points.length > 1) {
-    for (let i = 1; i < points.length; i++) {
-      const prev = points[i - 1];
-      const curr = points[i];
-      const cpX1 = prev.x + (curr.x - prev.x) / 2;
-      const cpY1 = prev.y;
-      const cpX2 = prev.x + (curr.x - prev.x) / 2;
-      const cpY2 = curr.y;
-      ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, curr.x, curr.y);
-    }
-  }
+  traceSmoothPath(points);
   ctx.stroke();
   ctx.restore();
 
-  // 3. Nodos de datos, guías verticales y etiquetas en JetBrains Mono
+  // 3. Nodos de datos, guías verticales y etiquetas en JetBrains Mono y Plus Jakarta Sans
   points.forEach(p => {
     const cumpleSla = p.row.uptimePct >= 99.90;
     const nodeColor = cumpleSla ? '#10B981' : '#F59E0B';
@@ -325,7 +350,7 @@ function drawChart(rows) {
     ctx.save();
     ctx.beginPath();
     ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#0F172A';
+    ctx.fillStyle = '#0B132B';
     ctx.fill();
     ctx.strokeStyle = nodeColor;
     ctx.lineWidth = 2;
@@ -338,9 +363,9 @@ function drawChart(rows) {
     ctx.fill();
     ctx.restore();
 
-    // Etiqueta superior nítida en JetBrains Mono
+    // Etiqueta superior nítida en JetBrains Mono (sin recorte superior)
     ctx.save();
-    ctx.font = 'bold 11px JetBrains Mono, monospace';
+    ctx.font = '700 11px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
     ctx.fillStyle = textColor;
@@ -351,12 +376,12 @@ function drawChart(rows) {
     ctx.fillStyle = '#CBD5E1';
     ctx.textBaseline = 'top';
     const shortName = p.row.nombreEntidad.split('(')[0].trim();
-    ctx.fillText(shortName, p.x, paddingTop + chartHeight + 10);
+    ctx.fillText(shortName, p.x, paddingTop + chartHeight + 12);
 
-    // Código BCRP en JetBrains Mono
+    // Código BCRP en JetBrains Mono (sin recorte inferior)
     ctx.font = '500 10px JetBrains Mono, monospace';
     ctx.fillStyle = '#64748B';
-    ctx.fillText(`[${p.row.codigoBcrp}]`, p.x, paddingTop + chartHeight + 25);
+    ctx.fillText(`[${p.row.codigoBcrp}]`, p.x, paddingTop + chartHeight + 26);
     ctx.restore();
   });
 
@@ -375,9 +400,9 @@ async function cargar() {
     const dot = document.getElementById('backendStatusDot');
     const text = document.getElementById('backendStatusText');
     if (pill) {
-      pill.className = 'backend-status-pill online';
-      if (text) text.innerText = 'CONECTADO (PostgreSQL)';
-      else pill.innerText = 'Backend Conectado (PostgreSQL)';
+      pill.classList.remove('offline');
+      pill.classList.add('online');
+      if (text) text.innerText = 'Conectado (PostgreSQL)';
       if (dot) {
         dot.className = 'status-dot online';
         dot.style.background = '#10B981';
@@ -390,9 +415,9 @@ async function cargar() {
     const dot = document.getElementById('backendStatusDot');
     const text = document.getElementById('backendStatusText');
     if (pill) {
-      pill.className = 'backend-status-pill offline';
-      if (text) text.innerText = 'MODO DEMO (Local Mock)';
-      else pill.innerText = 'Modo Simulación (Autónomo)';
+      pill.classList.remove('online');
+      pill.classList.add('offline');
+      if (text) text.innerText = 'Modo Simulación (Mock)';
       if (dot) {
         dot.className = 'status-dot';
         dot.style.background = '#F59E0B';
@@ -407,9 +432,8 @@ async function cargar() {
   if (tbody) {
     tbody.innerHTML = view.map(r => {
       const cumpleSla = r.uptimePct >= 99.90;
-      const statusClass = cumpleSla ? 'resuelto' : 'en_mitigacion';
-      const statusLabel = cumpleSla ? 'SLA OK' : 'SLA EN RIESGO';
-      const pctColorClass = cumpleSla ? 'sla-ok' : 'sla-warn';
+      const statusClass = cumpleSla ? 'badge-sla-ok' : 'badge-sla-warn';
+      const statusLabel = cumpleSla ? 'CUMPLE SLA' : 'ALERTA SLA';
       const pctColorHex = cumpleSla ? '#34D399' : '#FBBF24';
       const barFillGrad = cumpleSla ? 'linear-gradient(90deg, #059669, #10B981)' : 'linear-gradient(90deg, #D97706, #F59E0B)';
       const clampedPct = Math.min(100, Math.max(0, Number(r.uptimePct) || 0));
@@ -426,21 +450,24 @@ async function cargar() {
 
       return `
       <tr>
-        <td style="font-weight:600;color:var(--text-primary);">${nombreSafe}</td>
+        <td style="font-weight:600; color:var(--text-primary); font-family:var(--font-sans);">${nombreSafe}</td>
         <td class="ticket-mono">${codigoSafe}</td>
-        <td>${totalIncSafe}</td>
-        <td><span class="badge-severidad ${criticosSafe > 0 ? 'critica' : 'baja'}">${criticosSafe}</span></td>
-        <td style="font-family:var(--font-mono);">${mttrSafe}</td>
-        <td style="font-family:var(--font-mono);">${mttdSafe}</td>
-        <td style="font-family:var(--font-mono);">${minIndispSafe}</td>
+        <td style="font-family:var(--font-mono); font-weight:600; text-align:center;">${totalIncSafe}</td>
+        <td style="text-align:center;"><span class="badge-severidad ${criticosSafe > 0 ? 'critica' : 'baja'}">${criticosSafe}</span></td>
+        <td style="font-family:var(--font-mono); font-weight:600; text-align:right;">${mttrSafe}</td>
+        <td style="font-family:var(--font-mono); font-weight:600; text-align:right;">${mttdSafe}</td>
+        <td style="font-family:var(--font-mono); font-weight:600; text-align:right;">${minIndispSafe}</td>
         <td>
-          <div class="sla-progress-cell" style="display:flex;flex-direction:column;gap:4px;min-width:130px;">
-            <div class="sla-progress-header" style="display:flex;justify-content:space-between;align-items:center;">
-              <span class="sla-progress-val ${pctColorClass}" style="font-family:var(--font-mono);font-size:0.8rem;font-weight:700;color:${pctColorHex};">${uptimeSafe}%</span>
-              <span class="badge-estado ${statusClass}" style="font-size:0.65rem;padding:1px 6px;">${statusLabelSafe}</span>
+          <div class="sla-progress-cell">
+            <div class="sla-progress-header">
+              <span class="sla-progress-val" style="color:${pctColorHex};">${uptimeSafe}%</span>
+              <span class="badge-sla ${statusClass}">
+                <span class="sla-dot"></span>
+                <span>${statusLabelSafe}</span>
+              </span>
             </div>
-            <div class="sla-progress-track" style="height:5px;width:100%;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;position:relative;" title="Uptime: ${uptimeSafe}% | Meta SLA: >= 99.90%">
-              <div class="sla-progress-fill ${pctColorClass}" style="height:100%;width:${clampedPct}%;background:${barFillGrad};border-radius:9999px;"></div>
+            <div class="sla-progress-track" title="Disponibilidad: ${uptimeSafe}% | Meta BCRP: >= 99.90%">
+              <div class="sla-progress-fill" style="width:${clampedPct}%; background:${barFillGrad};"></div>
             </div>
           </div>
         </td>
@@ -669,7 +696,7 @@ function iniciarRelojUtc() {
         const opcionesFecha = { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric' };
         const horaStr = ahora.toLocaleTimeString('es-PE', opcionesHora);
         const fechaStr = ahora.toLocaleDateString('es-PE', opcionesFecha);
-        relojEl.textContent = `${horaStr} PET | ${fechaStr}`;
+        relojEl.innerHTML = `<span class="clock-time">${horaStr} PET</span><span class="clock-date"> | ${fechaStr}</span>`;
     };
     actualizar();
     setInterval(actualizar, 1000);

@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22 fill=%22none%22 stroke=%22%23E2B357%22 stroke-width=%222%22><path d=%22M16 2L2 9v7c0 8.84 5.97 17.11 14 19 8.03-1.89 14-10.16 14-19V9L16 2z%22 fill=%22%230B132B%22/><path d=%22M11 16l3.5 3.5L21 11%22 stroke=%22%2310B981%22/></svg>">
 </head>
 <body>
 
@@ -34,121 +34,528 @@
             </div>
             <div class="brand-title">
                 <h1>SIGIR - BCRP</h1>
-                <p>Bitácora Forense &amp; Trazabilidad Inmutable de Acciones Regulatorias</p>
+                <p>Supervisión Switch CCE &bull; ISO 20022</p>
             </div>
         </div>
 
+        <!-- Pestañas de navegación superiores limpias (Zero Emojis - SVGs Nítidos 1.75px) -->
         <nav class="header-nav" aria-label="Navegación del Sistema">
             <a href="index.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>📡 Consola NOC</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Consola NOC</span>
             </a>
             <a href="infraestructura.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                <span>🌐 Infraestructura</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>Infraestructura</span>
             </a>
             <a href="auditoria.html" class="nav-tab active">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>🛡️ Bitácora Auditoría</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <span>Bitácora Auditoría</span>
             </a>
             <a href="reportes.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span>📊 Reportes SFT</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Reportes SFT</span>
             </a>
         </nav>
 
         <div class="header-right">
-            <div class="header-clock-box">
-                <span class="clock-label">HORA OFICIAL DEL PERÚ:</span>
+            <!-- Píldora Command Palette (Raycast / Linear style) -->
+            <button class="cmd-palette-pill" id="btnHeaderCommandPalette" type="button" aria-label="Abrir Paleta de Comandos" title="Abrir Paleta de Comandos (⌘K / Ctrl+K)">
+                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="cmd-pill-label">Buscar</span>
+                <kbd class="cmd-pill-kbd">⌘K</kbd>
+            </button>
+
+            <!-- Botón Toggle de Audio Háptico Discreto (34x34px sin texto) -->
+            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API - Emil Kowalski)">
+                <svg class="icon-svg icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                <svg class="icon-svg icon-sound-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+            </button>
+
+            <!-- Reloj digital en tiempo real con punto verde pulsante -->
+            <div class="header-clock-box" title="Hora Oficial de la República del Perú (UTC-5)">
+                <span class="clock-live-dot"></span>
                 <span id="relojUtc" class="header-clock">--:--:-- PET</span>
             </div>
 
-            <div class="user-session-card" onclick="AuthRBAC.abrirModalRoles()" title="Haz clic para cambiar de rol institucional">
-                <div class="user-avatar">FV</div>
-                <div class="user-info">
-                    <span class="user-name">Frank Vargas Huamán</span>
-                    <span class="user-role">Arquitecto &amp; NOC Lead</span>
+            <!-- Dropdown de Sesión de Usuario Unificado (Estilo Stripe / Mercury / Linear) -->
+            <div class="header-user-dropdown" id="headerUserDropdown">
+                <button class="header-user-trigger" id="btnUserMenuTrigger" type="button" aria-haspopup="true" aria-expanded="false" title="Cuenta de usuario y sesión">
+                    <div class="user-avatar-circle" id="headerUserAvatar">FV</div>
+                    <span class="user-name-compact" id="headerUserName">Frank Vargas</span>
+                    <svg class="chevron-down-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="user-menu-popover" id="userMenuPopover" role="menu" aria-hidden="true">
+                    <div class="user-popover-header">
+                        <div class="user-popover-avatar" id="popoverUserAvatar">FV</div>
+                        <div class="user-popover-info">
+                            <div class="user-popover-name" id="popoverUserName">Frank Vargas Huamán</div>
+                            <div class="user-popover-role" id="popoverUserRole">Arquitecto de Software &amp; NOC Lead</div>
+                            <div class="user-popover-email" id="popoverUserEmail">frank.vargas@bcrp.gob.pe</div>
+                        </div>
+                    </div>
+
+                    <div class="user-popover-divider"></div>
+
+                    <!-- Estado de la Operación integrado en el Popover -->
+                    <div class="user-popover-status" id="backendStatusPill" title="Estado de la conexión institucional">
+                        <div class="status-indicator-row">
+                            <span class="status-indicator-label">
+                                <span class="status-dot online" id="backendStatusDot"></span>
+                                Estado de Conexión:
+                            </span>
+                            <span class="status-indicator-value" id="backendStatusText">Operativo (En Línea)</span>
+                        </div>
+                        <div class="status-indicator-row sub">
+                            <span class="status-sub-label">Sede / Red:</span>
+                            <span class="status-sub-val" id="popoverDomainText">Red Central BCRP</span>
+                        </div>
+                    </div>
+
+                    <div class="user-popover-divider"></div>
+
+                    <div class="user-popover-actions">
+                        <button type="button" class="user-menu-item" id="btnMenuCambiarRol" onclick="AuthRBAC.abrirModalRoles(); AuthRBAC.cerrarMenuUsuario();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <polyline points="17 11 19 13 23 9"></polyline>
+                            </svg>
+                            <span>Cambiar Perfil Institucional</span>
+                        </button>
+                        <button type="button" class="user-menu-item logout" id="btnMenuCerrarSesion" onclick="AuthRBAC.cerrarSesion()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Cerrar Sesión</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="dashboard-main">
-        <!-- Banner Explicativo Intuitivo para Usuarios No Técnicos -->
-        <div class="human-welcome-banner" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:16px;">
-                <span style="font-size:2rem;">🛡️</span>
-                <div>
-                    <h3 style="margin:0; font-size:1.05rem; color:#F8FAFC;">Trazabilidad Forense &amp; No Repudio Normativo BCRP</h3>
-                    <p style="margin:4px 0 0 0; font-size:0.82rem; color:#94A3B8;">
-                        Cada acción ejecutada en este sistema (registro de falla, mitigación, emisión de reporte SFT) genera un 
-                        <strong>sello criptográfico SHA-256 de 64 caracteres</strong> inalterable para auditoría oficial del BCRP.
+    <main class="main-layout auditoria-layout">
+        <!-- Banner Explicativo Intuitivo para Usuarios No Técnicos & Auditores BCRP -->
+        <div class="human-welcome-banner">
+            <div class="banner-left-group">
+                <div class="banner-badge-icon" aria-hidden="true">
+                    <svg class="icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <polyline points="9 12 11 14 15 10"></polyline>
+                    </svg>
+                </div>
+                <div class="banner-content">
+                    <div class="banner-title-row">
+                        <h3 class="banner-title">Trazabilidad Forense &amp; No Repudio Normativo BCRP</h3>
+                        <span class="banner-norm-tag">Circular BCRP N° 0014-2023 &bull; Art. 12</span>
+                    </div>
+                    <p class="banner-desc">
+                        Cada acción ejecutada en este sistema (registro de falla, contingencia, mitigación o emisión de reporte SFT) genera un 
+                        <strong>sello criptográfico SHA-256 inalterable de 64 caracteres hexadecimales</strong> (FIPS 180-4 / RFC 6234). 
+                        Conforme al marco regulatorio del BCRP, este mecanismo otorga plena <strong>validez jurídica y probatoria</strong>, garantizando inalterabilidad forense y no repudio ante la Gerencia de Operaciones Monetarias y Estabilidad Financiera.
                     </p>
                 </div>
             </div>
-            <button class="btn-action primary" onclick="verificarIntegridadCadena()" style="white-space:nowrap;">
-                ✓ Verificar Integridad Criptográfica
+            <button class="btn btn-verificar-cadena" id="btnVerificarIntegridad" type="button" onclick="verificarIntegridadCadena()">
+                <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Verificar Integridad Criptográfica</span>
             </button>
         </div>
 
-        <!-- Tabla de Eventos de Auditoría -->
-        <div class="incidents-container">
-            <div class="table-card-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h3 style="margin:0; font-size:1rem; color:#F8FAFC; display:flex; align-items:center; gap:8px;">
-                    <span style="color:#E2B357;">📋</span> Registro Oficial de Eventos de Seguridad &amp; Auditoría
-                </h3>
-                <span style="font-size:0.75rem; color:#64748B;">Circular BCRP 0014-2023 &bull; Artículo 12 (Bitácora Inmutable)</span>
+        <!-- Barra de Herramientas de Filtros y Búsqueda de Auditoría (38px uniforme, estilo oscuro institucional, foco dorado) -->
+        <section class="toolbar-unified audit-filters-toolbar" aria-label="Filtros y Búsqueda de Bitácora Forense">
+            <div class="toolbar-filters-group">
+                <div class="search-input-wrapper">
+                    <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="filtroAuditoriaBuscador" class="audit-input" placeholder="Buscar por usuario, acción, entidad o hash SHA-256..." autocomplete="off">
+                </div>
+                
+                <select id="filtroTipoEvento" class="audit-select" aria-label="Filtrar por tipo de evento">
+                    <option value="TODOS">Todos los eventos</option>
+                    <option value="SIMULACION">Simulación de Falla</option>
+                    <option value="TELEMETRIA">Sondeo de Telemetría</option>
+                    <option value="INSPECCION">Inspección SLA / SFT</option>
+                    <option value="MITIGACION">Mitigación de Incidente</option>
+                    <option value="SEGURIDAD">Seguridad &amp; Certificados TLS</option>
+                    <option value="CIERRE">Sellado Lote SFT</option>
+                </select>
+
+                <select id="filtroAuditoriaEntidad" class="audit-select" aria-label="Filtrar por entidad financiera">
+                    <option value="TODAS">Todas las entidades</option>
+                    <option value="BCP (Yape)">BCP (Yape)</option>
+                    <option value="Interbank (Plin)">Interbank (Plin)</option>
+                    <option value="Caja Cusco (Tunki)">Caja Cusco (Tunki)</option>
+                    <option value="Switch Central CCE">Switch Central CCE</option>
+                    <option value="Red Interbancaria">Red Interbancaria</option>
+                    <option value="BCRP (Circular 0014)">BCRP Central</option>
+                </select>
+
+                <select id="filtroAuditoriaEstado" class="audit-select" aria-label="Filtrar por estado de verificación">
+                    <option value="TODOS">Todos los estados</option>
+                    <option value="VALIDO">✓ Verificado Válido</option>
+                </select>
+            </div>
+
+            <div class="toolbar-actions-group">
+                <button class="btn btn-secondary" id="btnResetFiltrosAuditoria" type="button" title="Restablecer filtros de búsqueda">
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                    </svg>
+                    <span>Restablecer</span>
+                </button>
+                <button class="btn btn-bcrp" id="btnExportarBitacoraCsv" type="button" onclick="exportarBitacoraCsv()" title="Exportar bitácora oficial forense a formato CSV sellado">
+                    <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Exportar CSV</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Tabla de Eventos de Auditoría Forense -->
+        <section class="audit-table-card">
+            <div class="audit-table-header-bar">
+                <div class="audit-header-title-box">
+                    <div class="audit-header-icon-box" aria-hidden="true">
+                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="audit-header-title">Registro Oficial de Eventos de Seguridad &amp; Auditoría</h3>
+                    </div>
+                </div>
+                <div class="audit-header-meta">
+                    <span class="audit-counter-badge" id="auditTotalCounter">6 eventos registrados</span>
+                    <span>Circular BCRP 0014-2023 &bull; Artículo 12 (Bitácora Inmutable)</span>
+                </div>
             </div>
 
             <div class="table-responsive">
-                <table class="data-table" id="tablaAuditoria">
+                <table class="audit-data-table" id="tablaAuditoria">
                     <thead>
                         <tr>
-                            <th>Fecha y Hora (PET)</th>
-                            <th>Usuario Responsable</th>
-                            <th>Acción Realizada</th>
-                            <th>Entidad Afectada</th>
-                            <th>Sello Digital SHA-256 (64 hex)</th>
-                            <th>Estado de Verificación</th>
+                            <th style="width: 160px;">Fecha y Hora (PET)</th>
+                            <th style="width: 215px;">Usuario Responsable</th>
+                            <th style="width: 175px;">Tipo de Evento</th>
+                            <th style="width: 170px;">Entidad Afectada</th>
+                            <th style="width: 185px;">Sello Digital SHA-256</th>
+                            <th style="width: 155px;">Estado de Verificación</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyAuditoria">
-                        <tr>
-                            <td class="ticket-mono">2026-10-31 18:20:15</td>
-                            <td><strong style="color:#F8FAFC;">Frank Vargas Huamán</strong> <span style="font-size:0.7rem; color:#E2B357;">(NOC Lead)</span></td>
-                            <td>Simulación de Falla de Enlace HTTP 503</td>
-                            <td>BCP (Yape)</td>
-                            <td class="ticket-mono" style="font-size:0.7rem; color:#38BDF8;" title="Hash de validación">7a33d87afd2e5bf8d0f6478f9ca925a9289d11cb6a52c0e6da27664c5b9bf596</td>
-                            <td><span class="badge-estado resuelto" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:3px 8px; border-radius:12px; font-size:0.7rem;">✓ Verificado Válido</span></td>
+                        <!-- Fila 1 -->
+                        <tr class="audit-row" data-tipo="SIMULACION" data-entidad="BCP (Yape)" data-estado="VALIDO" data-search="2026-10-31 18:20:15 Frank Vargas Huamán NOC Lead Simulación Falla HTTP 503 BCP Yape 7a33d87afd2e5bf8d0f6478f9ca925a9289d11cb6a52c0e6da27664c5b9bf596">
+                            <td class="col-fecha-iso">2026-10-31 18:20:15</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-lead">FV</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Frank Vargas Huamán</span>
+                                        <span class="audit-user-role gold">NOC Lead</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge simulacion">
+                                    <span class="audit-event-dot"></span>
+                                    Simulación Falla 503
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">BCP (Yape)</span>
+                                    <span class="audit-entity-channel">Billetera Móvil</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="7a33d87afd2e5bf8d0f6478f9ca925a9289d11cb6a52c0e6da27664c5b9bf596">7a33...f596</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, '7a33d87afd2e5bf8d0f6478f9ca925a9289d11cb6a52c0e6da27664c5b9bf596')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="ticket-mono">2026-10-31 18:05:40</td>
-                            <td><strong style="color:#F8FAFC;">Sistema Autónomo NOC</strong> <span style="font-size:0.7rem; color:#94A3B8;">(Telemetría)</span></td>
-                            <td>Sondeo periódico de pasarelas (Latencias &lt; 25ms)</td>
-                            <td>Todas (5 Entidades)</td>
-                            <td class="ticket-mono" style="font-size:0.7rem; color:#38BDF8;" title="Hash de validación">986124d3d72d2543819202cf0b628292a129c926e1393cb603be3fd1c8069046</td>
-                            <td><span class="badge-estado resuelto" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:3px 8px; border-radius:12px; font-size:0.7rem;">✓ Verificado Válido</span></td>
+
+                        <!-- Fila 2 -->
+                        <tr class="audit-row" data-tipo="TELEMETRIA" data-entidad="Red Interbancaria" data-estado="VALIDO" data-search="2026-10-31 18:05:40 Sistema Autónomo NOC Telemetría Sondeo periódico pasarelas Red Interbancaria 5 Entidades 986124d3d72d2543819202cf0b628292a129c926e1393cb603be3fd1c8069046">
+                            <td class="col-fecha-iso">2026-10-31 18:05:40</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-system">SA</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Sistema Autónomo NOC</span>
+                                        <span class="audit-user-role">Telemetría Core</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge telemetria">
+                                    <span class="audit-event-dot"></span>
+                                    Sondeo Telemetría
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">Red Interbancaria</span>
+                                    <span class="audit-entity-channel">5 Entidades Participantes</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="986124d3d72d2543819202cf0b628292a129c926e1393cb603be3fd1c8069046">9861...9046</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, '986124d3d72d2543819202cf0b628292a129c926e1393cb603be3fd1c8069046')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="ticket-mono">2026-10-31 17:45:00</td>
-                            <td><strong style="color:#F8FAFC;">Prof. Zamata</strong> <span style="font-size:0.7rem; color:#10B981;">(Auditor BCRP)</span></td>
-                            <td>Inspección de Disponibilidad SLA y Descarga SFT</td>
-                            <td>Switch Central CCE</td>
-                            <td class="ticket-mono" style="font-size:0.7rem; color:#38BDF8;" title="Hash de validación">505408dc319f6a19f9d784a329ef3c0451a942a7819ce2f8d035f2998a44b120</td>
-                            <td><span class="badge-estado resuelto" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:3px 8px; border-radius:12px; font-size:0.7rem;">✓ Verificado Válido</span></td>
+
+                        <!-- Fila 3 -->
+                        <tr class="audit-row" data-tipo="INSPECCION" data-entidad="Switch Central CCE" data-estado="VALIDO" data-search="2026-10-31 17:45:00 Prof. Zamata Auditor BCRP Inspección Disponibilidad SLA Descarga SFT Switch Central CCE 505408dc319f6a19f9d784a329ef3c0451a942a7819ce2f8d035f2998a44b120">
+                            <td class="col-fecha-iso">2026-10-31 17:45:00</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-auditor">PZ</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Prof. Zamata</span>
+                                        <span class="audit-user-role green">Auditor BCRP</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge inspeccion">
+                                    <span class="audit-event-dot"></span>
+                                    Inspección SLA / SFT
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">Switch Central CCE</span>
+                                    <span class="audit-entity-channel">Cámara de Compensación Electrónica</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="505408dc319f6a19f9d784a329ef3c0451a942a7819ce2f8d035f2998a44b120">5054...b120</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, '505408dc319f6a19f9d784a329ef3c0451a942a7819ce2f8d035f2998a44b120')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="ticket-mono">2026-10-31 16:30:22</td>
-                            <td><strong style="color:#F8FAFC;">Fernando Romero Requejo</strong> <span style="font-size:0.7rem; color:#38BDF8;">(Operador)</span></td>
-                            <td>Atención y Mitigación de Incidente Operativo</td>
-                            <td>Interbank (Plin)</td>
-                            <td class="ticket-mono" style="font-size:0.7rem; color:#38BDF8;" title="Hash de validación">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</td>
-                            <td><span class="badge-estado resuelto" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:3px 8px; border-radius:12px; font-size:0.7rem;">✓ Verificado Válido</span></td>
+
+                        <!-- Fila 4 -->
+                        <tr class="audit-row" data-tipo="MITIGACION" data-entidad="Interbank (Plin)" data-estado="VALIDO" data-search="2026-10-31 16:30:22 Fernando Romero Requejo Operador Atención y Mitigación de Incidente Interbank Plin e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">
+                            <td class="col-fecha-iso">2026-10-31 16:30:22</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-operator">FR</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Fernando Romero Requejo</span>
+                                        <span class="audit-user-role blue">Operador NOC</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge mitigacion">
+                                    <span class="audit-event-dot"></span>
+                                    Mitigación de Incidente
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">Interbank (Plin)</span>
+                                    <span class="audit-entity-channel">Billetera Móvil</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">e3b0...b855</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 5 (Demostración de a8f3...4e91 y Seguridad TLS) -->
+                        <tr class="audit-row" data-tipo="SEGURIDAD" data-entidad="Caja Cusco (Tunki)" data-estado="VALIDO" data-search="2026-10-31 15:10:04 Joel Olaya Vivas Seguridad TI Verificación Certificados TLS 1.3 mTLS Caja Cusco Tunki a8f3c719e5d42b918a3fc09d781b2a9e40938b712c98ef01d8a4369e5d014e91">
+                            <td class="col-fecha-iso">2026-10-31 15:10:04</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-sec">JO</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Joel Olaya Vivas</span>
+                                        <span class="audit-user-role">Seguridad TI</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge inspeccion">
+                                    <span class="audit-event-dot"></span>
+                                    Validación TLS 1.3
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">Caja Cusco (Tunki)</span>
+                                    <span class="audit-entity-channel">Billetera Móvil Regional</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="a8f3c719e5d42b918a3fc09d781b2a9e40938b712c98ef01d8a4369e5d014e91">a8f3...4e91</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, 'a8f3c719e5d42b918a3fc09d781b2a9e40938b712c98ef01d8a4369e5d014e91')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 6 (Sellado Lote SFT) -->
+                        <tr class="audit-row" data-tipo="CIERRE" data-entidad="BCRP (Circular 0014)" data-estado="VALIDO" data-search="2026-10-31 14:02:18 Frank Vargas Huamán NOC Lead Generación Acta de Cierre SFT Regulado BCRP Circular 0014 4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a">
+                            <td class="col-fecha-iso">2026-10-31 14:02:18</td>
+                            <td>
+                                <div class="audit-user-cell">
+                                    <span class="audit-user-avatar avatar-lead">FV</span>
+                                    <div class="audit-user-meta">
+                                        <span class="audit-user-name">Frank Vargas Huamán</span>
+                                        <span class="audit-user-role gold">NOC Lead</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-event-badge rbac">
+                                    <span class="audit-event-dot"></span>
+                                    Sellado Lote SFT
+                                </span>
+                            </td>
+                            <td>
+                                <div class="audit-entity-cell">
+                                    <span class="audit-entity-name">BCRP (Circular 0014)</span>
+                                    <span class="audit-entity-channel">Cierre de Período SFT</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="crypto-hash-cell">
+                                    <code class="crypto-hash-mono" title="4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a">4b22...bf8a</code>
+                                    <button class="btn-copy-hash" type="button" onclick="copiarHashCripto(this, '4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a')" aria-label="Copiar hash SHA-256 completo" title="Copiar hash completo">
+                                        <svg class="icon-svg icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg class="icon-svg icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="copy-tooltip">¡Copiado!</span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="audit-status-badge valid">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verificado Válido
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
     </main>
 
     <footer class="app-footer">
@@ -161,9 +568,15 @@
     </footer>
 
     <!-- Scripts Esenciales Registrados -->
+    <!-- Librerías de Vanguardia para Seguridad y Animación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>
+    <script src="js/command-palette.js"></script>
+    <script src="js/app.js"></script>
     <script>
         function actualizarReloj() {
             const reloj = document.getElementById('relojUtc');
@@ -175,13 +588,6 @@
         }
         setInterval(actualizarReloj, 1000);
         actualizarReloj();
-
-        function verificarIntegridadCadena() {
-            if (window.SoundFX && typeof window.SoundFX.playSuccess === 'function') {
-                window.SoundFX.playSuccess();
-            }
-            alert("🔒 AUDITORÍA BCRP EXITOSA:\n\nSe ha recalculado la función resumen SHA-256 de los 4 bloques de bitácora.\n\nResultado: 100% de registros intactos sin indicios de manipulación ni repudio.\nFirma criptográfica conforme a la Circular BCRP N° 0014-2023.");
-        }
     </script>
 </body>
 </html>

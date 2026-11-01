@@ -34,61 +34,118 @@
             </div>
             <div class="brand-title">
                 <h1>SIGIR - BCRP</h1>
-                <p>Sistema de Supervisión y Gestión de Incidentes Regulatorios | Switch Interbancario CCE</p>
+                <p>Supervisión Switch CCE &bull; ISO 20022</p>
             </div>
         </div>
 
-        <!-- Pestañas de navegación superiores limpias -->
+        <!-- Pestañas de navegación superiores limpias (Zero Emojis - SVGs Nítidos 1.75px) -->
         <nav class="header-nav" aria-label="Navegación del Sistema">
             <a href="index.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>📡 Consola NOC</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Consola NOC</span>
             </a>
             <a href="infraestructura.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                <span>🌐 Infraestructura</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>Infraestructura</span>
             </a>
             <a href="auditoria.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>🛡️ Bitácora Auditoría</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <span>Bitácora Auditoría</span>
             </a>
             <a href="reportes.html" class="nav-tab active">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span>📊 Reportes SFT</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Reportes SFT</span>
             </a>
         </nav>
 
         <div class="header-right">
             <!-- Píldora Command Palette (Raycast / Linear style) -->
-            <button class="cmd-palette-pill" id="btnHeaderCommandPalette" title="Abrir Paleta de Comandos (Ctrl+K / ⌘K)">
-                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <button class="cmd-palette-pill" id="btnHeaderCommandPalette" type="button" aria-label="Abrir Paleta de Comandos" title="Abrir Paleta de Comandos (⌘K / Ctrl+K)">
+                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <span class="cmd-pill-label">Buscar comando</span>
+                <span class="cmd-pill-label">Buscar</span>
                 <kbd class="cmd-pill-kbd">⌘K</kbd>
             </button>
 
-            <!-- Reloj digital en tiempo real -->
+            <!-- Botón Toggle de Audio Háptico Discreto (34x34px sin texto) -->
+            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API - Emil Kowalski)">
+                <svg class="icon-svg icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                <svg class="icon-svg icon-sound-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+            </button>
+
+            <!-- Reloj digital en tiempo real con punto verde pulsante -->
             <div class="header-clock-box" title="Hora Oficial de la República del Perú (UTC-5)">
-                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="clock-live-dot"></span>
                 <span id="relojUtc" class="header-clock">--:--:-- PET</span>
             </div>
 
-            <!-- Píldora de estado del sistema -->
-            <div class="backend-status-pill online" id="backendStatusPill" title="Estado de conexión con Spring Boot API (http://localhost:8080)">
-                <span class="status-dot online" id="backendStatusDot"></span>
-                <span id="backendStatusText">MOTOR DE TELEMETRÍA ACTIVO</span>
-            </div>
+            <!-- Dropdown de Sesión de Usuario Unificado (Estilo Stripe / Mercury / Linear) -->
+            <div class="header-user-dropdown" id="headerUserDropdown">
+                <button class="header-user-trigger" id="btnUserMenuTrigger" type="button" aria-haspopup="true" aria-expanded="false" title="Cuenta de usuario y sesión">
+                    <div class="user-avatar-circle" id="headerUserAvatar">FV</div>
+                    <span class="user-name-compact" id="headerUserName">Frank Vargas</span>
+                    <svg class="chevron-down-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="user-menu-popover" id="userMenuPopover" role="menu" aria-hidden="true">
+                    <div class="user-popover-header">
+                        <div class="user-popover-avatar" id="popoverUserAvatar">FV</div>
+                        <div class="user-popover-info">
+                            <div class="user-popover-name" id="popoverUserName">Frank Vargas Huamán</div>
+                            <div class="user-popover-role" id="popoverUserRole">Arquitecto de Software &amp; NOC Lead</div>
+                            <div class="user-popover-email" id="popoverUserEmail">frank.vargas@bcrp.gob.pe</div>
+                        </div>
+                    </div>
 
-            <!-- Tarjeta de sesión -->
-            <div class="ad-session-card">
-                <div class="user-avatar">FV</div>
-                <div class="user-meta">
-                    <span class="user-name">Frank Vargas Huamán</span>
-                    <span class="user-ad-domain">
-                        <span class="status-dot online"></span> Frank Vargas Huamán | NOC Lead
-                    </span>
+                    <div class="user-popover-divider"></div>
+
+                    <!-- Estado de la Operación integrado en el Popover -->
+                    <div class="user-popover-status" id="backendStatusPill" title="Estado de la conexión institucional">
+                        <div class="status-indicator-row">
+                            <span class="status-indicator-label">
+                                <span class="status-dot online" id="backendStatusDot"></span>
+                                Estado de Conexión:
+                            </span>
+                            <span class="status-indicator-value" id="backendStatusText">Operativo (En Línea)</span>
+                        </div>
+                        <div class="status-indicator-row sub">
+                            <span class="status-sub-label">Sede / Red:</span>
+                            <span class="status-sub-val" id="popoverDomainText">Red Central BCRP</span>
+                        </div>
+                    </div>
+
+                    <div class="user-popover-divider"></div>
+
+                    <div class="user-popover-actions">
+                        <button type="button" class="user-menu-item" id="btnMenuCambiarRol" onclick="AuthRBAC.abrirModalRoles(); AuthRBAC.cerrarMenuUsuario();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <polyline points="17 11 19 13 23 9"></polyline>
+                            </svg>
+                            <span>Cambiar Perfil Institucional</span>
+                        </button>
+                        <button type="button" class="user-menu-item logout" id="btnMenuCerrarSesion" onclick="AuthRBAC.cerrarSesion()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Cerrar Sesión</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,11 +157,12 @@
         <!-- Panel 1: Barra de Filtros del Período de Supervisión -->
         <section class="toolbar-unified">
             <div class="toolbar-filters-group">
-                <div style="display:flex; align-items:center; gap:8px;">
+                <div class="toolbar-filter-label">
                     <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em;">Período:</span>
+                    <span>Período:</span>
                 </div>
                 <input type="datetime-local" id="fDesde" class="select-filter" aria-label="Fecha y hora de inicio">
+                <span class="toolbar-separator">a</span>
                 <input type="datetime-local" id="fHasta" class="select-filter" aria-label="Fecha y hora de fin">
                 <select id="fEntidad" class="select-filter" aria-label="Filtro de entidad participante">
                     <option value="">Todas las entidades</option>
@@ -123,8 +181,8 @@
         <section class="panel-card">
             <div class="panel-header">
                 <div class="panel-title-group">
-                    <h3>KPIs Globales de Disponibilidad y Confiabilidad (RF-09)</h3>
-                    <span class="panel-subtitle">Métricas de Confiabilidad Operativa: MTTR / MTTD / Disponibilidad Ponderada</span>
+                    <h3>Resumen Ejecutivo de Disponibilidad y Cumplimiento de Pagos</h3>
+                    <span class="panel-subtitle">Indicadores Operativos Oficiales conforme a la normativa BCRP Circular 0014-2023</span>
                 </div>
                 <div class="action-buttons-group">
                     <button class="btn btn-secondary" id="btnCSV">
@@ -138,8 +196,8 @@
                 </div>
             </div>
 
-            <!-- Fila de 6 KPIs Ejecutivos de Borde Nítido -->
-            <div class="executive-kpi-grid grid-6" style="padding: 16px 20px;">
+            <!-- Fila de 6 KPIs Ejecutivos con CSS Grid Fluido y Acento Superior -->
+            <div class="executive-kpi-grid" style="padding: 16px 20px;">
                 <div class="executive-kpi-card kpi-accent-blue">
                     <div class="kpi-card-top">
                         <span class="kpi-card-label">Total</span>
@@ -181,38 +239,38 @@
 
                 <div class="executive-kpi-card kpi-accent-gold">
                     <div class="kpi-card-top">
-                        <span class="kpi-card-label">MTTR (min)</span>
+                        <span class="kpi-card-label">Tiempo Solución (min)</span>
                         <span class="kpi-card-icon">
                             <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         </span>
                     </div>
-                    <span class="kpi-card-value" id="kMttr">-</span>
+                    <span class="kpi-card-value" id="kMttr" style="color:#E2B357">-</span>
                     <div class="kpi-card-footer">
-                        <span class="kpi-tag">Recuperación</span>
+                        <span class="kpi-tag">Recuperación Promedio</span>
                     </div>
                 </div>
 
                 <div class="executive-kpi-card kpi-accent-gold">
                     <div class="kpi-card-top">
-                        <span class="kpi-card-label">MTTD (min)</span>
+                        <span class="kpi-card-label">Tiempo Detección (min)</span>
                         <span class="kpi-card-icon">
                             <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         </span>
                     </div>
-                    <span class="kpi-card-value" id="kMttd">-</span>
+                    <span class="kpi-card-value" id="kMttd" style="color:#E2B357">-</span>
                     <div class="kpi-card-footer">
-                        <span class="kpi-tag">Detección</span>
+                        <span class="kpi-tag">Detección Promedio</span>
                     </div>
                 </div>
 
                 <div class="executive-kpi-card kpi-accent-cyan">
                     <div class="kpi-card-top">
-                        <span class="kpi-card-label">Uptime %</span>
+                        <span class="kpi-card-label">Disponibilidad Global %</span>
                         <span class="kpi-card-icon">
-                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                         </span>
                     </div>
-                    <span class="kpi-card-value" id="kUptime" style="color:#38BDF8">-</span>
+                    <span class="kpi-card-value" id="kUptime" style="color:#06B6D4">-</span>
                     <div class="kpi-card-footer">
                         <span class="kpi-tag">Meta ≥ 99.90%</span>
                     </div>
@@ -221,7 +279,7 @@
 
             <!-- Gráfico de Confiabilidad con Umbral SLA 99.90% -->
             <div style="padding:0 20px 20px;">
-                <canvas id="chartUptime" width="800" height="220" style="width:100%; background:rgba(255,255,255,.02); border-radius:10px;"></canvas>
+                <canvas id="chartUptime" width="800" height="260" style="width:100%; height:260px; background:rgba(255,255,255,.015); border: 1px solid rgba(255,255,255,0.05); border-radius:10px; display:block;"></canvas>
             </div>
         </section>
 
@@ -237,14 +295,14 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Entidad</th>
+                            <th>Entidad Participante</th>
                             <th>Cód. BCRP</th>
-                            <th>Incidentes</th>
-                            <th>Críticos</th>
-                            <th>MTTR (min)</th>
-                            <th>MTTD (min)</th>
-                            <th>Min. Indisp.</th>
-                            <th>Uptime %</th>
+                            <th style="text-align:center;">Total Incidentes</th>
+                            <th style="text-align:center;">Incidentes Críticos</th>
+                            <th style="text-align:right;">MTTR (min)</th>
+                            <th style="text-align:right;">MTTD (min)</th>
+                            <th style="text-align:right;">Min. Indisponibles</th>
+                            <th>Disponibilidad SLA (%)</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyIndisp">
@@ -308,6 +366,10 @@
         </section>
     </main>
 
+    <!-- Librerías de Vanguardia para Seguridad y Animación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>

@@ -10,6 +10,23 @@
 (function (window) {
     'use strict';
 
+    /**
+     * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+     */
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    if (typeof window !== 'undefined' && !window.escapeHTML) {
+        window.escapeHTML = escapeHTML;
+    }
+
     class BcrpSoundFXEngine {
         constructor() {
             this.ctx = null;
@@ -416,12 +433,15 @@
                 iconSvg = `<svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
             }
 
+            const titleSafe = escapeHTML(title);
+            const messageSafe = escapeHTML(message);
+
             toast.innerHTML = `
                 <div class="toast-indicator"></div>
                 <div class="toast-icon-box">${iconSvg}</div>
                 <div class="toast-content">
-                    <h5 class="toast-title">${title}</h5>
-                    <p class="toast-message">${message}</p>
+                    <h5 class="toast-title">${titleSafe}</h5>
+                    <p class="toast-message">${messageSafe}</p>
                 </div>
                 <button type="button" class="toast-dismiss" aria-label="Cerrar notificación">
                     <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

@@ -47,11 +47,11 @@
         {
             id: 'simular-falla-503',
             category: 'Operaciones Críticas NOC',
-            title: 'Simular Falla 503 en Enlace BCP',
-            description: 'Inyecta caída de disponibilidad HTTP 503 en Yape/BCP vía sonda de telemetría',
+            title: 'Simular Falla en BCP (Yape)',
+            description: 'Simula interrupción temporal en la conexión con BCP (Yape)',
             icon: '⚡',
             shortcut: ['Alt', '2'],
-            keywords: ['simular', 'falla', '503', 'bcp', 'yape', 'caida', 'error', 'alerta', 'critico'],
+            keywords: ['simular', 'falla', 'bcp', 'yape', 'interrupcion', 'alerta', 'critico'],
             handler: () => ejecutarSimulacionFallaBcp()
         },
         {
@@ -275,6 +275,7 @@
         const input = document.getElementById('sigirCmdInput');
         if (!overlay || !input) return;
 
+        PaletteState.previousActiveElement = document.activeElement;
         PaletteState.isOpen = true;
         PaletteState.searchQuery = '';
         input.value = '';
@@ -293,6 +294,10 @@
             overlay.classList.remove('active');
         }
         PaletteState.isOpen = false;
+        if (PaletteState.previousActiveElement && typeof PaletteState.previousActiveElement.focus === 'function') {
+            PaletteState.previousActiveElement.focus();
+            PaletteState.previousActiveElement = null;
+        }
     }
 
     /**
@@ -536,10 +541,10 @@
         const btnSimular = document.getElementById('btnSimularCaida');
         if (btnSimular) {
             btnSimular.click();
-            mostrarToastNotificacion('Inyección de Telemetría', 'Falla HTTP 503 disparada para enlace BCP (Yape)', 'warning');
+            mostrarToastNotificacion('Simulación de Falla', 'Interrupción temporal disparada para enlace BCP (Yape)', 'warning');
         } else if (typeof window.simularCaidaAutomatica === 'function') {
             window.simularCaidaAutomatica();
-            mostrarToastNotificacion('Inyección de Telemetría', 'Falla HTTP 503 disparada para enlace BCP (Yape)', 'warning');
+            mostrarToastNotificacion('Simulación de Falla', 'Interrupción temporal disparada para enlace BCP (Yape)', 'warning');
         } else {
             // Si nos encontramos en reportes.html u otra página, redirigir con query param
             window.location.href = 'index.html?action=simular-caida';
@@ -687,18 +692,33 @@
     }
 
     /**
-     * Calcula dinámicamente un hash SHA-256 con Web Crypto API
+     * Calcula dinámicamente un hash SHA-256 con Web Crypto API y manejo defensivo
+     * Produce un hash canónico de 64 caracteres hexadecimales en minúsculas.
      */
     async function calcularSha256DeEstadoActual() {
         try {
             const raw = `BCRP-SIGIR|SESSION|${new Date().toISOString().slice(0, 13)}|Frankosyni|APF1-ZAMATA`;
-            const buffer = new TextEncoder().encode(raw);
-            const digest = await crypto.subtle.digest('SHA-256', buffer);
-            const hashArray = Array.from(new Uint8Array(digest));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+                const buffer = new TextEncoder().encode(raw);
+                const digest = await window.crypto.subtle.digest('SHA-256', buffer);
+                const hashArray = Array.from(new Uint8Array(digest));
+                const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+                if (hex.length === 64 && /^[0-9a-f]{64}$/.test(hex)) {
+                    return hex;
+                }
+            }
         } catch (e) {
-            return '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069';
+            console.warn('[CommandPalette] Error en Web Crypto SHA-256:', e);
         }
+
+        if (typeof window !== 'undefined' && typeof window.calcularSha256 === 'function') {
+            try {
+                const res = await window.calcularSha256('BCRP-SIGIR|SESSION|' + new Date().toISOString().slice(0, 13));
+                if (res && res.length === 64) return res;
+            } catch (e) {}
+        }
+
+        return '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069';
     }
 
     /**
@@ -758,11 +778,14 @@
             info: '⌘'
         };
 
+        const tituloSafe = escapeHTML(titulo);
+        const mensajeSafe = escapeHTML(mensaje);
+
         toast.innerHTML = `
             <span class="cmd-toast-icon">${iconMap[tipo] || '•'}</span>
             <div class="cmd-toast-content">
-                <div class="cmd-toast-title">${titulo}</div>
-                <div class="cmd-toast-msg">${mensaje}</div>
+                <div class="cmd-toast-title">${tituloSafe}</div>
+                <div class="cmd-toast-msg">${mensajeSafe}</div>
             </div>
         `;
 
@@ -787,6 +810,13 @@
             if (isCmdK) {
                 e.preventDefault();
                 togglePalette();
+                return;
+            }
+
+            // Escape global para cerrar la paleta si está abierta
+            if ((e.key === 'Escape' || e.key === 'Esc') && PaletteState.isOpen) {
+                e.preventDefault();
+                cerrarPalette();
             }
         });
     }

@@ -34,163 +34,259 @@
             </div>
             <div class="brand-title">
                 <h1>SIGIR - BCRP</h1>
-                <p>Topología de Infraestructura &amp; Conectividad de Pasarelas Interbancarias</p>
+                <p>Supervisión Switch CCE &bull; ISO 20022</p>
             </div>
         </div>
 
+        <!-- Pestañas de navegación superiores limpias (Zero Emojis - SVGs Nítidos 1.75px) -->
         <nav class="header-nav" aria-label="Navegación del Sistema">
             <a href="index.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>📡 Consola NOC</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Consola NOC</span>
             </a>
             <a href="infraestructura.html" class="nav-tab active">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                <span>🌐 Infraestructura</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>Infraestructura</span>
             </a>
             <a href="auditoria.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>🛡️ Bitácora Auditoría</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <span>Bitácora Auditoría</span>
             </a>
             <a href="reportes.html" class="nav-tab">
-                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span>📊 Reportes SFT</span>
+                <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Reportes SFT</span>
             </a>
         </nav>
 
         <div class="header-right">
-            <div class="header-clock-box">
-                <span class="clock-label">HORA OFICIAL DEL PERÚ:</span>
+            <!-- Píldora Command Palette (Raycast / Linear style) -->
+            <button class="cmd-palette-pill" id="btnHeaderCommandPalette" type="button" aria-label="Abrir Paleta de Comandos" title="Abrir Paleta de Comandos (⌘K / Ctrl+K)">
+                <svg class="icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="cmd-pill-label">Buscar</span>
+                <kbd class="cmd-pill-kbd">⌘K</kbd>
+            </button>
+
+            <!-- Botón Toggle de Audio Háptico Discreto (34x34px sin texto) -->
+            <button id="btnAudioToggle" class="btn-audio-toggle" type="button" aria-label="Alternar audio táctil BCRP" title="Audio activo (Web Audio API - Emil Kowalski)">
+                <svg class="icon-svg icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                <svg class="icon-svg icon-sound-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+            </button>
+
+            <!-- Reloj digital en tiempo real con punto verde pulsante -->
+            <div class="header-clock-box" title="Hora Oficial de la República del Perú (UTC-5)">
+                <span class="clock-live-dot"></span>
                 <span id="relojUtc" class="header-clock">--:--:-- PET</span>
             </div>
 
-            <div class="user-session-card" onclick="AuthRBAC.abrirModalRoles()" title="Haz clic para cambiar de rol institucional">
-                <div class="user-avatar">FV</div>
-                <div class="user-info">
-                    <span class="user-name">Frank Vargas Huamán</span>
-                    <span class="user-role">Arquitecto &amp; NOC Lead</span>
+            <!-- Dropdown de Sesión de Usuario Unificado (Estilo Stripe / Mercury / Linear) -->
+            <div class="header-user-dropdown" id="headerUserDropdown">
+                <button class="header-user-trigger" id="btnUserMenuTrigger" type="button" aria-haspopup="true" aria-expanded="false" title="Cuenta de usuario y sesión">
+                    <div class="user-avatar-circle" id="headerUserAvatar">FV</div>
+                    <span class="user-name-compact" id="headerUserName">Frank Vargas</span>
+                    <svg class="chevron-down-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="user-menu-popover" id="userMenuPopover" role="menu" aria-hidden="true">
+                    <div class="user-popover-header">
+                        <div class="user-popover-avatar" id="popoverUserAvatar">FV</div>
+                        <div class="user-popover-info">
+                            <div class="user-popover-name" id="popoverUserName">Frank Vargas Huamán</div>
+                            <div class="user-popover-role" id="popoverUserRole">Arquitecto de Software &amp; NOC Lead</div>
+                            <div class="user-popover-email" id="popoverUserEmail">frank.vargas@bcrp.gob.pe</div>
+                        </div>
+                    </div>
+
+                    <div class="user-popover-divider"></div>
+
+                    <!-- Estado de la Operación integrado en el Popover -->
+                    <div class="user-popover-status" id="backendStatusPill" title="Estado de la conexión institucional">
+                        <div class="status-indicator-row">
+                            <span class="status-indicator-label">
+                                <span class="status-dot online" id="backendStatusDot"></span>
+                                Estado de Conexión:
+                            </span>
+                            <span class="status-indicator-value" id="backendStatusText">Operativo (En Línea)</span>
+                        </div>
+                        <div class="status-indicator-row sub">
+                            <span class="status-sub-label">Sede / Red:</span>
+                            <span class="status-sub-val" id="popoverDomainText">Red Central BCRP</span>
+                        </div>
+                    </div>
+
+                    <div class="user-popover-divider"></div>
+
+                    <div class="user-popover-actions">
+                        <button type="button" class="user-menu-item" id="btnMenuCambiarRol" onclick="AuthRBAC.abrirModalRoles(); AuthRBAC.cerrarMenuUsuario();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <polyline points="17 11 19 13 23 9"></polyline>
+                            </svg>
+                            <span>Cambiar Perfil Institucional</span>
+                        </button>
+                        <button type="button" class="user-menu-item logout" id="btnMenuCerrarSesion" onclick="AuthRBAC.cerrarSesion()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Cerrar Sesión</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="dashboard-main">
+    <main class="dashboard-main main-layout">
         <!-- Banner Explicativo Intuitivo para Usuarios No Técnicos -->
-        <div class="human-welcome-banner" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(226, 179, 87, 0.25); border-radius: 12px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:16px;">
-                <span style="font-size:2rem;">🌐</span>
+        <div class="human-welcome-banner banner-infra">
+            <div class="welcome-banner-content">
+                <div class="welcome-banner-icon" aria-hidden="true">
+                    <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </div>
                 <div>
-                    <h3 style="margin:0; font-size:1.05rem; color:#F8FAFC;">Mapa de Infraestructura y Pasarelas Interbancarias</h3>
-                    <p style="margin:4px 0 0 0; font-size:0.82rem; color:#94A3B8;">
+                    <h2 class="welcome-banner-title">Mapa de Infraestructura &amp; Pasarelas Interbancarias</h2>
+                    <p class="welcome-banner-desc">
                         Supervisión del canal de comunicación del Switch CCE con los principales bancos y cajas municipales. 
-                        <strong>Verde:</strong> Canal seguro y fluido. <strong>Rojo:</strong> Desvío activo a ruta de contingencia.
+                        <span class="legend-dot-emerald">●</span> <strong>Verde:</strong> Canal seguro y fluido. 
+                        <span class="legend-dot-crimson">●</span> <strong>Rojo:</strong> Desvío activo a ruta de contingencia.
                     </p>
                 </div>
             </div>
-            <a href="index.html" class="btn-action primary" style="text-decoration:none; white-space:nowrap;">
-                Volver a Consola NOC &rarr;
-            </a>
+            <div class="welcome-banner-actions">
+                <a href="index.html" class="welcome-portal-link" title="Volver a la Consola NOC de Supervisión">
+                    <span>Volver a Consola NOC</span>
+                    <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
         </div>
 
-        <!-- Grilla de Nodos de Infraestructura -->
-        <div class="grid-infraestructura" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:30px;">
+        <!-- Grilla de Nodos de Infraestructura (Grid Elástica Fluida) -->
+        <div class="grid-infraestructura">
             
             <!-- CCE Switch Central -->
-            <div class="card-infra" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(226,179,87,0.3); border-radius:12px; padding:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="card-infra cce-core">
+                <div class="card-infra-header">
                     <div>
-                        <span style="font-size:0.7rem; color:#E2B357; font-weight:700; text-transform:uppercase;">Núcleo Central Regulatorio</span>
-                        <h4 style="margin:4px 0; font-size:1.1rem; color:#F8FAFC;">CCE · Switch Central de Compensación</h4>
-                        <span style="font-size:0.75rem; color:#94A3B8;">Pasarela Principal de Enlace ISO 20022</span>
+                        <span class="card-infra-badge-tag tag-gold">Núcleo Central Regulatorio</span>
+                        <h3 class="card-infra-title">CCE · Switch Central de Compensación</h3>
+                        <span class="card-infra-subtitle">Pasarela Principal de Enlace ISO 20022</span>
                     </div>
-                    <span class="status-pill-human" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
-                        🟢 Activo 100%
+                    <span class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        Activo 100%
                     </span>
                 </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
-                    <div><span style="color:#64748B;">Capacidad por segundo:</span><div style="font-weight:700; color:#F8FAFC;">4,500 trans/seg</div></div>
-                    <div><span style="color:#64748B;">Latencia interna:</span><div style="font-weight:700; color:#10B981;">12 ms</div></div>
-                    <div><span style="color:#64748B;">Protocolo de seguridad:</span><div style="font-weight:700; color:#F8FAFC;">mTLS + AES-256</div></div>
-                    <div><span style="color:#64748B;">Respaldo en Nube:</span><div style="font-weight:700; color:#38BDF8;">Hot-Standby Activo</div></div>
+                <div class="card-infra-specs">
+                    <div class="spec-item"><span class="spec-label">Capacidad por segundo:</span><div class="spec-value">4,500 trans/seg</div></div>
+                    <div class="spec-item"><span class="spec-label">Latencia interna:</span><div class="spec-value val-emerald">12 ms</div></div>
+                    <div class="spec-item"><span class="spec-label">Protocolo de seguridad:</span><div class="spec-value">mTLS + AES-256</div></div>
+                    <div class="spec-item"><span class="spec-label">Respaldo en Nube:</span><div class="spec-value val-sky">Hot-Standby Activo</div></div>
                 </div>
             </div>
 
             <!-- BCP Yape -->
-            <div class="card-infra" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="card-infra bank-node">
+                <div class="card-infra-header">
                     <div>
-                        <span style="font-size:0.7rem; color:#38BDF8; font-weight:700; text-transform:uppercase;">Entidad Bancaria Privada</span>
-                        <h4 style="margin:4px 0; font-size:1.1rem; color:#F8FAFC;">BCP · Banco de Crédito del Perú (Yape)</h4>
-                        <span style="font-size:0.75rem; color:#94A3B8;">Canal Interoperable Billeteras Móviles</span>
+                        <span class="card-infra-badge-tag tag-sky">Entidad Bancaria Privada</span>
+                        <h3 class="card-infra-title">BCP · Banco de Crédito del Perú (Yape)</h3>
+                        <span class="card-infra-subtitle">Canal Interoperable Billeteras Móviles</span>
                     </div>
-                    <span id="badgeBcpInfra" class="status-pill-human" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
-                        🟢 Operación Normal
+                    <span id="badgeBcpInfra" class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        Operación Normal
                     </span>
                 </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
-                    <div><span style="color:#64748B;">Volumen diario estimado:</span><div style="font-weight:700; color:#F8FAFC;">12.4M operaciones</div></div>
-                    <div><span style="color:#64748B;">Tiempo de respuesta:</span><div id="latenciaBcpInfra" style="font-weight:700; color:#10B981;">18 ms</div></div>
-                    <div><span style="color:#64748B;">Enlace dedicado:</span><div style="font-weight:700; color:#F8FAFC;">Fibra Directa Red Privada</div></div>
-                    <div><span style="color:#64748B;">Ruta de escape:</span><div style="font-weight:700; color:#CBD5E1;">VPN IPsec Alternativa</div></div>
+                <div class="card-infra-specs">
+                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">12.4M operaciones</div></div>
+                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div id="latenciaBcpInfra" class="spec-value val-emerald">18 ms</div></div>
+                    <div class="spec-item"><span class="spec-label">Enlace dedicado:</span><div class="spec-value">Fibra Directa Red Privada</div></div>
+                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">VPN IPsec Alternativa</div></div>
                 </div>
             </div>
 
             <!-- Interbank Plin -->
-            <div class="card-infra" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="card-infra bank-node">
+                <div class="card-infra-header">
                     <div>
-                        <span style="font-size:0.7rem; color:#38BDF8; font-weight:700; text-transform:uppercase;">Entidad Bancaria Privada</span>
-                        <h4 style="margin:4px 0; font-size:1.1rem; color:#F8FAFC;">Interbank / BBVA (Plin)</h4>
-                        <span style="font-size:0.75rem; color:#94A3B8;">Canal Interoperable de Pagos Inmediatos</span>
+                        <span class="card-infra-badge-tag tag-sky">Entidad Bancaria Privada</span>
+                        <h3 class="card-infra-title">Interbank / BBVA (Plin)</h3>
+                        <span class="card-infra-subtitle">Canal Interoperable de Pagos Inmediatos</span>
                     </div>
-                    <span class="status-pill-human" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
-                        🟢 Operación Normal
+                    <span class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        Operación Normal
                     </span>
                 </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
-                    <div><span style="color:#64748B;">Volumen diario estimado:</span><div style="font-weight:700; color:#F8FAFC;">6.8M operaciones</div></div>
-                    <div><span style="color:#64748B;">Tiempo de respuesta:</span><div style="font-weight:700; color:#10B981;">24 ms</div></div>
-                    <div><span style="color:#64748B;">Enlace dedicado:</span><div style="font-weight:700; color:#F8FAFC;">Conexión Segura CCE</div></div>
-                    <div><span style="color:#64748B;">Ruta de escape:</span><div style="font-weight:700; color:#CBD5E1;">Colas MQ Replicadas</div></div>
+                <div class="card-infra-specs">
+                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">6.8M operaciones</div></div>
+                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">24 ms</div></div>
+                    <div class="spec-item"><span class="spec-label">Enlace dedicado:</span><div class="spec-value">Conexión Segura CCE</div></div>
+                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Colas MQ Replicadas</div></div>
                 </div>
             </div>
 
             <!-- Caja Cusco Tunki -->
-            <div class="card-infra" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="card-infra box-node">
+                <div class="card-infra-header">
                     <div>
-                        <span style="font-size:0.7rem; color:#F59E0B; font-weight:700; text-transform:uppercase;">Caja Municipal / Microfinanzas</span>
-                        <h4 style="margin:4px 0; font-size:1.1rem; color:#F8FAFC;">Caja Cusco (Tunki)</h4>
-                        <span style="font-size:0.75rem; color:#94A3B8;">Inclusión Financiera Sur del Perú</span>
+                        <span class="card-infra-badge-tag tag-amber">Caja Municipal / Microfinanzas</span>
+                        <h3 class="card-infra-title">Caja Cusco (Tunki)</h3>
+                        <span class="card-infra-subtitle">Inclusión Financiera Sur del Perú</span>
                     </div>
-                    <span class="status-pill-human" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
-                        🟢 Operación Normal
+                    <span class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        Operación Normal
                     </span>
                 </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
-                    <div><span style="color:#64748B;">Volumen diario estimado:</span><div style="font-weight:700; color:#F8FAFC;">850K operaciones</div></div>
-                    <div><span style="color:#64748B;">Tiempo de respuesta:</span><div style="font-weight:700; color:#10B981;">32 ms</div></div>
-                    <div><span style="color:#64748B;">Enlace regional:</span><div style="font-weight:700; color:#F8FAFC;">Nodo Primario Cusco</div></div>
-                    <div><span style="color:#64748B;">Ruta de escape:</span><div style="font-weight:700; color:#CBD5E1;">Gateway CCE Lima</div></div>
+                <div class="card-infra-specs">
+                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">850K operaciones</div></div>
+                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">32 ms</div></div>
+                    <div class="spec-item"><span class="spec-label">Enlace regional:</span><div class="spec-value">Nodo Primario Cusco</div></div>
+                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Gateway CCE Lima</div></div>
                 </div>
             </div>
 
             <!-- Caja de los Andes -->
-            <div class="card-infra" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="card-infra box-node">
+                <div class="card-infra-header">
                     <div>
-                        <span style="font-size:0.7rem; color:#F59E0B; font-weight:700; text-transform:uppercase;">Caja Rural de Ahorro y Crédito</span>
-                        <h4 style="margin:4px 0; font-size:1.1rem; color:#F8FAFC;">Caja de los Andes</h4>
-                        <span style="font-size:0.75rem; color:#94A3B8;">Microfinanzas y Crédito Rural</span>
+                        <span class="card-infra-badge-tag tag-amber">Caja Rural de Ahorro y Crédito</span>
+                        <h3 class="card-infra-title">Caja de los Andes</h3>
+                        <span class="card-infra-subtitle">Microfinanzas y Crédito Rural</span>
                     </div>
-                    <span class="status-pill-human" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;">
-                        🟢 Operación Normal
+                    <span class="status-pill-human">
+                        <span class="micro-dot-pulse"></span>
+                        Operación Normal
                     </span>
                 </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
-                    <div><span style="color:#64748B;">Volumen diario estimado:</span><div style="font-weight:700; color:#F8FAFC;">420K operaciones</div></div>
-                    <div><span style="color:#64748B;">Tiempo de respuesta:</span><div style="font-weight:700; color:#10B981;">45 ms</div></div>
-                    <div><span style="color:#64748B;">Enlace regional:</span><div style="font-weight:700; color:#F8FAFC;">Nodo Puno / Arequipa</div></div>
-                    <div><span style="color:#64748B;">Ruta de escape:</span><div style="font-weight:700; color:#CBD5E1;">Gateway Alternativo</div></div>
+                <div class="card-infra-specs">
+                    <div class="spec-item"><span class="spec-label">Volumen diario estimado:</span><div class="spec-value">420K operaciones</div></div>
+                    <div class="spec-item"><span class="spec-label">Tiempo de respuesta:</span><div class="spec-value val-emerald">45 ms</div></div>
+                    <div class="spec-item"><span class="spec-label">Enlace regional:</span><div class="spec-value">Nodo Puno / Arequipa</div></div>
+                    <div class="spec-item"><span class="spec-label">Ruta de escape:</span><div class="spec-value val-muted">Gateway Alternativo</div></div>
                 </div>
             </div>
 
@@ -207,6 +303,10 @@
     </footer>
 
     <!-- Scripts Esenciales Registrados -->
+    <!-- Librerías de Vanguardia para Seguridad y Animación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js" integrity="sha512-VZXzDNjghgPumTNYmcp9B1j8jWfW7y8c0o32Y3/Vl0+2x9uM+y33hQfRzR4r1+tE4kXU8J0e/uE1g+v5Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/svg-icons.js"></script>
     <script src="js/sound-fx.js"></script>
     <script src="js/auth-rbac.js"></script>

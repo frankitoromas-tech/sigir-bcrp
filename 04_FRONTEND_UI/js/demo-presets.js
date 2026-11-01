@@ -10,21 +10,38 @@
  * ==========================================================================
  * 
  * Contrato de Escenarios para Demostración en Vivo:
- * 1. Escenario 1: Tráfico Normal Interbancario (SLA 99.94%, 0 caídas, latencias 16-24ms)
- * 2. Escenario 2: Caída Crítica BCP/Yape HTTP 503 (TIMEOUT, parpadeo rojo, ticket INC-20261031-10001)
- * 3. Escenario 3: Mitigación & Cierre Inmutable (REGISTRADO -> EN_MITIGACION -> RESUELTO -> CERRADO, cálculo SLA en vivo)
- * 4. Escenario 4: Compilación Inmediata SFT + SHA-256 (Modal oficial BCRP, archivo plano y hash criptográfico)
+ * 1. Escenario 1: Operación Normal (Disponibilidad 99.94%, 0 fallas, tiempos de respuesta 16-24ms)
+ * 2. Escenario 2: Simular Falla en BCP (Yape) (Alerta inmediata, ticket INC-20261031-10001)
+ * 3. Escenario 3: Recuperar Canal y Mitigar (Recuperación y cálculo de disponibilidad en vivo)
+ * 4. Escenario 4: Emitir Reporte con Firma Digital (Reporte oficial normativo SFT y hash SHA-256)
  * 
  * Atajos de Teclado:
- *   [Alt + 1] -> Escenario 1 (Tráfico Normal)
- *   [Alt + 2] -> Escenario 2 (Caída Crítica BCP)
- *   [Alt + 3] -> Escenario 3 (Mitigación & Cierre)
- *   [Alt + 4] -> Escenario 4 (Compilación SFT)
+ *   [Alt + 1] -> Escenario 1 (Operación Normal)
+ *   [Alt + 2] -> Escenario 2 (Simular Falla en BCP)
+ *   [Alt + 3] -> Escenario 3 (Recuperar Canal y Mitigar)
+ *   [Alt + 4] -> Escenario 4 (Emitir Reporte con Firma Digital)
  *   [Alt + P] -> Minimizar / Desplegar Panel de Presets
  */
 
 (function () {
     'use strict';
+
+    /**
+     * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+     */
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    if (typeof window !== 'undefined' && !window.escapeHTML) {
+        window.escapeHTML = escapeHTML;
+    }
 
     // Resolver referencia reactiva al estado del SIGIR (soporta global lexical y window)
     function obtenerEstado() {
@@ -43,7 +60,7 @@
         version: '1.0.0-APF1-ZAMATA',
         ticketObjetivo: 'INC-20261031-10001',
         soundEnabled: false,
-        isMinimized: false
+        isMinimized: true
     };
 
     /**
@@ -118,12 +135,15 @@
 
         const icono = iconos[tipo] || '⚡';
 
+        const tituloSafe = escapeHTML(titulo);
+        const mensajeSafe = escapeHTML(mensaje);
+
         toast.innerHTML = `
             <div class="toast-indicator"></div>
             <div class="toast-icon">${icono}</div>
             <div class="toast-content">
-                <div class="toast-title">${titulo}</div>
-                <div class="toast-body">${mensaje}</div>
+                <div class="toast-title">${tituloSafe}</div>
+                <div class="toast-body">${mensajeSafe}</div>
             </div>
             <button class="toast-close" title="Cerrar">&times;</button>
         `;
@@ -153,36 +173,40 @@
         const styleEl = document.createElement('style');
         styleEl.id = 'noc-demo-styles';
         styleEl.textContent = `
-            /* Contenedor Flotante Principal de Presets Jurado */
+            /* Contenedor Flotante Inferior de Presets Jurado (Estilo macOS Dock / Vercel HUD) */
             .noc-demo-dock {
                 position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
+                bottom: 18px;
+                left: 50%;
+                transform: translateX(-50%);
                 z-index: 99999;
                 background: rgba(11, 15, 23, 0.94);
-                backdrop-filter: blur(14px);
-                -webkit-backdrop-filter: blur(14px);
-                border-bottom: 1px solid rgba(56, 189, 248, 0.28);
-                box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(56, 189, 248, 0.35);
+                border-radius: 16px;
+                box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
                 font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+                max-width: calc(100vw - 32px);
+                width: auto;
+                padding: 6px 14px;
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
             }
 
             .noc-demo-dock.minimized {
-                transform: translateY(-100%);
+                transform: translate(-50%, calc(100% + 30px));
                 pointer-events: none;
                 opacity: 0;
             }
 
             .noc-demo-inner {
-                max-width: 1440px;
+                max-width: 1400px;
                 margin: 0 auto;
-                padding: 7px 18px;
+                padding: 0;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                gap: 14px;
+                gap: 12px;
             }
 
             /* Badge y Metadatos Institucionales */
@@ -365,8 +389,8 @@
             /* Botón Flotante para Reabrir Panel cuando esté minimizado */
             .noc-demo-fab-trigger {
                 position: fixed;
-                top: 14px;
-                right: 20px;
+                bottom: 20px;
+                right: 24px;
                 z-index: 99998;
                 background: #0B0F17;
                 border: 1px solid rgba(56, 189, 248, 0.4);
@@ -395,9 +419,9 @@
                 display: inline-flex;
             }
 
-            /* Compensación de margen superior para el layout cuando la barra está activa */
+            /* Compensación inferior cuando el dock flotante está visible */
             body.has-noc-dock {
-                padding-top: 50px !important;
+                padding-bottom: 74px !important;
             }
 
             /* ==========================================================
@@ -423,7 +447,7 @@
             }
 
             .bcp-strobe-alert::after {
-                content: 'ALERTA HTTP 503';
+                content: 'FALLA DE CANAL';
                 position: absolute;
                 top: 6px;
                 right: 8px;
@@ -571,7 +595,7 @@
 
         inyectarEstilosDemo();
 
-        // Barra superior fija
+        // Dock flotante inferior estilo macOS Dock / Vercel Toolbar
         const dock = document.createElement('aside');
         dock.id = 'noc-demo-dock';
         dock.className = 'noc-demo-dock';
@@ -593,28 +617,28 @@
 
                 <!-- Botonera de 4 Escenarios Clave -->
                 <div class="noc-demo-presets-row">
-                    <button type="button" class="noc-btn-preset escenario-1" id="btnNocEscenario1" title="Restablecer todos los bancos a estado óptimo y disponibilidad 99.94%">
-                        <span>🟢 1. Tráfico Normal</span>
+                    <button type="button" class="noc-btn-preset escenario-1" id="btnNocEscenario1" title="Restablecer todos los bancos a estado óptimo y disponibilidad 99.94% (Alt+1)">
+                        <span>🟢 1. Operación Normal</span>
                         <span class="noc-key-badge">Alt+1</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-2" id="btnNocEscenario2" title="Provocar caída crítica masiva HTTP 503 en BCP/Yape con auto-ticket INC-20261031-10001">
-                        <span>🚨 2. Caída BCP (HTTP 503)</span>
+                    <button type="button" class="noc-btn-preset escenario-2" id="btnNocEscenario2" title="Simular falla en BCP (Yape) con auto-ticket INC-20261031-10001 (Alt+2)">
+                        <span>🚨 2. Simular Falla en BCP (Yape)</span>
                         <span class="noc-key-badge">Alt+2</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-3" id="btnNocEscenario3" title="Ejecutar ciclo inmutable: REGISTRADO -> EN_MITIGACION -> RESUELTO con recálculo SLA">
-                        <span>🛡️ 3. Mitigación & Cierre</span>
+                    <button type="button" class="noc-btn-preset escenario-3" id="btnNocEscenario3" title="Recuperar canal y mitigar con recálculo de disponibilidad de pagos (Alt+3)">
+                        <span>🛡️ 3. Recuperar Canal y Mitigar</span>
                         <span class="noc-key-badge">Alt+3</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset escenario-4" id="btnNocEscenario4" title="Abrir visor oficial SFT con archivo plano normativo y cálculo criptográfico SHA-256">
-                        <span>📜 4. Compilar SFT + SHA-256</span>
+                    <button type="button" class="noc-btn-preset escenario-4" id="btnNocEscenario4" title="Emitir reporte oficial normativo SFT con firma digital SHA-256 (Alt+4)">
+                        <span>📜 4. Emitir Reporte con Firma Digital</span>
                         <span class="noc-key-badge">Alt+4</span>
                     </button>
 
-                    <button type="button" class="noc-btn-preset" id="btnNocGuiaDemo" style="border-color: rgba(226, 179, 87, 0.45); background: rgba(226, 179, 87, 0.1); color: #F8FAFC;" title="Abrir Guía Rápida de Demostración para Jurado (Alt+G)">
-                        <span>📋 Guía Jurado</span>
+                    <button type="button" class="noc-btn-preset" id="btnNocGuiaDemo" style="border-color: rgba(226, 179, 87, 0.45); background: rgba(226, 179, 87, 0.1); color: #F8FAFC;" title="Abrir Guía de Demostración (Alt+G)">
+                        <span>📋 Guía de Demostración</span>
                         <span class="noc-key-badge">Alt+G</span>
                     </button>
                 </div>
@@ -624,8 +648,8 @@
                     <button type="button" class="noc-btn-icon" id="btnNocToggleAudio" title="Alternar audio beeps sintéticos de alerta">
                         <span id="lblNocAudioIcon">🔇</span>
                     </button>
-                    <button type="button" class="noc-btn-icon" id="btnNocMinimize" title="Minimizar panel superior (Alt+P)">
-                        <span>▲ Ocultar</span>
+                    <button type="button" class="noc-btn-icon" id="btnNocMinimize" title="Minimizar dock inferior de presets (Alt+P)">
+                        <span>▼ Ocultar</span>
                         <span class="noc-key-badge">Alt+P</span>
                     </button>
                 </div>
@@ -645,7 +669,13 @@
 
         document.body.appendChild(dock);
         document.body.appendChild(fab);
-        document.body.classList.add('has-noc-dock');
+        if (DEMO_CONFIG.isMinimized) {
+            dock.classList.add('minimized');
+            fab.classList.add('visible');
+            document.body.classList.remove('has-noc-dock');
+        } else {
+            document.body.classList.add('has-noc-dock');
+        }
 
         // Configuración de eventos de los botones
         document.getElementById('btnNocEscenario1')?.addEventListener('click', () => window.NocDemo.escenario1());
@@ -766,7 +796,7 @@
             elUptime.style.color = '#38BDF8';
         }
 
-        const elCriticos = document.getElementById('kpiCriticos');
+        const elCriticos = document.getElementById('kpiActivos') || document.getElementById('kpiCriticos');
         if (elCriticos) {
             elCriticos.innerText = '0';
         }
@@ -774,8 +804,8 @@
         reproducirTono('exito');
 
         mostrarToast(
-            'Escenario 1: Tráfico Normal Interbancario',
-            '5/5 entidades saludables (BCP, Interbank, Cusco, Andes, CCE) · Latencias: 16–24ms · 0 caídas activas · SLA: 99.94%',
+            '1. Operación Normal',
+            '5/5 entidades saludables (BCP, Interbank, Cusco, Andes, CCE) · Tiempos de respuesta óptimos (16–24ms) · 0 fallas activas · Disponibilidad de pagos: 99.94%',
             'success',
             5000
         );
@@ -817,8 +847,8 @@
             severidad: 'CRITICA',
             origen: 'AUTOMATICO',
             fechaDeteccion: fechaHoraStr,
-            servicio: 'API_TRANSFERENCIAS_INMEDIATAS_YAPE',
-            descripcion: 'ALERTA AUTOMÁTICA BCRP: Falla HTTP 503 en endpoint Yape. Latencia >TIMEOUT. Interrupción masiva de interoperabilidad detectada por sonda central.',
+            servicio: 'PAGOS_INMEDIATOS_YAPE',
+            descripcion: 'ALERTA AUTOMÁTICA BCRP: Interrupción temporal en la conexión con BCP (Yape). Canal alterno activado exitosamente.',
             estado: 'REGISTRADO'
         };
 
@@ -852,8 +882,8 @@
         reproducirTono('alerta');
 
         mostrarToast(
-            'Escenario 2: Caída Crítica BCP/Yape (HTTP 503)',
-            `BCP en estado CAÍDO · Latencia: TIMEOUT · Generado ticket inmutable: ${DEMO_CONFIG.ticketObjetivo} (Severidad CRÍTICA) · SLA cae a 98.74%`,
+            '2. Simular Falla en BCP (Yape)',
+            `Interrupción temporal en la conexión con BCP (Yape) · Se genera ticket normativo: ${DEMO_CONFIG.ticketObjetivo} (Severidad CRÍTICA) · Canal alterno activado exitosamente.`,
             'critical',
             6500
         );
@@ -895,7 +925,7 @@
 
         mostrarToast(
             'Paso 1: Transición hacia EN_MITIGACION',
-            `Ticket ${inc.ticket}: Acciones de contingencia activadas (Desvío de cola MQ a Switch Secundario CCE).`,
+            `Ticket ${inc.ticket}: Canal alterno activado exitosamente. Enrutamiento preventivo en curso hacia Switch Secundario CCE.`,
             'warning',
             2800
         );
@@ -922,7 +952,7 @@
 
         mostrarToast(
             'Paso 2: Transición hacia RESUELTO',
-            `Ticket ${inc.ticket}: Servicio Yape estabilizado (Latencia normalizada a 18ms). Iniciando recálculo de SLA.`,
+            `Ticket ${inc.ticket}: Transferencias interbancarias restablecidas al 100% (Tiempo de respuesta normalizado a 18ms).`,
             'success',
             2800
         );
@@ -933,6 +963,17 @@
         inc.estado = 'CERRADO';
         if (typeof window.renderizarMatrizIncidentes === 'function') window.renderizarMatrizIncidentes();
         if (typeof window.actualizarKpis === 'function') window.actualizarKpis();
+
+        if (typeof window.confetti === 'function') {
+            try {
+                window.confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.85 },
+                    colors: ['#10B981', '#E2B357', '#38BDF8']
+                });
+            } catch (e) {}
+        }
 
         // Animación progresiva de recuperación del SLA (de 98.74% a 99.94%)
         const elUptime = document.getElementById('kpiUptime');
@@ -946,8 +987,8 @@
         }
 
         mostrarToast(
-            'Paso 3: Cierre Inmutable & SLA Consolidado',
-            `Ticket ${inc.ticket} CERRADO · Fórmula SLA BCRP: [(43200m - 12m) / 43200m] × 100 = 99.94% (Cumple Circular BCRP 0014-2023).`,
+            'Paso 3: Cierre y Disponibilidad Consolidada',
+            `Ticket ${inc.ticket} CERRADO · Disponibilidad de Pagos BCRP: [(43200m - 12m) / 43200m] × 100 = 99.94% (Cumple Circular BCRP 0014-2023).`,
             'info',
             5500
         );
@@ -989,15 +1030,30 @@
             contenidoPlano += `DETALLE|${inc.ticket}|${codEnt}|${inc.entidadNombre}|${inc.categoriaCodigo || 'DISP_SERV'}|${inc.severidad}|${inc.fechaDeteccion || fechaHoraDetalle}|${fechaFin}|${inc.origen || 'AUTOMATICO'}|${inc.servicio || 'CORE_SWITCH'}\n`;
         });
 
-        // Cálculo de SHA-256 criptográfico con Web Crypto API
+        // Cálculo de SHA-256 criptográfico con Web Crypto API defensivo (64 caracteres hex)
         let sha256Hex = '';
-        try {
-            const buffer = new TextEncoder().encode(contenidoPlano);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            sha256Hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        } catch (e) {
-            // Fallback sintético en caso de entornos sin HTTPS/SubtleCrypto
+        if (typeof window !== 'undefined' && typeof window.calcularSha256 === 'function') {
+            try {
+                sha256Hex = await window.calcularSha256(contenidoPlano);
+            } catch (e) {}
+        }
+        if (!sha256Hex || sha256Hex.length !== 64) {
+            try {
+                if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+                    const buffer = new TextEncoder().encode(contenidoPlano);
+                    const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+                    if (hex.length === 64 && /^[0-9a-f]{64}$/.test(hex)) {
+                        sha256Hex = hex;
+                    }
+                }
+            } catch (e) {
+                // Fallback sintético en caso de entornos sin HTTPS/SubtleCrypto
+                sha256Hex = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+            }
+        }
+        if (!sha256Hex || sha256Hex.length !== 64) {
             sha256Hex = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
         }
 
@@ -1026,18 +1082,29 @@
             modalSft.classList.add('active');
         }
 
+        if (typeof window.confetti === 'function') {
+            try {
+                window.confetti({
+                    particleCount: 50,
+                    spread: 70,
+                    origin: { y: 0.75 },
+                    colors: ['#E2B357', '#38BDF8', '#10B981']
+                });
+            } catch (e) {}
+        }
+
         reproducirTono('exito');
 
         mostrarToast(
-            'Escenario 4: Compilación Inmediata SFT BCRP',
-            `Archivo plano generado con ${cerrados.length} registros normativos. Sello criptográfico SHA-256: ${sha256Hex.substring(0, 16)}...`,
+            '4. Emitir Reporte con Firma Digital',
+            `Reporte oficial normativo SFT emitido con ${cerrados.length} registros oficiales. Firma digital SHA-256 generada y validada.`,
             'crypto',
             6000
         );
     }
 
     /**
-     * Alternar visibilidad de la barra superior de presets
+     * Alternar visibilidad del dock flotante inferior de presets
      */
     function alternarDrawer() {
         const dock = document.getElementById('noc-demo-dock');
@@ -1098,13 +1165,13 @@
 
     // Mensaje de bienvenida e instrucciones en consola DevTools para el Jurado
     console.log(
-        '%c🏛️ BCRP - SIGIR | MÓDULO DE DEMOSTRACIÓN PARA JURADO (APF1)\n' +
+        '%c🏛️ BCRP - SIGIR | MÓDULO DE DEMOSTRACIÓN OPERATIVA (APF1)\n' +
         '%cEvaluador: Prof. Zamata | Desarrollador: Frank Vargas Huamán (NOC Lead)\n' +
         '%cComandos directos en consola:\n' +
-        '  > NocDemo.escenario1() // Tráfico Normal Interbancario (SLA 99.94%)\n' +
-        '  > NocDemo.escenario2() // Caída Crítica BCP/Yape HTTP 503 (Ticket INC-20261031-10001)\n' +
-        '  > NocDemo.escenario3() // Mitigación & Cierre Inmutable (Recálculo SLA)\n' +
-        '  > NocDemo.escenario4() // Compilación Inmediata SFT + Hash SHA-256\n' +
+        '  > NocDemo.escenario1() // 1. Operación Normal (99.94%)\n' +
+        '  > NocDemo.escenario2() // 2. Simular Falla en BCP (Yape)\n' +
+        '  > NocDemo.escenario3() // 3. Recuperar Canal y Mitigar\n' +
+        '  > NocDemo.escenario4() // 4. Emitir Reporte con Firma Digital\n' +
         '  > NocDemo.toggle()     // Alternar Visibilidad de la Barra de Presets (Alt+P)',
         'color: #38BDF8; font-weight: 800; font-size: 14px;',
         'color: #F59E0B; font-weight: 600; font-size: 12px;',

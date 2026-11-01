@@ -72,9 +72,12 @@
             transition: border-color 150ms ease;
             box-sizing: border-box;
         }
-        .login-input:focus {
+        .login-input:focus,
+        .login-input:focus-visible {
+            outline: 2px solid #E2B357 !important;
+            outline-offset: 1px !important;
             border-color: #E2B357;
-            box-shadow: 0 0 0 2px rgba(226, 179, 87, 0.2);
+            box-shadow: 0 0 0 3px rgba(226, 179, 87, 0.25);
         }
         .login-alert-box {
             display: none;
@@ -113,6 +116,11 @@
         .btn-login-submit:active {
             transform: scale(0.98);
         }
+        .btn-login-submit:focus-visible {
+            outline: 2px solid #E2B357 !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
+        }
         .quick-access-section {
             margin-top: 24px;
             padding-top: 20px;
@@ -122,7 +130,7 @@
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #64748B;
+            color: #94A3B8;
             font-weight: 700;
             margin-bottom: 10px;
             display: block;
@@ -152,6 +160,11 @@
             border-color: rgba(226, 179, 87, 0.3);
             color: #F8FAFC;
         }
+        .btn-quick-role:focus-visible {
+            outline: 2px solid #E2B357 !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 4px rgba(226, 179, 87, 0.35) !important;
+        }
         .role-pill-badge {
             font-size: 0.68rem;
             font-weight: 700;
@@ -162,7 +175,7 @@
             text-align: center;
             margin-top: 20px;
             font-size: 0.7rem;
-            color: #475569;
+            color: #8898AA;
         }
     </style>
 </head>

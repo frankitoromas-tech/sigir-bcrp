@@ -211,7 +211,58 @@ const AuthRBAC = {
         this.mostrarNotificacionRol(rol);
     },
 
+    toggleMenuUsuario(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        const dropdown = document.getElementById('headerUserDropdown');
+        const trigger = document.getElementById('btnUserMenuTrigger');
+        const popover = document.getElementById('userMenuPopover');
+        if (!dropdown) return;
+
+        const isOpen = dropdown.classList.contains('active');
+        if (isOpen) {
+            this.cerrarMenuUsuario();
+        } else {
+            dropdown.classList.add('active');
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+            if (popover) popover.setAttribute('aria-hidden', 'false');
+            if (window.SoundFX && typeof window.SoundFX.playPop === 'function') {
+                window.SoundFX.playPop();
+            }
+        }
+    },
+
+    cerrarMenuUsuario() {
+        const dropdown = document.getElementById('headerUserDropdown');
+        const trigger = document.getElementById('btnUserMenuTrigger');
+        const popover = document.getElementById('userMenuPopover');
+        if (!dropdown) return;
+        dropdown.classList.remove('active');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        if (popover) popover.setAttribute('aria-hidden', 'true');
+    },
+
     aplicarPermisosEnUI(rol) {
+        // 1. Elementos del Dropdown de Usuario Unificado (FinTech Standard)
+        const headerAvatar = document.getElementById('headerUserAvatar');
+        const headerName = document.getElementById('headerUserName');
+        const popoverAvatar = document.getElementById('popoverUserAvatar');
+        const popoverName = document.getElementById('popoverUserName');
+        const popoverRole = document.getElementById('popoverUserRole');
+        const popoverEmail = document.getElementById('popoverUserEmail');
+
+        if (headerAvatar) headerAvatar.textContent = rol.avatar;
+        if (headerName) {
+            const partes = (rol.nombreCompleto || '').split(' ');
+            headerName.textContent = partes.length >= 2 ? `${partes[0]} ${partes[1]}` : rol.nombreCompleto;
+        }
+        if (popoverAvatar) popoverAvatar.textContent = rol.avatar;
+        if (popoverName) popoverName.textContent = rol.nombreCompleto;
+        if (popoverRole) popoverRole.textContent = rol.cargo;
+        if (popoverEmail) popoverEmail.textContent = rol.email;
+
+        // Compatibilidad con selectores de sesiones anteriores
         const userNameElem = document.querySelector('.user-info .user-name') || document.querySelector('.user-meta .user-name');
         const userRoleElem = document.querySelector('.user-info .user-role') || document.querySelector('.user-meta .user-ad-domain');
         const userAvatarElem = document.querySelector('.user-avatar');
@@ -248,24 +299,10 @@ const AuthRBAC = {
             }
         }
 
-        // Píldora de Rol Activo y Botón Cerrar Sesión en Header
-        let sessionContainer = document.querySelector('.header-right');
-        if (sessionContainer && !document.getElementById('btnCerrarSesionHeader')) {
-            const btnLogout = document.createElement('button');
-            btnLogout.id = 'btnCerrarSesionHeader';
-            btnLogout.type = 'button';
-            btnLogout.className = 'btn-logout-header';
-            btnLogout.title = 'Cerrar Sesión Activa';
-            btnLogout.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span>Salir</span>
-            `;
-            btnLogout.onclick = () => AuthRBAC.cerrarSesion();
-            sessionContainer.appendChild(btnLogout);
+        // Eliminar botón salir suelto del header si existiera (ahora integrado en el popover)
+        const btnSalirViejo = document.getElementById('btnCerrarSesionHeader');
+        if (btnSalirViejo) {
+            btnSalirViejo.remove();
         }
     },
 
@@ -293,6 +330,7 @@ const AuthRBAC = {
     },
 
     abrirModalRoles() {
+        this.ultimoFoco = document.activeElement;
         let modal = document.getElementById('modalSelectorRoles');
         if (!modal) {
             this.crearModalRolesDOM();
@@ -300,12 +338,20 @@ const AuthRBAC = {
         }
         if (modal) {
             modal.classList.add('active');
+            setTimeout(() => {
+                const firstCard = modal.querySelector('.rbac-role-card');
+                if (firstCard) firstCard.focus();
+            }, 60);
         }
     },
 
     cerrarModalRoles() {
         const modal = document.getElementById('modalSelectorRoles');
         if (modal) modal.classList.remove('active');
+        if (this.ultimoFoco && typeof this.ultimoFoco.focus === 'function') {
+            this.ultimoFoco.focus();
+            this.ultimoFoco = null;
+        }
     },
 
     crearModalRolesDOM() {
@@ -313,7 +359,7 @@ const AuthRBAC = {
         modal.id = 'modalSelectorRoles';
         modal.className = 'modal-overlay';
         modal.innerHTML = `
-            <div class="modal-box rbac-modal-box">
+            <div class="modal-box rbac-modal-box" role="dialog" aria-modal="true" aria-label="Control de Acceso Institucional BCRP">
                 <div class="modal-header">
                     <div>
                         <h3 style="margin:0; font-size:1.15rem; color:#F8FAFC; display:flex; align-items:center; gap:8px;">
@@ -321,10 +367,10 @@ const AuthRBAC = {
                         </h3>
                         <p style="margin:4px 0 0 0; font-size:0.8rem; color:#94A3B8;">Alterna entre los perfiles autorizados para evaluar las restricciones de la interfaz:</p>
                     </div>
-                    <button class="modal-close" onclick="AuthRBAC.cerrarModalRoles()">&times;</button>
+                    <button class="modal-close" aria-label="Cerrar selector de roles" onclick="AuthRBAC.cerrarModalRoles()">&times;</button>
                 </div>
                 <div class="rbac-roles-list">
-                    <div class="rbac-role-card" onclick="AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();">
+                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Frank Vargas Huamán, Arquitecto de Software" onclick="AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('ARQUITECTO'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(226,179,87,0.15); color:#E2B357; border:1px solid #E2B357;">FV</span>
                             <div>
@@ -338,7 +384,7 @@ const AuthRBAC = {
                         </p>
                     </div>
 
-                    <div class="rbac-role-card" onclick="AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();">
+                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Fernando Romero o Joel Olaya, Operador NOC" onclick="AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('OPERADOR'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid #38BDF8;">OP</span>
                             <div>
@@ -352,7 +398,7 @@ const AuthRBAC = {
                         </p>
                     </div>
 
-                    <div class="rbac-role-card" onclick="AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();">
+                    <div class="rbac-role-card" tabindex="0" role="button" aria-label="Seleccionar perfil: Prof. Zamata, Auditor Regulatorio BCRP" onclick="AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); AuthRBAC.establecerRol('AUDITOR'); AuthRBAC.cerrarModalRoles();}">
                         <div class="rbac-card-header">
                             <span class="rbac-avatar" style="background:rgba(16,185,129,0.15); color:#10B981; border:1px solid #10B981;">PZ</span>
                             <div>
@@ -368,7 +414,19 @@ const AuthRBAC = {
                 </div>
             </div>
         `;
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) AuthRBAC.cerrarModalRoles();
+        });
         document.body.appendChild(modal);
+
+        // Escape para cerrar modal de roles
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                if (modal.classList.contains('active')) {
+                    AuthRBAC.cerrarModalRoles();
+                }
+            }
+        });
     },
 
     inicializar() {
@@ -380,14 +438,46 @@ const AuthRBAC = {
         const rol = this.obtenerRolActual();
         this.aplicarPermisosEnUI(rol);
 
-        // Click en la tarjeta de sesión abre el selector de perfiles
+        // Inicializar trigger del Dropdown de Usuario Unificado
+        const userTrigger = document.getElementById('btnUserMenuTrigger');
+        if (userTrigger) {
+            userTrigger.addEventListener('click', (e) => this.toggleMenuUsuario(e));
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('headerUserDropdown');
+            if (dropdown && dropdown.classList.contains('active')) {
+                if (!dropdown.contains(e.target)) {
+                    this.cerrarMenuUsuario();
+                }
+            }
+        });
+
+        // Cerrar dropdown con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                this.cerrarMenuUsuario();
+            }
+        });
+
+        // Click y teclado en tarjetas de sesión legadas (si existieran)
         const userCard = document.querySelector('.user-profile-badge') || 
                          document.querySelector('.user-session-card') || 
                          document.querySelector('.ad-session-card');
         if (userCard) {
             userCard.style.cursor = 'pointer';
-            userCard.setAttribute('title', 'Haz clic para cambiar de rol o ver permisos');
+            userCard.setAttribute('tabindex', '0');
+            userCard.setAttribute('role', 'button');
+            userCard.setAttribute('aria-label', 'Cambiar rol institucional activo');
+            userCard.setAttribute('title', 'Haz clic o pulsa Enter para cambiar de rol institucional');
             userCard.addEventListener('click', () => this.abrirModalRoles());
+            userCard.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.abrirModalRoles();
+                }
+            });
         }
     }
 };

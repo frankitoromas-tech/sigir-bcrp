@@ -22,6 +22,7 @@
     let slaTimerInterval = null;
     let elapsedSecondsSession = 0;
     let drawerMounted = false;
+    let lastFocusedElement = null;
 
     // Configuración regulatoria BCRP
     const SLA_LIMIT_SECONDS = 30 * 60; // 30 minutos normativos BCRP
@@ -42,33 +43,110 @@
     }
 
     /**
-     * Calcula Hash SHA-256 estándar vía Web Crypto API con fallback seguro
+     * Sanitización estricta anti-XSS DOM para interpolación segura en templates HTML
+     */
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    if (typeof window !== 'undefined' && !window.escapeHTML) {
+        window.escapeHTML = escapeHTML;
+    }
+
+    /**
+     * Implementación determinista en JavaScript puro de SHA-256 (FIPS 180-4)
+     */
+    function sha256PureFallback(ascii) {
+        function rightRotate(value, amount) {
+            return (value >>> amount) | (value << (32 - amount));
+        }
+        const mathPow = Math.pow;
+        const maxWord = mathPow(2, 32);
+        let result = '';
+        const words = [];
+        const utf8Str = unescape(encodeURIComponent(ascii));
+        const asciiBitLength = utf8Str.length * 8;
+        let hash = [];
+        const k = [];
+        let primeCounter = 0;
+        const isComposite = {};
+        for (let candidate = 2; primeCounter < 64; candidate++) {
+            if (!isComposite[candidate]) {
+                for (let i = candidate * candidate; i < 313; i += candidate) { isComposite[i] = true; }
+                hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+                k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+            }
+        }
+        let padded = utf8Str + '\x80';
+        while ((padded.length % 64) !== 56) padded += '\x00';
+        for (let i = 0; i < padded.length; i++) {
+            const j = padded.charCodeAt(i);
+            words[i >> 2] |= j << (((3 - i) % 4) * 8);
+        }
+        words[words.length] = ((asciiBitLength / maxWord) | 0);
+        words[words.length] = (asciiBitLength | 0);
+        for (let j = 0; j < words.length;) {
+            const w = words.slice(j, j += 16);
+            const oldHash = hash;
+            hash = hash.slice(0, 8);
+            for (let i = 0; i < 64; i++) {
+                const w15 = w[i - 15], w2 = w[i - 2];
+                const s0 = i < 16 ? w[i] : (w[i] = ((rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10)) + w[i - 16]) | 0);
+                const ch = (hash[4] & hash[5]) ^ (~hash[4] & hash[6]);
+                const maj = (hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]);
+                const s1 = rightRotate(hash[4], 6) ^ rightRotate(hash[4], 11) ^ rightRotate(hash[4], 25);
+                const s0_round = rightRotate(hash[0], 2) ^ rightRotate(hash[0], 13) ^ rightRotate(hash[0], 22);
+                const t1 = (hash[7] + s1 + ch + k[i] + w[i]) | 0;
+                const t2 = (s0_round + maj) | 0;
+                hash = [(t1 + t2) | 0].concat(hash);
+                hash[4] = (hash[4] + t1) | 0;
+            }
+            for (let i = 0; i < 8; i++) { hash[i] = (hash[i] + oldHash[i]) | 0; }
+        }
+        for (let i = 0; i < 8; i++) {
+            for (let j = 3; j >= 0; j--) {
+                const b = (hash[i] >> (8 * j)) & 255;
+                result += (b < 16 ? '0' : '') + b.toString(16);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Calcula Hash SHA-256 estándar vía Web Crypto API con manejo defensivo y validación canónica de 64 caracteres
      */
     async function calcularSha256(cadenaTexto) {
+        const raw = String(cadenaTexto || '');
         try {
-            if (window.crypto && window.crypto.subtle) {
-                const buffer = new TextEncoder().encode(cadenaTexto);
+            if (window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+                const buffer = new TextEncoder().encode(raw);
                 const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
-                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
+                if (hex.length === 64 && /^[0-9a-f]{64}$/.test(hex)) {
+                    return hex;
+                }
             }
         } catch (e) {
             console.warn('[IncidentDrawer] Fallback cálculo SHA-256:', e);
         }
 
-        // Fallback algorítmico determinista si Web Crypto no estuviese habilitado
-        let h1 = 0xdeadbeef, h2 = 0x41c64e6d;
-        for (let i = 0, ch; i < cadenaTexto.length; i++) {
-            ch = cadenaTexto.charCodeAt(i);
-            h1 = Math.imul(h1 ^ ch, 2654435761);
-            h2 = Math.imul(h2 ^ ch, 1597334677);
+        // Si app.js o global calcularSha256 está disponible, usarlo
+        if (typeof window.calcularSha256 === 'function') {
+            try {
+                const res = await window.calcularSha256(raw);
+                if (res && res.length === 64) return res;
+            } catch (e) {}
         }
-        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
-        h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
-        h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-        const hex = (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).padStart(16, '0');
-        return (hex + hex + hex + hex).substring(0, 64);
+
+        const fallbackHex = String(sha256PureFallback(raw) || '').toLowerCase();
+        return fallbackHex.padStart(64, '0').slice(0, 64);
     }
 
     /**
@@ -360,6 +438,9 @@
         const cerrar = () => modal.classList.remove('active');
         document.getElementById('btnCerrarModalActa')?.addEventListener('click', cerrar);
         document.getElementById('btnCerrarActaFooter')?.addEventListener('click', cerrar);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) cerrar();
+        });
     }
 
     /**
@@ -451,14 +532,51 @@
             const row = e.target.closest('tr');
             if (!row) return;
 
-            // Extraer ticket o id de la fila
-            const dataId = row.getAttribute('data-id');
+            // Extraer ticket o id de la fila (data-incident-id o data-id)
+            const dataId = row.getAttribute('data-incident-id') || row.getAttribute('data-id');
             const dataTicket = row.getAttribute('data-ticket');
             const ticketCell = row.querySelector('.ticket-mono');
             const ticketText = dataTicket || (ticketCell ? ticketCell.textContent.trim() : null);
 
             if (dataId || ticketText) {
                 abrirDrawer(dataId ? parseInt(dataId, 10) : ticketText);
+            }
+        });
+
+        // Navegación accesible por teclado sobre la matriz de incidentes (Enter / Space para abrir, Flechas Arriba/Abajo)
+        tbody.addEventListener('keydown', (e) => {
+            const row = e.target.closest('tr.incident-row');
+            if (!row) return;
+
+            // Si el foco está en un botón o link de acción rápida dentro de la fila, no interceptar Enter/Space
+            if (e.target.closest('button') || e.target.closest('a')) {
+                return;
+            }
+
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const dataId = row.getAttribute('data-incident-id') || row.getAttribute('data-id');
+                const dataTicket = row.getAttribute('data-ticket');
+                const ticketCell = row.querySelector('.ticket-mono');
+                const ticketText = dataTicket || (ticketCell ? ticketCell.textContent.trim() : null);
+
+                if (dataId || ticketText) {
+                    abrirDrawer(dataId ? parseInt(dataId, 10) : ticketText);
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                let nextRow = row.nextElementSibling;
+                while (nextRow && !nextRow.classList.contains('incident-row')) {
+                    nextRow = nextRow.nextElementSibling;
+                }
+                if (nextRow) nextRow.focus();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                let prevRow = row.previousElementSibling;
+                while (prevRow && !prevRow.classList.contains('incident-row')) {
+                    prevRow = prevRow.previousElementSibling;
+                }
+                if (prevRow) prevRow.focus();
             }
         });
     }
@@ -474,9 +592,10 @@
             toast.className = 'drawer-toast-feedback';
             document.body.appendChild(toast);
         }
+        const mensajeSafe = escapeHTML(mensaje);
         toast.innerHTML = `
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>${mensaje}</span>
+            <span>${mensajeSafe}</span>
         `;
         toast.classList.add('visible');
         clearTimeout(toast._timeout);
@@ -521,6 +640,7 @@
             return;
         }
 
+        lastFocusedElement = document.activeElement;
         activeIncident = inc;
         elapsedSecondsSession = 0;
 
@@ -541,6 +661,10 @@
         if (drawer && backdrop) {
             backdrop.classList.add('active');
             drawer.classList.add('active');
+            setTimeout(() => {
+                const closeBtn = document.getElementById('btnDrawerClose');
+                if (closeBtn) closeBtn.focus();
+            }, 60);
         }
     }
 
@@ -561,6 +685,11 @@
 
         quitarResaltadoFilas();
         activeIncident = null;
+
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
     }
 
     /**
@@ -878,6 +1007,12 @@
             const fechaHito = new Date(fechaDet.getTime() + etapa.tiempoRelativoSeg * 1000);
             const horaHitoStr = fechaHito.toLocaleTimeString('es-PE', { hour12: false, timeZone: 'America/Lima' });
 
+            const tituloSafe = escapeHTML(etapa.titulo);
+            const horaHitoSafe = escapeHTML(`${horaHitoStr} PET`);
+            const actorSafe = escapeHTML(etapa.actor);
+            const badgeTextoSafe = escapeHTML(badgeTexto);
+            const detalleSafe = escapeHTML(etapa.detalle);
+
             return `
                 <div class="timeline-item ${estadoClase}">
                     <div class="timeline-rail">
@@ -890,15 +1025,15 @@
                     </div>
                     <div class="timeline-content">
                         <div class="timeline-top">
-                            <h4 class="timeline-title">${etapa.titulo}</h4>
-                            <span class="timeline-timestamp">${horaHitoStr} PET</span>
+                            <h4 class="timeline-title">${tituloSafe}</h4>
+                            <span class="timeline-timestamp">${horaHitoSafe}</span>
                         </div>
                         <div class="timeline-actor">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            <span>${etapa.actor}</span>
-                            <span class="timeline-status-pill ${estadoClase}">${badgeTexto}</span>
+                            <span>${actorSafe}</span>
+                            <span class="timeline-status-pill ${estadoClase}">${badgeTextoSafe}</span>
                         </div>
-                        <p class="timeline-detail">${etapa.detalle}</p>
+                        <p class="timeline-detail">${detalleSafe}</p>
                     </div>
                 </div>
             `;
@@ -1003,13 +1138,19 @@
     function renderizarDescripcion(inc) {
         const elDesc = document.getElementById('drawerDescripcionText');
         if (!elDesc) return;
+        const descSafe = escapeHTML(inc.descripcion || 'Sin descripción técnica disponible.');
+        const entidadSafe = escapeHTML(inc.entidadNombre);
+        const servicioSafe = escapeHTML(inc.servicio);
+        const severidadSafe = escapeHTML(inc.severidad);
+        const operadorSafe = escapeHTML(OPERADOR_DEFAULT);
+
         elDesc.innerHTML = `
-            <p><strong>Causa Raíz Diagnosticada:</strong> ${inc.descripcion || 'Sin descripción técnica disponible.'}</p>
+            <p><strong>Causa Raíz Diagnosticada:</strong> ${descSafe}</p>
             <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <span class="drawer-kpi-pill"><strong>Entidad:</strong> ${inc.entidadNombre}</span>
-                <span class="drawer-kpi-pill"><strong>Servicio:</strong> ${inc.servicio}</span>
-                <span class="drawer-kpi-pill"><strong>Severidad:</strong> ${inc.severidad}</span>
-                <span class="drawer-kpi-pill"><strong>Operador Asignado:</strong> ${OPERADOR_DEFAULT}</span>
+                <span class="drawer-kpi-pill"><strong>Entidad:</strong> ${entidadSafe}</span>
+                <span class="drawer-kpi-pill"><strong>Servicio:</strong> ${servicioSafe}</span>
+                <span class="drawer-kpi-pill"><strong>Severidad:</strong> ${severidadSafe}</span>
+                <span class="drawer-kpi-pill"><strong>Operador Asignado:</strong> ${operadorSafe}</span>
             </div>
         `;
     }
