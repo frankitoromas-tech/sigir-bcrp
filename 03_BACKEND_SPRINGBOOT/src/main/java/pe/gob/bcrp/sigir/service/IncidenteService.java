@@ -55,6 +55,14 @@ public class IncidenteService implements IIncidenteService {
     }
 
     @Transactional(readOnly = true)
+    public List<IncidenteResponseDTO> listarActivos() {
+        return incidenteRepository.findAll().stream()
+                .filter(i -> i.getEstadoActual() != EstadoIncidente.CERRADO)
+                .map(this::mapearADto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public IncidenteResponseDTO obtenerPorId(Long id) {
         Incidente inc = incidenteRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Incidente no encontrado con ID: " + id));

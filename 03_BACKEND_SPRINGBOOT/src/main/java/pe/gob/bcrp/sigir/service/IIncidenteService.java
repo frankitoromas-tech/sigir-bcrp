@@ -17,6 +17,8 @@ public interface IIncidenteService {
 
     List<IncidenteResponseDTO> listarTodos();
 
+    List<IncidenteResponseDTO> listarActivos();
+
     IncidenteResponseDTO obtenerPorId(Long id);
 
     boolean existeIncidenteAbiertoParaEntidad(Long idEntidad);

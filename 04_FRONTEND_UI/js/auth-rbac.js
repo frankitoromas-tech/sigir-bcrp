@@ -180,7 +180,7 @@ const ROLES_BCRP = {
         nombreCompleto: 'Frank Vargas Huamán',
         email: 'frank.vargas@bcrp.gob.pe',
         cargo: 'Arquitecto de Software & NOC Lead',
-        badge: '👑 SUPERADMIN / NOC LEAD',
+        badge: 'ARQUITECTO & NOC LEAD',
         nivelAcceso: 'Control Total y Simulación',
         avatar: 'FV',
         colorBadge: '#E2B357',
@@ -200,7 +200,7 @@ const ROLES_BCRP = {
         nombreCompleto: 'Fernando Romero / Joel Olaya',
         email: 'operador.noc@bcrp.gob.pe',
         cargo: 'Operador NOC & Mesa de Ayuda',
-        badge: '👨‍💻 OPERADOR NOC',
+        badge: 'OPERADOR NOC BCRP',
         nivelAcceso: 'Operación y Mesa de Ayuda',
         avatar: 'OP',
         colorBadge: '#38BDF8',
@@ -220,7 +220,7 @@ const ROLES_BCRP = {
         nombreCompleto: 'Prof. Zamata',
         email: 'auditor.zamata@bcrp.gob.pe',
         cargo: 'Auditor Regulatorio BCRP / Jurado Evaluador',
-        badge: '⚖️ AUDITOR REGULATORIO BCRP',
+        badge: 'AUDITOR REGULATORIO BCRP',
         nivelAcceso: 'Modo Inspección y No Repudio',
         avatar: 'PZ',
         colorBadge: '#10B981',
@@ -547,9 +547,11 @@ const AuthRBAC = {
         const nombreSafe = escapeHTML(rol.nombreCompleto);
         const cargoSafe = escapeHTML(rol.cargo);
         const nivelSafe = escapeHTML(rol.nivelAcceso);
+        const avatarSafe = escapeHTML(rol.avatar || 'ID');
+        const colorSafe = escapeHTML(rol.colorBadge || '#E2B357');
         const html = `
             <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-size:1.2rem;">${rol.avatar === 'FV' ? '👑' : (rol.avatar === 'PZ' ? '⚖️' : '👨‍💻')}</span>
+                <span style="width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; background:rgba(15,23,42,0.9); color:${colorSafe}; border:1px solid ${colorSafe}; flex-shrink:0;">${avatarSafe}</span>
                 <div>
                     <div style="font-size:0.85rem; font-weight:700; color:#F8FAFC;">Perfil Activo: ${nombreSafe}</div>
                     <div style="font-size:0.75rem; color:#94A3B8;">${cargoSafe} &bull; ${nivelSafe}</div>
@@ -599,7 +601,7 @@ const AuthRBAC = {
                 <div class="modal-header">
                     <div>
                         <h3 style="margin:0; font-size:1.15rem; color:#F8FAFC; display:flex; align-items:center; gap:8px;">
-                            <span style="color:#E2B357;">🏛️</span> Control de Acceso Institucional BCRP
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E2B357" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Control de Acceso Institucional BCRP
                         </h3>
                         <p style="margin:4px 0 0 0; font-size:0.8rem; color:#94A3B8;">Alterna entre los perfiles autorizados para evaluar las restricciones de la interfaz:</p>
                     </div>

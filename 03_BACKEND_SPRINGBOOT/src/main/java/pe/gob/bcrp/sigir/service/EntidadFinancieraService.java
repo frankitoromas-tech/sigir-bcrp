@@ -1,13 +1,18 @@
 package pe.gob.bcrp.sigir.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.bcrp.sigir.domain.entity.EntidadFinanciera;
+import pe.gob.bcrp.sigir.domain.entity.Incidente;
+import pe.gob.bcrp.sigir.domain.enums.Severidad;
 import pe.gob.bcrp.sigir.repository.EntidadFinancieraRepository;
+import pe.gob.bcrp.sigir.repository.IncidenteRepository;
 import pe.gob.bcrp.sigir.web.dto.EntidadSaludDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +20,17 @@ import java.util.stream.Collectors;
 public class EntidadFinancieraService {
 
     private final EntidadFinancieraRepository entidadRepository;
+    private final IncidenteRepository incidenteRepository;
 
     public EntidadFinancieraService(EntidadFinancieraRepository entidadRepository) {
+        this(entidadRepository, null);
+    }
+
+    @Autowired
+    public EntidadFinancieraService(EntidadFinancieraRepository entidadRepository,
+                                    IncidenteRepository incidenteRepository) {
         this.entidadRepository = entidadRepository;
+        this.incidenteRepository = incidenteRepository;
     }
 
     @Transactional(readOnly = true)
@@ -50,15 +63,27 @@ public class EntidadFinancieraService {
         String ahora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         return activas.stream().map(e -> {
-            // Generación de estado simulado en base al sondeo reciente
+            List<Incidente> abiertos = (incidenteRepository != null && e.getIdEntidad() != null)
+                    ? incidenteRepository.findIncidentesAbiertosPorEntidad(e.getIdEntidad())
+                    : Collections.emptyList();
+            int cantActivos = abiertos != null ? abiertos.size() : 0;
+            String estadoSalud = "SALUDABLE";
+            int latencia = 18 + (int) (Math.random() * 25);
+
+            if (cantActivos > 0) {
+                boolean tieneCritico = abiertos.stream().anyMatch(i -> i.getSeveridad() == Severidad.CRITICA);
+                estadoSalud = tieneCritico ? "CAIDO" : "DEGRADADO";
+                latencia = tieneCritico ? 0 : 480;
+            }
+
             return EntidadSaludDTO.builder()
                     .idEntidad(e.getIdEntidad())
                     .codigoBcrp(e.getCodigoBcrp())
                     .nombreComercial(e.getNombreComercial())
                     .canalInteroperable(e.getCanalInteroperable())
-                    .estadoSalud("SALUDABLE")
-                    .latenciaMs(18 + (int)(Math.random() * 25))
-                    .incidentesActivos(0)
+                    .estadoSalud(estadoSalud)
+                    .latenciaMs(latencia)
+                    .incidentesActivos(cantActivos)
                     .ultimoSondeo(ahora)
                     .build();
         }).collect(Collectors.toList());

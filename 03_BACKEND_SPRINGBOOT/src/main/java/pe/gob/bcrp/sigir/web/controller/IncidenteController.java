@@ -33,13 +33,19 @@ public class IncidenteController {
         return ResponseEntity.ok(incidenteService.listarTodos());
     }
 
+    @GetMapping("/activos")
+    @Operation(summary = "Listar todos los incidentes activos (no cerrados) en el ecosistema de pagos")
+    public ResponseEntity<List<IncidenteResponseDTO>> listarActivos() {
+        return ResponseEntity.ok(incidenteService.listarActivos());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Obtener detalle completo de un incidente por ID")
     public ResponseEntity<IncidenteResponseDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(incidenteService.obtenerPorId(id));
     }
 
-    @PostMapping("/manual")
+    @PostMapping({"", "/manual"})
     @Operation(summary = "Registrar manualmente un incidente (Fraude o Manipulación de Información)")
     public ResponseEntity<IncidenteResponseDTO> registrarManual(
             @Valid @RequestBody IncidenteRegistroDTO dto,
